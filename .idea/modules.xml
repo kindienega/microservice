@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Order Optima/Auth Service/Auth-Service.iml" filepath="$PROJECT_DIR$/Order Optima/Auth Service/Auth-Service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Order Optima/Order-Optima.iml" filepath="$PROJECT_DIR$/Order Optima/Order-Optima.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Order Optima/Service Discovery/Service-Discovery.iml" filepath="$PROJECT_DIR$/Order Optima/Service Discovery/Service-Discovery.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/capsOrder.iml" filepath="$PROJECT_DIR$/.idea/capsOrder.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Order Optima/Inventory Management/inventory_management.iml" filepath="$PROJECT_DIR$/Order Optima/Inventory Management/inventory_management.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Order Optima/Order Service/order_service.iml" filepath="$PROJECT_DIR$/Order Optima/Order Service/order_service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Order Optima/User Service/user_service.iml" filepath="$PROJECT_DIR$/Order Optima/User Service/user_service.iml" />
+    </modules>
+  </component>
+</project>
