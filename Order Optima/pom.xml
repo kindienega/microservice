@@ -6,7 +6,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.2.2</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>et.gebeya.com</groupId>
     <artifactId>Order-Optima</artifactId>
@@ -22,6 +22,8 @@
         <module>Order Service</module>
         <module>Inventory Management</module>
         <module>Api Gateway</module>
+
+
     </modules>
 
     <properties>
