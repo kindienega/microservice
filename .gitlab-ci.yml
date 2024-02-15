@@ -15,6 +15,7 @@ variables:
 
 build:
   stage: build
+  image: docker:24.0.7
   script:
     - apk add mvn
     - bash <(curl -s https://codecov.io/bash)
