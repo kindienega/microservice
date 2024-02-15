@@ -11,8 +11,8 @@ stages:
   - update-manifests
 
 variables:
-  APP_NAME: "backend-service-"
-  DOCKER_IMAGE: $DOCKER_USER_NAME/${$APP_NAME}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
+  IMAGE_SLUG: ""
+  DOCKER_IMAGE: ""
   DOCKER_FILE_PATH: ""
   MANIFEST_STAGING_PATH: ""
   COMMIT_MESSAGE: ""
@@ -26,14 +26,7 @@ variables:
   script:
     - cd "Order Optima"/"$DOCKER_FILE_PATH"
     - mvn compile com.google.cloud.tools:jib-maven-plugin:3.4.0:dockerBuild
-    - docker push $DOCKER_FILE_PATH
-# .docker_push:
-#   image: docker:24.0.7
-#   stage: build
-#   before_script:
-#     - docker login -u $DOCKER_USER_NAME -p $DOCKER_PASSWORD
-#   script:
-#     - docker push $DOCKER_FILE_PATH
+    - docker push $DOCKER_IMAGE
 
 
 .update_manifest:
@@ -68,11 +61,15 @@ build_service_discovery:
   stage: build
   variables:
     DOCKER_FILE_PATH: "Service Discovery"
+    IMAGE_SLUG: "service-discovery"
+    DOCKER_IMAGE: $DOCKER_USER_NAME/${CI_PROJECT_NAME}"-"${IMAGE_SLUG}:$CI_COMMIT_SHA
 build_auth_managment:
   extends: .docker_build
   stage: build
   variables:
+    IMAGE_SLUG: "auth-service"
     DOCKER_FILE_PATH: "Auth Service"
+    DOCKER_IMAGE: $DOCKER_USER_NAME/${CI_PROJECT_NAME}"-"${IMAGE_SLUG}:$CI_COMMIT_SHA
 
 # build_inventory_managment:
 #   extends: .docker_build
