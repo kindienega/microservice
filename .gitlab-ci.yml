@@ -22,7 +22,7 @@ variables:
   stage: build
   before_script:
     - docker login -u $DOCKER_USER_NAME -p $DOCKER_PASSWORD
-    - apk add openjdk8 maven
+    - apk add  maven
   script:
     - cd "Order Optima"/"$DOCKER_FILE_PATH"
     - mvn compile com.google.cloud.tools:jib-maven-plugin:3.4.0:dockerBuild
