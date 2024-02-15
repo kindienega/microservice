@@ -4,7 +4,7 @@ workflow:
     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
       when: never
     - if: $CI_COMMIT_BRANCH
-
+image: maven:latest
 stages:
   - test
   - build
@@ -56,17 +56,6 @@ test_job:
   script:
     - echo "this is mocked test"
   
-# build_inventory_managment:
-#   extends: .docker_build
-#   stage: build
-#   variables:
-#     DOCKER_FILE_PATH: "Inventory Management"
-
-# build_order_managment:
-#   extends: .docker_build
-#   stage: build
-#   variables:
-#     DOCKER_FILE_PATH: "OrderManagement"
 
 build_service_discovery:
   extends: .docker_build
@@ -79,6 +68,17 @@ build_auth_managment:
   variables:
     DOCKER_FILE_PATH: "Auth Service"
 
+# build_inventory_managment:
+#   extends: .docker_build
+#   stage: build
+#   variables:
+#     DOCKER_FILE_PATH: "Inventory Management"
+
+# build_order_managment:
+#   extends: .docker_build
+#   stage: build
+#   variables:
+#     DOCKER_FILE_PATH: "OrderManagement"
 # build_user_managment:
 #   extends: .docker_build
 #   stage: build
