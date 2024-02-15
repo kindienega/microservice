@@ -1,0 +1,25 @@
+version: "3"
+services:
+  postgresql:
+    image: postgres 
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: inventory_db
+  authservice:
+   build: "authService"
+
+  service-discovery:
+   build: "Service Discovery"
+   ports:
+     - "8761:8761"
+  # service:
+  #  build: ServiceDiscovery
+  #  ports:
+  #    - "8761:8761"
+  # user:
+  #  build: UserManagement
+  #  ports:
+  #    - "8081:8081"

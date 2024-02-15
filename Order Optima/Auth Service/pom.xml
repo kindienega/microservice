@@ -8,7 +8,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <groupId>et.com.gebeya</groupId>
-    <artifactId>Auth-Service</artifactId>
+    <artifactId>auth-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Auth Service</name>
     <description>Auth Service</description>
@@ -84,6 +84,23 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.4.0</version>
+                <configuration>
+                    <from>
+                        <auth>
+                            <username>sondawitmekonnen</username>
+                            <password>@son1dawitmekonnen</password>
+                        </auth>
+                        <image>eclipse-temurin:17-jre-jammy</image>
+                    </from>
+                    <to>
+                        <image>${project.artifactId}:1.0</image>
+                    </to>
+                </configuration>
             </plugin>
         </plugins>
     </build>

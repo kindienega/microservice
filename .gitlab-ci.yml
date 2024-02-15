@@ -1,0 +1,115 @@
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH
+
+stages:
+  - test
+  - build
+  - update-manifests
+
+variables:
+  APP_NAME: "backend-service-"
+  DOCKER_IMAGE: $DOCKER_USER_NAME/${$APP_NAME}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
+  DOCKER_FILE_PATH: ""
+  MANIFEST_STAGING_PATH: ""
+  COMMIT_MESSAGE: ""
+
+.docker_build:
+  image: docker:24.0.7
+  stage: build
+  before_script:
+    - docker login -u $DOCKER_USER_NAME -p $DOCKER_PASSWORD
+  script:
+    - cd "Order Optima"/"$DOCKER_FILE_PATH"
+    - mvn compile com.google.cloud.tools:jib-maven-plugin:3.4.0:dockerBuild
+    # - docker buildx build -t $DOCKER_IMAGE  -f "Order Optima"/"$DOCKER_FILE_PATH"/Dockerfile  "Order Optima"/"$DOCKER_FILE_PATH"/
+    # - docker push $DOCKER_IMAGE
+    - docker push $DOCKER_FILE_PATH
+
+
+.update_manifest:
+    stage: update-manifests
+    variables:
+        MANIFEST_GIT_REPO: https://$USERNAME:$PAT_TOKEN@git.gebeya.training/order-optima/k8s-manifests.git
+
+    before_script:
+        - apk add git
+        - git clone $MANIFEST_GIT_REPO
+        - git config --global user.name "$GITLAB_USER_NAME"
+        - git config --global user.email "$GITLAB_USER_EMAIL"
+    script:
+        - cd k8s-manifests
+        - git remote set-url origin --push $MANIFEST_GIT_REPO
+        - |
+            sed -i "s#image:.*#image: ${DOCKER_IMAGE}#g" ./$MANIFEST_STAGING_PATH
+        - git stage ./$MANIFEST_STAGING_PATH
+        - git commit -m "$COMMIT_MESSAGE [skip-ci]"
+        - git push origin HEAD:$CI_COMMIT_REF_NAME
+
+test_job:
+  image: busybox
+  before_script:
+    - sleep 10
+  script:
+    - echo "this is mocked test"
+  
+# build_inventory_managment:
+#   extends: .docker_build
+#   stage: build
+#   variables:
+#     DOCKER_FILE_PATH: "Inventory Management"
+
+# build_order_managment:
+#   extends: .docker_build
+#   stage: build
+#   variables:
+#     DOCKER_FILE_PATH: "OrderManagement"
+
+build_service_discovery:
+  extends: .docker_build
+  stage: build
+  variables:
+    DOCKER_FILE_PATH: "Service Discovery"
+build_auth_managment:
+  extends: .docker_build
+  stage: build
+  variables:
+    DOCKER_FILE_PATH: "Auth Service"
+
+# build_user_managment:
+#   extends: .docker_build
+#   stage: build
+#   variables:
+#     DOCKER_FILE_PATH: "UserManagement"
+
+
+# update_inventory_managment:
+#   extends: .update_manifest
+#   stage: update-manifests
+#   variables:
+#    MANIFEST_STAGING_PATH: "inventory-manifest.yml"
+#    COMMIT_MESSAGE: "update inventory managmanet image"
+
+# update_order_managment:
+#   extends: .update_manifest
+#   stage: update-manifests
+#   variables:
+#    MANIFEST_STAGING_PATH: "inventory-manifest.yml"
+#    COMMIT_MESSAGE: "update order managmanet image"
+
+# update_service_managment:
+#   extends: .update_manifest
+#   stage: update-manifests
+#   variables:
+#    MANIFEST_STAGING_PATH: "inventory-manifest.yml"
+#    COMMIT_MESSAGE: "update service managmanet image "
+
+# update_user_managment:
+#   extends: .update_manifest
+#   stage: update-manifests
+#   variables:
+#    MANIFEST_STAGING_PATH: "inventory-manifest.yml" 
+#    COMMIT_MESSAGE: "update user managmanet image"
