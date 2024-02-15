@@ -4,7 +4,7 @@ workflow:
     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
       when: never
     - if: $CI_COMMIT_BRANCH
-image: maven:latest
+
 stages:
   - test
   - build
@@ -18,15 +18,20 @@ variables:
   COMMIT_MESSAGE: ""
 
 .docker_build:
+  image: maven:latest
+  stage: build
+  # before_script:
+  #   - docker login -u $DOCKER_USER_NAME -p $DOCKER_PASSWORD
+  script:
+    - cd "Order Optima"/"$DOCKER_FILE_PATH"
+    - mvn compile com.google.cloud.tools:jib-maven-plugin:3.4.0:dockerBuild
+
+.docker_push:
   image: docker:24.0.7
   stage: build
   before_script:
     - docker login -u $DOCKER_USER_NAME -p $DOCKER_PASSWORD
   script:
-    - cd "Order Optima"/"$DOCKER_FILE_PATH"
-    - mvn compile com.google.cloud.tools:jib-maven-plugin:3.4.0:dockerBuild
-    # - docker buildx build -t $DOCKER_IMAGE  -f "Order Optima"/"$DOCKER_FILE_PATH"/Dockerfile  "Order Optima"/"$DOCKER_FILE_PATH"/
-    # - docker push $DOCKER_IMAGE
     - docker push $DOCKER_FILE_PATH
 
 
