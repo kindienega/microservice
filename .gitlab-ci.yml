@@ -22,10 +22,10 @@ variables:
   stage: build
   before_script:
     - apk add  maven
-    - docker login -u $DOCKER_USER_NAME -p $DOCKER_PASSWORD
   script:
     - cd "Order Optima"/"$DOCKER_FILE_PATH"
     - mvn compile com.google.cloud.tools:jib-maven-plugin:3.4.0:dockerBuild
+    - docker login -u $DOCKER_USER_NAME -p $DOCKER_PASSWORD
     - docker push $IMAGE_SLUG
 
 
