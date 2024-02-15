@@ -6,7 +6,7 @@ stages:
 services:
   - docker:dind
 
-image: maven:jdk-8
+image: maven
 
 variables:
   COMMIT: ${CI_COMMIT_SHORT_ID}
