@@ -3,10 +3,10 @@ stages:
   - tag
   - push
 
-services:
-  - docker:dind
+# services:
+#   - docker:dind
 
-image: maven
+# image: maven
 
 variables:
   COMMIT: ${CI_COMMIT_SHORT_ID}
@@ -17,7 +17,7 @@ build:
   stage: build
   image: docker:24.0.7
   script:
-    - apk add mvn
+    - apk add maven
     - bash <(curl -s https://codecov.io/bash)
   only:
     - ci-branch
