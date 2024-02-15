@@ -16,7 +16,7 @@ variables:
 build:
   stage: build
   script:
-    - mvn install
+    - apk add mvn
     - bash <(curl -s https://codecov.io/bash)
   only:
     - ci-branch
