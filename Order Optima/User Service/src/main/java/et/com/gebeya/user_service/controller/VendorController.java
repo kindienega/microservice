@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/user/vendor")
+@RequestMapping("/api/v1/user/vendor")
 public class VendorController {
 private final VendorService vendorService;
     @PostMapping("/register")
