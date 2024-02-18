@@ -26,12 +26,14 @@ public class SecurityConfig {
 
     protected static final String [] UNAUTHORIZED_MATCHERS = {
             "/api/v1/user/restaurant/register",
+            "/api/v1/user/restaurant/test1"
 
     };
 
     protected static final String [] ADMIN_MATCHERS = {
             "/api/v1/user/restaurant/approve",
-            "api/v1/user/vendor/register"
+            "/api/v1/user/vendor/register",
+            "/api/v1/user/restaurant/test2"
 
     };
 
@@ -43,6 +45,9 @@ public class SecurityConfig {
             "/api/v1/vendor/update",
 
     };
+
+
+
 
 
     @Bean

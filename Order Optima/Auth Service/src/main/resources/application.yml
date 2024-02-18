@@ -6,8 +6,8 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/orderoptima
-    username: postgres
-    password: Kill
+    username: ${db.username}
+    password: ${db.password}
     hikari:
       maximum-pool-size: 10
       connection-timeout: 30000

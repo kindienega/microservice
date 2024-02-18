@@ -61,6 +61,7 @@ public class AuthConfig {
                     .isActive(true)
                     .role(Role.ADMIN)
                     .userName("admin")
+                    .roleId(0)
                     .password(passwordEncoder().encode("password"))
                     .build();
             usersService.createUpdateUser(users);
