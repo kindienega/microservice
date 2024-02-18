@@ -17,14 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class VendorController {
 private final VendorService vendorService;
     @PostMapping("/register")
-    public ResponseEntity<String> registerVendor(
-            @RequestBody VendorRequestDto vendorRequestDto) {
-
+    public ResponseEntity<VendorRequestDto> registerVendor(@RequestBody VendorRequestDto vendorRequestDto) {
         try {
-            String registrationMessage = vendorService.vendorRegistration(vendorRequestDto);
-            return ResponseEntity.ok(registrationMessage);
+            VendorRequestDto registeredDto = vendorService.vendorRegistration(vendorRequestDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(registeredDto);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Registration failed: " + e.getMessage());
+            // to do :Handle exceptions appropriately, log errors, return meaningful error responses
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

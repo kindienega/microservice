@@ -4,6 +4,7 @@ import et.com.gebeya.authservice.dto.requestdto.UsersCredential;
 import et.com.gebeya.authservice.dto.requestdto.ValidationRequest;
 import et.com.gebeya.authservice.dto.responsedto.AuthenticationResponse;
 import et.com.gebeya.authservice.dto.responsedto.ValidationResponse;
+import et.com.gebeya.authservice.enums.Role;
 import et.com.gebeya.authservice.model.Users;
 import et.com.gebeya.authservice.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,7 @@ public class AuthenticationService {
         Users user = userRepository.findFirstByUserName(usersCredential.getUserName())
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid user name or password"));
         // Check if the user is approved or if the status is pending
-        if (!user.isApproved()) {
+        if (!user.isApproved()&&user.getRole()!= Role.ADMIN) {
             throw new RuntimeException("User is not approved or status is pending");
         }
 
@@ -64,10 +65,11 @@ public class AuthenticationService {
                         .role(users.getRole())
                         .roleId(users.getRoleId())
                         .build();
-
+                System.out.println(response);
                 return new ResponseEntity<>(response, HttpStatus.OK);
             }
         }
+        System.out.println ("HttpStatus.UNAUTHORIZED)");
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 

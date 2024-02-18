@@ -21,6 +21,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorMessageDto> handleUnAuthorizedException(HeaderNotFoundException exception)
     {
         ErrorMessageDto errorObject = ErrorMessageDto.builder().message(exception.getMessage()).build();
+        System.out.println(errorObject);
         return new ResponseEntity<>(errorObject, HttpStatus.UNAUTHORIZED);
     }
 }

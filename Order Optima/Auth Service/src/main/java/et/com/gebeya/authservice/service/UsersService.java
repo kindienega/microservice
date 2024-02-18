@@ -15,8 +15,8 @@ public class UsersService {
         return this::loadUserByUsername;
     }
 
-    public Users createUpdateUser(Users users){
-       return usersRepository.save(users);
+    public void createUpdateUser(Users users){
+        usersRepository.save(users);
     }
     public Users loadUserByUsername(String userName){
         return usersRepository.findFirstByUserName(userName).orElseThrow(() -> new IllegalArgumentException("Invalid user name or password"));

@@ -22,6 +22,8 @@ protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull Ht
             Authentication authentication = new RoleHeaderAuthenticationToken(headerRole, roleId);
             authentication = new RoleHeaderAuthenticationProvider().authenticate(authentication);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            System.out.println(headerRole+roleId);
+
         }
         chain.doFilter(request, response);
     }

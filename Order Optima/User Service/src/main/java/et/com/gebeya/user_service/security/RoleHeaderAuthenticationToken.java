@@ -13,6 +13,7 @@ public class RoleHeaderAuthenticationToken extends AbstractAuthenticationToken {
         this.headerRole = headerRole;
         this.roleId= Integer.valueOf(roleId);
         setAuthenticated(false);
+        System.out.println("problem");
     }
 
     @Override

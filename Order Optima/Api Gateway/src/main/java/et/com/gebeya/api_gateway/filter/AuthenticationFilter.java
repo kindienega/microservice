@@ -53,13 +53,17 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                                     .header("RoleId",response.getRoleId().toString())
                                     .build();
                             ServerWebExchange mutatedExchange = exchange.mutate().request(mutatedHttpRequest).build();
+                            System.out.println(mutatedExchange);
                             return chain.filter(mutatedExchange);
                         })
                         .onErrorResume(error -> {
                             // Handle validation error
+                            System.out.println("Error");
                             return chain.filter(exchange);
+
                         });
             }
+            System.out.println(exchange);
             return chain.filter(exchange);
         });
     }
@@ -76,7 +80,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                 .toEntity(ValidationResponseDto.class)
                 .map(ResponseEntity::getBody)
                 .onErrorResume(error -> {
-
+                    System.out.println("erroryy");
                     return Mono.error(new UnAuthorizedException("UnAuthorized"));
                 });
     }

@@ -20,6 +20,7 @@ public class AuthController {
     @PostMapping("/validate")
     public ResponseEntity<ValidationResponse> validate(@RequestBody ValidationRequest request)
     {
+        System.out.println(authenticationService.validate(request));
         return authenticationService.validate(request);
     }
 

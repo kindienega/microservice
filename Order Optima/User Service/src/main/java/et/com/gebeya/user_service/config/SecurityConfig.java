@@ -25,13 +25,14 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfig {
 
     protected static final String [] UNAUTHORIZED_MATCHERS = {
-            "/api/v1/user/restaurant/register",
+           // "/api/v1/user/restaurant/register",
+            "/api/v1/user/restaurant/**",
 
     };
 
     protected static final String [] ADMIN_MATCHERS = {
-            "/api/v1/user/restaurant/approve",
-            "api/v1/user/vendor/register"
+            "api/v1/user/vendor/register",
+
 
     };
 
@@ -75,12 +76,14 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationEntryPoint unauthorizedEntryPoint() {
+        System.out.println("unauthorized");
         return (request, response, authException) ->
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
     }
 
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
+        System.out.println("unauthorized");
         return (request, response, accessDeniedException) ->
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
     }
