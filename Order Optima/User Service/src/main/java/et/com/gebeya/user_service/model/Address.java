@@ -28,16 +28,8 @@ public class Address extends BaseModel {
     @Column(length = 255)
     @NotBlank(message = "Wereda is mandatory")
     private String wereda;
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "addressId")
-    @NotEmpty
-    private List<PhoneNumber> phoneNumber;
-    @ManyToOne
-    @JoinColumn(name = "restaurant_id", referencedColumnName = "id")
-    private Restaurant restaurant;
-    @ManyToOne
-    @JoinColumn(name = "vendor_id", referencedColumnName = "id")
-    private Vendor vendor;
+
+
 
 }
 

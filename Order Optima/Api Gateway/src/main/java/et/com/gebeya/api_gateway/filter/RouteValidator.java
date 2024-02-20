@@ -14,10 +14,10 @@ public class RouteValidator {
             "/eureka",
             "/v3/api-docs",
             "/swagger-ui/index.html#/**",
-            "/api/v1/user/restaurant/register",
-            "/api/v1/user/restaurant/approve",
+            "/api/v1/user/restaurant/register"
+           // "/api/v1/user/restaurant/approve"
            // "/api/v1/user/vendor/register",
-            "/api/v1/user/restaurant/test1"
+
 
 
     );

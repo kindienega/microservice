@@ -39,9 +39,15 @@ public class AuthenticationService {
         Users user = userRepository.findFirstByUserName(usersCredential.getUserName())
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid user name or password"));
         // Check if the user is approved or if the status is pending
+
         if (!user.isApproved()&&user.getRole()!= Role.ADMIN) {
             throw new RuntimeException("User is not approved or status is pending");
         }
+
+//        if (!user.isApproved()) {
+//            throw new RuntimeException("User is not approved or status is pending");
+//        }
+
 
         String jwt = jwtService.generateToken(user);
         AuthenticationResponse response = AuthenticationResponse.builder()

@@ -5,6 +5,7 @@ import et.com.gebeya.user_service.enums.Role;
 import et.com.gebeya.user_service.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -27,11 +28,18 @@ public class Restaurant extends BaseModel {
     private String OwnerName;
     @NotBlank
     private String LicenseNumber;
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurantId")
+    @NotEmpty
     private List<Address> addresses;
     @Enumerated(EnumType.STRING)
     private Status status;
-
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurantId")
+    @NotEmpty
+    private List<PhoneNumber> phoneNumber;
+    @Column(name = "profile_picture_url")
+    private String profilePictureUrl;
 
 
 

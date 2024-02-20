@@ -2,13 +2,16 @@ package et.com.gebeya.user_service.controller;
 
 import et.com.gebeya.user_service.dto.requestDto.RestaurantRequestDto;
 
+import et.com.gebeya.user_service.dto.responseDto.RestaurantResponseDto;
 import et.com.gebeya.user_service.model.Restaurant;
 import et.com.gebeya.user_service.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+
 import org.springframework.web.bind.annotation.*;
+
 
 
 
@@ -24,12 +27,10 @@ public class RestaurantController {
             RestaurantRequestDto registeredDto = restaurantService.restaurantRegistration(restaurantRequestDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(registeredDto);
         } catch (Exception e) {
+
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-
-
 
     @PutMapping("/approve/{id}")
     public ResponseEntity<Restaurant> approveRestaurant(@PathVariable Integer id) {
@@ -41,6 +42,10 @@ public class RestaurantController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 
         }
+
     }}
+
+
+
 
 

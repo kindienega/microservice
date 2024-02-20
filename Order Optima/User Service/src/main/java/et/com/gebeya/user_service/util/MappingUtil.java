@@ -1,7 +1,9 @@
 package et.com.gebeya.user_service.util;
 
 import et.com.gebeya.user_service.dto.requestDto.*;
-import et.com.gebeya.user_service.enums.Role;
+import et.com.gebeya.user_service.dto.responseDto.AddressResponseDto;
+import et.com.gebeya.user_service.dto.responseDto.PhoneNumberResponseDto;
+import et.com.gebeya.user_service.dto.responseDto.RestaurantResponseDto;
 import et.com.gebeya.user_service.model.*;
 
 import java.util.List;
@@ -21,7 +23,11 @@ public class MappingUtil {
                     .collect(Collectors.toList());
         }
         restaurant.setAddresses(addresses);
-
+        List<PhoneNumber> phoneNumbers = dto.getPhoneNumber()
+                .stream()
+                .map(MappingUtil::mapPhoneNumberDtoToModel)
+                .toList();
+        restaurant.setPhoneNumber(phoneNumbers);
         return restaurant;
     }
     public static Vendor mapVendorDtoToModel(VendorRequestDto dto){
@@ -33,6 +39,11 @@ public class MappingUtil {
                 .stream()
                 .map(MappingUtil::mapAddressDtoToModel).toList();
         vendor.setAddresses(addresses);
+        List<PhoneNumber> phoneNumbers = dto.getPhoneNumber()
+                .stream()
+                .map(MappingUtil::mapPhoneNumberDtoToModel)
+                .toList();
+        vendor.setPhoneNumber(phoneNumbers);
         return vendor;
     }
     private static PhoneNumber mapPhoneNumberDtoToModel(PhoneNumberDto dto) {
@@ -41,6 +52,11 @@ public class MappingUtil {
         phoneNumber.setIsActive(true);
         return phoneNumber;
     }
+    private static PhoneNumberResponseDto mapPhoneNumberModelToDto(PhoneNumber phoneNumber) {
+        PhoneNumberResponseDto responseDto = new PhoneNumberResponseDto();
+        responseDto.setPhoneNumber(phoneNumber.getPhoneNumber());
+        return responseDto;
+    }
     private static Address mapAddressDtoToModel(AddressRequestDto dto) {
         Address address = new Address();
         address.setEmail(dto.getEmail());
@@ -48,16 +64,34 @@ public class MappingUtil {
         address.setSubCity(dto.getSubCity());
         address.setWereda(dto.getWereda());
         address.setIsActive(true);
-
-        List<PhoneNumber> phoneNumbers = dto.getPhoneNumber()
-                .stream()
-                .map(MappingUtil::mapPhoneNumberDtoToModel)
-                .collect(Collectors.toList());
-        address.setPhoneNumber(phoneNumbers);
-
         return address;
     }
 
+private static AddressResponseDto mapAddressModelToDto(Address address){
+    AddressResponseDto responseDto = new AddressResponseDto();
+    responseDto.setEmail(address.getEmail());
+    responseDto.setCity(address.getCity());
+    responseDto.setSubCity(address.getSubCity());
+    responseDto.setWereda(address.getWereda());
+    return responseDto;
+}
 
+    public static RestaurantResponseDto mapRestaurantModelToDto(Restaurant restaurant) {
+         RestaurantResponseDto responseDto=new RestaurantResponseDto();
+         responseDto.setOwnerName(restaurant.getOwnerName());
+         responseDto.setBusinessName(responseDto.getBusinessName());
 
+        List<AddressResponseDto> addressResponseDtos=restaurant.getAddresses()
+                .stream()
+                .map(MappingUtil::mapAddressModelToDto)
+                .toList();
+        responseDto.setAddresses(addressResponseDtos);
+        List<PhoneNumberResponseDto> phoneNumbers = restaurant.getPhoneNumber()
+                .stream()
+                .map(MappingUtil::mapPhoneNumberModelToDto)
+                .toList();
+        responseDto.setPhoneNumber(phoneNumbers);
+        return responseDto;
+
+    }
 }

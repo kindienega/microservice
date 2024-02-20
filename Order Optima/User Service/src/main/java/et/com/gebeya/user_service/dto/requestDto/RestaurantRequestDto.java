@@ -24,6 +24,7 @@ public class RestaurantRequestDto {
     private List<AddressRequestDto> addresses;
     private String userName;
     private String password;
+    private List<PhoneNumberDto> phoneNumber;
 
 
 

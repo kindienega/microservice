@@ -14,5 +14,5 @@ public class AddressRequestDto {
     private String city;
     private String subCity;
     private String wereda;
-    private List<PhoneNumberDto> phoneNumber;
+   // private List<PhoneNumberDto> phoneNumber;
 }

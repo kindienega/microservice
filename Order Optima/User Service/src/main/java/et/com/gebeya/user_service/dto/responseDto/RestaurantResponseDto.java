@@ -1,6 +1,7 @@
 package et.com.gebeya.user_service.dto.responseDto;
 
 import et.com.gebeya.user_service.dto.requestDto.AddressRequestDto;
+import et.com.gebeya.user_service.dto.requestDto.PhoneNumberDto;
 import lombok.*;
 
 import java.util.List;
@@ -9,11 +10,10 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @ToString
-public class RestaurantResonseDto {
+public class RestaurantResponseDto {
     private String BusinessName;
     private String OwnerName;
     private String LicenseNumber;
-    private List<AddressRequestDto> addresses;
-    private String userName;
-    private String password;
+    private List<AddressResponseDto> addresses;
+    private List<PhoneNumberResponseDto> phoneNumber;
 }

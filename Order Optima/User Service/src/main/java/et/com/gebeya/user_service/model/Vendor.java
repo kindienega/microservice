@@ -1,7 +1,9 @@
 package et.com.gebeya.user_service.model;
 
+import et.com.gebeya.user_service.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 import java.util.List;
@@ -24,8 +26,14 @@ public class Vendor extends BaseModel {
     private String OwnerName;
     @NotBlank
     private String LicenseNumber;
-    @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "vendorId")
+    @NotEmpty
     private List<Address> addresses;
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "vendorId")
+    @NotEmpty
+    private List<PhoneNumber> phoneNumber;
 
 
 
