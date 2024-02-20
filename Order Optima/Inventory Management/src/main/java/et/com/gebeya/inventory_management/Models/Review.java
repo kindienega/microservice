@@ -12,5 +12,4 @@ public class Review {
     private Product product;
     private Long userId;
     private int numberOutOfFive;
-
 }

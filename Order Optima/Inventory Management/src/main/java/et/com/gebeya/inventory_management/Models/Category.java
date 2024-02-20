@@ -1,10 +1,11 @@
 package et.com.gebeya.inventory_management.Models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Set;
 
 @Setter
 @Getter
@@ -17,6 +18,7 @@ public class Category {
     private String description;
     private String imageUrl;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private Set<Product> products;
+//    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+//    @JsonIgnore
+//    private Set<Product> products;
 }

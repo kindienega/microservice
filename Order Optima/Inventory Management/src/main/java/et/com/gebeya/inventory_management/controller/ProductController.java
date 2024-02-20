@@ -2,6 +2,7 @@ package et.com.gebeya.inventory_management.controller;
 
 import et.com.gebeya.inventory_management.dto.ProductDTO;
 import et.com.gebeya.inventory_management.service.listOfMethods.ProductService;
+import jakarta.annotation.PostConstruct;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,9 +33,9 @@ public class ProductController {
         }
     }
 
-    @PostMapping
-    public ProductDTO createProduct(@RequestBody ProductDTO productDTO) {
-        return productService.createProduct(productDTO);
+    @PostMapping()
+    public ProductDTO saveProduct(@RequestBody ProductDTO productDTO){
+        return productService.savedProduct(productDTO);
     }
 
     @PutMapping("/{id}")

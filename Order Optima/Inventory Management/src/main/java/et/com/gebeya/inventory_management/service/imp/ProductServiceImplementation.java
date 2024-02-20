@@ -7,7 +7,6 @@ import et.com.gebeya.inventory_management.repos.CategoryRepository;
 import et.com.gebeya.inventory_management.repos.ProductRepository;
 import et.com.gebeya.inventory_management.service.listOfMethods.ProductService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,18 +32,16 @@ public class ProductServiceImplementation implements ProductService {
             return convertToDTO(product);
         }
 
-        @Override
-        public ProductDTO createProduct(ProductDTO productDTO) {
+    @Override
+    public ProductDTO savedProduct(ProductDTO productDTO) {
             Product product = convertToEntity(productDTO);
-            Product savedProduct = productRepository.save(product);
-            return convertToDTO(savedProduct);
-        }
-        public ProductDTO saveProduct(ProductDTO productDTO) {
-            Product product = convertToEntity(productDTO);
-            Category category = categoryRepository.findById(productDTO.getCategoryId())
+            Category category = categoryRepository.findById(productDTO.getCategory().getId())
                     .orElseGet(() -> {
                         Category newCategory = new Category();
-                        newCategory.setName(String.valueOf(productDTO.getCategoryId()));
+                        newCategory.setName(String.valueOf(productDTO.getCategory().getName()));
+                        newCategory.setId(productDTO.getCategory().getId());
+                        newCategory.setDescription(String.valueOf(productDTO.getCategory().getDescription()));
+                        newCategory.setImageUrl(String.valueOf(productDTO.getCategory().getImageUrl()));
                         return categoryRepository.save(newCategory);
                     });
             product.setCategory(category);
@@ -68,19 +65,28 @@ public class ProductServiceImplementation implements ProductService {
 
         private ProductDTO convertToDTO(Product product) {
             ProductDTO dto = new ProductDTO();
-            dto.setId(product.getId());
+            //dto.setId(product.getId());
             dto.setName(product.getName());
             dto.setDescription(product.getDescription());
             dto.setPrice(product.getPrice());
+            dto.setDiscount(product.getDiscount());
+            dto.setProductDetail(product.getProductDetail());
+            dto.setQuantity(product.getQuantity());
+            dto.setImageUrl(product.getImageUrl());
+            dto.setCategory(product.getCategory());
             return dto;
         }
 
         private Product convertToEntity(ProductDTO dto) {
             Product product = new Product();
-            product.setId(dto.getId());
             product.setName(dto.getName());
             product.setDescription(dto.getDescription());
             product.setPrice(dto.getPrice());
+            product.setDiscount(dto.getDiscount());
+            product.setProductDetail(dto.getProductDetail());
+            product.setQuantity(dto.getQuantity());
+            product.setCategory(dto.getCategory());
+            product.setImageUrl(dto.getImageUrl());
             return product;
         }
 
@@ -88,5 +94,10 @@ public class ProductServiceImplementation implements ProductService {
             product.setName(dto.getName());
             product.setDescription(dto.getDescription());
             product.setPrice(dto.getPrice());
+            product.setProductDetail(dto.getProductDetail());
+            product.setDiscount(dto.getDiscount());
+            product.setImageUrl(dto.getImageUrl());
+            product.setQuantity(dto.getQuantity());
+            product.setCategory(dto.getCategory());
         }
 }

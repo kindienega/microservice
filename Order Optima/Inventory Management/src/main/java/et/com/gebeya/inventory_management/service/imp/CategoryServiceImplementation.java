@@ -52,6 +52,7 @@ public class CategoryServiceImplementation implements CategoryService {
     }
     private CategoryDTO convertToDTO(Category category) {
         CategoryDTO dto = new CategoryDTO();
+        dto.setId(category.getId());
         dto.setName(category.getName());
         dto.setDescription(category.getDescription());
         dto.setImageUrl(category.getImageUrl());
@@ -59,6 +60,7 @@ public class CategoryServiceImplementation implements CategoryService {
     }
     private Category convertToEntity(CategoryDTO categoryDTO){
         Category category = new Category();
+        category.setId(categoryDTO.getId());
         category.setName(categoryDTO.getName());
         category.setDescription(categoryDTO.getDescription());
         category.setImageUrl(categoryDTO.getImageUrl());

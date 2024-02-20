@@ -1,8 +1,10 @@
 package et.com.gebeya.inventory_management.Models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Digits;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 
@@ -20,6 +22,8 @@ public class Product {
     private String Description;
     private String productDetail;
     private String imageUrl;
+    private String discount;
+    //private MultipartFile photo;
     @ManyToOne
     @JoinColumn(name = "categoryId", nullable = true)
     private Category category;
@@ -27,6 +31,6 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private Set<Review> reviews;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private Set<Discount> discounts;
+//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+//    private Set<Discount> discounts;
 }

@@ -7,9 +7,9 @@ public class Discount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "productId", nullable = false)
-    private Product product;
-    private double discountPercent;
+//    @ManyToOne
+//    @JoinColumn(name = "productId", nullable = false)
+//    private Product product;
+    private String discountPercent;
 
 }
