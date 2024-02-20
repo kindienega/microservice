@@ -18,9 +18,9 @@
     <modules>
         <module>Service Discovery</module>
         <module>Auth Service</module>
-        <!-- <module>User Service</module> -->
-        <!-- <module>Order Service</module> -->
-        <!-- <module>Inventory Management</module> -->
+        <module>User Service</module> 
+         <module>Order Service</module> 
+        <module>Inventory Management</module>
         <!-- <module>Api Gateway</module> -->
     </modules>
 
@@ -59,23 +59,7 @@
                     </excludes>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>com.google.cloud.tools</groupId>
-                <artifactId>jib-maven-plugin</artifactId>
-                <version>3.4.0</version>
-                <configuration>
-                    <from>
-                        <auth>
-                            <username>sondawitmekonnen</username>
-                            <password>@son1dawitmekonnen</password>
-                        </auth>
-                        <image>eclipse-temurin:17-jre-jammy</image>
-                    </from>
-                    <to>
-                        <image>${project.artifactId}:1.0</image>
-                    </to>
-                </configuration>
-            </plugin>
+           
         </plugins>
     </build>
 
