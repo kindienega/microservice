@@ -1,128 +1,133 @@
+workflow:
+  rules:
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+    when: never
+  - if: $CI_COMMIT_BRANCH
+
 stages:
-  - build
-  - tag
-  - push
-
-# services:
-#   - docker:dind
-
-# image: maven
+- generate-artifact
+- test
+- build
+- update-manifests
 
 variables:
-  COMMIT: ${CI_COMMIT_SHORT_ID}
-  DOCKER_USER: '${DOCKER_USER_NAME}' # Assuming environment variable defined in GitLab
-  DOCKER_PASS: '${DOCKER_PASSWORD}' # Assuming environment variable defined in GitLab
+  APP_NAME: "backend-service-"
+  DOCKER_IMAGE: ""
+  DOCKER_FILE_PATH: ""
+  MANIFEST_STAGING_PATH: ""
+  COMMIT_MESSAGE: ""
 
-build:
-  stage: build
+.docker_build:
   image: docker:24.0.7
+  stage: build
+  before_script:
+  - docker login -u $DOCKER_USER_NAME -p $DOCKER_PASSWORD
   script:
-    - apk add maven
-    - bash <(curl -s https://codecov.io/bash)
-  only:
-    - ci-branch
+  - docker buildx build -t $DOCKER_IMAGE  -f $DOCKER_FILE_PATH/Dockerfile   $DOCKER_FILE_PATH/
+  - docker push $DOCKER_IMAGE
 
-tag:
-  stage: tag
+
+.update_manifest:
+  stage: update-manifests
+  variables:
+    MANIFEST_GIT_REPO: https://$USERNAME:$PAT_TOKEN@git.gebeya.training/order-optima/k8s-manifests.git
+
+  before_script:
+  - apk add git
+  - git clone $MANIFEST_GIT_REPO
+  - git config --global user.name "$GITLAB_USER_NAME"
+  - git config --global user.email "$GITLAB_USER_EMAIL"
   script:
-    - |
-      export TAG=
-      if [[ "$CI_COMMIT_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-        TAG=$CI_COMMIT_TAG
-      elif [[ "$CI_BRANCH_NAME" == "ci-branch" ]]; then
-        TAG="latest"
-      else
-        TAG=$CI_BRANCH_NAME
-      fi
-  only:
-    - ci-branch
+  - cd k8s-manifests
+  - git remote set-url origin --push $MANIFEST_GIT_REPO
+  - |
+    sed -i "s#image:.*#image: ${DOCKER_IMAGE}#g" ./$MANIFEST_STAGING_PATH
+  - git stage ./$MANIFEST_STAGING_PATH
+  - git commit -m "$COMMIT_MESSAGE [skip-ci]"
+  - git push origin HEAD:$CI_COMMIT_REF_NAME
 
-push:
-  stage: push
-  script:
-    - |
-      export CONFIG=sondawitmekonnen/piggymetrics-config
-      docker build -t $CONFIG:$COMMIT ./"Auth Service"
-      docker tag $CONFIG:$COMMIT $CONFIG:$TAG
-      docker push $CONFIG
-
-  dependencies:
-    - build
-  only:
-    - ci-branch
-
-
-# workflow:
-#   rules:
-#     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-#     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
-#       when: never
-#     - if: $CI_COMMIT_BRANCH
-
-# stages:
-#   - test
-#   - build
-#   - update-manifests
-
-# variables:
-#   IMAGE_SLUG: ""
-#   DOCKER_IMAGE: ""
-#   DOCKER_FILE_PATH: ""
-#   MANIFEST_STAGING_PATH: ""
-#   COMMIT_MESSAGE: ""
-
-# .docker_build:
-#   image: docker:24.0.7
-#   stage: build
-#   before_script:
-#     - apk add  maven
-#   script:
-#     - cd "Order Optima"/"$DOCKER_FILE_PATH"
-#     - mvn compile com.google.cloud.tools:jib-maven-plugin:3.4.0:dockerBuild
-#     - docker login -u $DOCKER_USER_NAME -p $DOCKER_PASSWORD
-#     - docker push $IMAGE_SLUG
-
-
-# .update_manifest:
-#     stage: update-manifests
-#     variables:
-#         MANIFEST_GIT_REPO: https://$USERNAME:$PAT_TOKEN@git.gebeya.training/order-optima/k8s-manifests.git
-
-#     before_script:
-#         - apk add git
-#         - git clone $MANIFEST_GIT_REPO
-#         - git config --global user.name "$GITLAB_USER_NAME"
-#         - git config --global user.email "$GITLAB_USER_EMAIL"
-#     script:
-#         - cd k8s-manifests
-#         - git remote set-url origin --push $MANIFEST_GIT_REPO
-#         - |
-#             sed -i "s#image:.*#image: ${DOCKER_IMAGE}#g" ./$MANIFEST_STAGING_PATH
-#         - git stage ./$MANIFEST_STAGING_PATH
-#         - git commit -m "$COMMIT_MESSAGE [skip-ci]"
-#         - git push origin HEAD:$CI_COMMIT_REF_NAME
-
-# test_job:
-#   image: busybox
-#   before_script:
-#     - sleep 10
-#   script:
-#     - echo "this is mocked test"
+generate_artifact:
+  stage: generate-artifact
+  image: maven:3.6.3
+  before_script:
+    - chmod +x build.sh
+  script: 
+    - ./build.sh
   
+test_job:
+  image: busybox
+  before_script:
+  - sleep 10
+  script:
+  - echo "this is mocked test"
 
-# build_service_discovery:
-#   extends: .docker_build
-#   stage: build
-#   variables:
-#     DOCKER_FILE_PATH: "Service Discovery"
-#     IMAGE_SLUG: "service-discovery:1.0"
-#     DOCKER_IMAGE: $DOCKER_USER_NAME/${CI_PROJECT_NAME}"-"${IMAGE_SLUG}:$CI_COMMIT_SHA
+build_service_discovery:
+  extends: .docker_build
+  stage: build
+  variables:
+    DOCKER_FILE_PATH: "ServiceDiscovery"
+    IMAGE_PATH: "servicediscovery-"
+    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
-# build_auth_managment:
-#   extends: .docker_build
-#   stage: build
-#   variables:
-#     IMAGE_SLUG: "auth-service:1.0"
-#     DOCKER_FILE_PATH: "Auth Service"
-#     DOCKER_IMAGE: $DOCKER_USER_NAME/${CI_PROJECT_NAME}"-"${IMAGE_SLUG}:$CI_COMMIT_SHA
+build_auth_service:
+  extends: .docker_build
+  stage: build
+  variables:
+    DOCKER_FILE_PATH: "AuthService"
+    IMAGE_PATH: "authservice-"
+    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
+build_inventory_managment:
+  extends: .docker_build
+  stage: build
+  variables:
+    DOCKER_FILE_PATH: "InventoryManagement"
+    IMAGE_PATH: "inventorymanagement-"
+    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
+
+build_order_managment:
+  extends: .docker_build
+  stage: build
+  variables:
+    DOCKER_FILE_PATH: "OrderManagement"
+    IMAGE_PATH: "ordermanagement-"
+    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
+
+update_order_managment_manifest:
+  extends: .update_manifest
+  stage: update-manifests
+  variables:
+    MANIFEST_STAGING_PATH: "order-management/deployment.yaml"
+    COMMIT_MESSAGE: "update order  managmanet image"
+    IMAGE_PATH: "ordermanagement-"
+    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
+
+
+update_inventory_managment_manifest:
+  extends: .update_manifest
+  stage: update-manifests
+  variables:
+    MANIFEST_STAGING_PATH: "inventory-management/deployment.yaml"
+    COMMIT_MESSAGE: "update order  inventory image"
+    IMAGE_PATH: "inventorymanagement-"
+    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
+
+update_service_discovery_manifest:
+  extends: .update_manifest
+  stage: update-manifests
+  variables:
+    MANIFEST_STAGING_PATH: "service-discovery/deployment.yaml"
+    COMMIT_MESSAGE: "update service managmanet image"
+    IMAGE_PATH: "servicediscovery-"
+    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
+
+update_auth_service-manifest:
+  extends: .update_manifest
+  stage: update-manifests
+  variables:
+    MANIFEST_STAGING_PATH: "auth-service/deployment.yaml"
+    COMMIT_MESSAGE: "update auth service image"
+
+    IMAGE_PATH: "authservice-"
+    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
