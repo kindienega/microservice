@@ -2,7 +2,7 @@ package et.com.gebeya.user_service.controller;
 
 import et.com.gebeya.user_service.dto.requestDto.RestaurantRequestDto;
 
-import et.com.gebeya.user_service.dto.responseDto.RestaurantResponseDto;
+
 import et.com.gebeya.user_service.model.Restaurant;
 import et.com.gebeya.user_service.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +11,7 @@ import org.springframework.http.ResponseEntity;
 
 
 import org.springframework.web.bind.annotation.*;
-
-
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -22,9 +21,9 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
 
     @PostMapping("/register")
-    public ResponseEntity<RestaurantRequestDto> registerRestaurant(@RequestBody RestaurantRequestDto restaurantRequestDto) {
+    public ResponseEntity<RestaurantRequestDto> registerRestaurant(@RequestBody RestaurantRequestDto restaurantRequestDto, @RequestParam("imageFile")MultipartFile imageFile) {
         try {
-            RestaurantRequestDto registeredDto = restaurantService.restaurantRegistration(restaurantRequestDto);
+            RestaurantRequestDto registeredDto = restaurantService.restaurantRegistration(restaurantRequestDto,imageFile);
             return ResponseEntity.status(HttpStatus.CREATED).body(registeredDto);
         } catch (Exception e) {
 
