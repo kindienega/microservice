@@ -3,7 +3,7 @@
 # Navigate to the parent directory of your multi-module project
 
 # Build each module individually
-modules=("ApiGateway" "AuthService" "InventoryManagement" "OrderService" "ServiceDiscovery")
+modules=("Api_Gateway" "Auth-Service" "Inventory_Management" "Order_Service" "Service-Discovery" "User-Service")
 
 for module in "${modules[@]}"; do
     echo "Building $module..."

@@ -21,7 +21,7 @@ services:
 
   # Auth service
   api-service:
-    build: ./ApiGateway
+    build: ./Api_Gateway
     restart: always
     depends_on:
       - service-discovery 
@@ -30,7 +30,7 @@ services:
     networks:
       - orderoptima-network
   auth-service:
-    build: ./AuthService
+    build: ./Auth-Service
     restart: always
     depends_on:
       - postgres 
@@ -46,7 +46,7 @@ services:
       - orderoptima-network
   # Service discovery
   service-discovery:
-    build: ./ServiceDiscovery
+    build: ./Service-Discovery
     restart: always
     ports:
       - "8761:8761" 
@@ -55,7 +55,7 @@ services:
 
   # User service
   user-service:
-    build: ./UserService
+    build: ./User_Service
     restart: always
     depends_on:
       - service-discovery  
@@ -64,7 +64,7 @@ services:
     networks:
       - orderoptima-network
   order-service:
-    build: ./OrderService
+    build: ./Order_Service
     restart: always
     depends_on:
       - service-discovery  
@@ -73,7 +73,7 @@ services:
     networks:
       - orderoptima-network    
   inventory-managment:
-    build: ./InventoryManagement
+    build: ./Inventory_Management
     restart: always
     depends_on:
       - service-discovery  

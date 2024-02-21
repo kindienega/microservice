@@ -4,10 +4,16 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
+<<<<<<<< HEAD:Order Optima/UserService/src/main/resources/application.yml
     # url: jdbc:postgresql://localhost:5432/orderoptima
     url: jdbc:postgresql://postgres:5432/orderoptima
     username: postgres
     password: Kill
+========
+    url: jdbc:postgresql://localhost:5432/orderoptima
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+>>>>>>>> main:Order Optima/User_Service/src/main/resources/application.yml
 
   jpa:
     hibernate:
