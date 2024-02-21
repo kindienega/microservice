@@ -16,12 +16,12 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>Service Discovery</module>
-        <module>Auth Service</module>
-        <module>User Service</module>
-        <module>Order Service</module>
-        <module>Inventory Management</module>
-        <module>Api Gateway</module>
+        <module>Service-Discovery</module>
+        <module>Auth-Service</module>
+        <module>User_Service</module>
+        <module>Order_Service</module>
+        <module>Inventory_Management</module>
+        <module>Api_Gateway</module>
 
 
     </modules>

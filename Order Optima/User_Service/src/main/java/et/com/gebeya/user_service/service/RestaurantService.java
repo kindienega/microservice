@@ -17,6 +17,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -24,12 +25,15 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CloudinaryService cloudinaryService;
     @Transactional
-    public RestaurantRequestDto restaurantRegistration(RestaurantRequestDto restaurantRequestDto) {
+    public RestaurantRequestDto restaurantRegistration(RestaurantRequestDto restaurantRequestDto, MultipartFile imageFile) {
         try {
+            String imageUrl=cloudinaryService.uploadImage(imageFile);
             Restaurant restaurant = MappingUtil.mapRestaurantDtoToModel(restaurantRequestDto);
             restaurant.setStatus(Status.PENDING);
             restaurant.setIsActive(true);
+            restaurant.setProfilePictureUrl(imageUrl);
             restaurant = restaurantRepository.save(restaurant);
 
             Users users = Users.builder()
