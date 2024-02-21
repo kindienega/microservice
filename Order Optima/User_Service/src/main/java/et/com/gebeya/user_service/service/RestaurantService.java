@@ -25,15 +25,15 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
-    private final CloudinaryService cloudinaryService;
+    // private final CloudinaryService cloudinaryService;
     @Transactional
-    public RestaurantRequestDto restaurantRegistration(RestaurantRequestDto restaurantRequestDto, MultipartFile imageFile) {
+    public RestaurantRequestDto restaurantRegistration(RestaurantRequestDto restaurantRequestDto) {
         try {
-            String imageUrl=cloudinaryService.uploadImage(imageFile);
+            // String imageUrl=cloudinaryService.uploadImage(imageFile);
             Restaurant restaurant = MappingUtil.mapRestaurantDtoToModel(restaurantRequestDto);
             restaurant.setStatus(Status.PENDING);
             restaurant.setIsActive(true);
-            restaurant.setProfilePictureUrl(imageUrl);
+            // restaurant.setProfilePictureUrl(imageUrl);
             restaurant = restaurantRepository.save(restaurant);
 
             Users users = Users.builder()
