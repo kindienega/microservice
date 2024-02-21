@@ -21,7 +21,7 @@ services:
 
   # Auth service
   api-service:
-    build: ./Api_Gateway
+    image: sondawitmekonnen/api-service:latest
     restart: always
     depends_on:
       - service-discovery 
@@ -30,7 +30,7 @@ services:
     networks:
       - orderoptima-network
   auth-service:
-    build: ./Auth-Service
+    image: sondawitmekonnen/auth-service:latest
     restart: always
     depends_on:
       - postgres 
@@ -46,7 +46,7 @@ services:
       - orderoptima-network
   # Service discovery
   service-discovery:
-    build: ./Service-Discovery
+    image: sondawitmekonnen/service-discovery:latest
     restart: always
     ports:
       - "8761:8761" 
@@ -55,7 +55,7 @@ services:
 
   # User service
   user-service:
-    build: ./User_Service
+    image: sondawitmekonnen/user-service:latest
     restart: always
     depends_on:
       - service-discovery  
@@ -64,7 +64,7 @@ services:
     networks:
       - orderoptima-network
   order-service:
-    build: ./Order_Service
+    image: sondawitmekonnen/order-service:latest
     restart: always
     depends_on:
       - service-discovery  
@@ -73,7 +73,7 @@ services:
     networks:
       - orderoptima-network    
   inventory-managment:
-    build: ./Inventory_Management
+    image: sondawitmekonnen/inventory-service:latest
     restart: always
     depends_on:
       - service-discovery  
