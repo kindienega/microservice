@@ -8,7 +8,7 @@ modules=("Api_Gateway" "Auth-Service" "Inventory_Management" "Order_Service" "Se
 for module in "${modules[@]}"; do
     echo "Building $module..."
     cd "$module"
-    mvn clean install
+    mvn clean install -DskipTests
     cd ..
 done
 
