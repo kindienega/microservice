@@ -30,3 +30,7 @@ management:
   tracing:
     sampling:
       probability: 1.0
+
+token:
+  signing:
+    key: RDhENTBiMVdCeGVSWU8xUTNTQmFXY3hnM2pYZ0IyaXFiYTh3cXRQd3VvY2REVUdzdW82c1M5elEycmN5ZWVIMg==
