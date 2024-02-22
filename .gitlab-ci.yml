@@ -6,15 +6,13 @@ workflow:
   - if: $CI_COMMIT_BRANCH
 
 stages:
-- generate-artifact
-- test
 - build
 - update-manifests
 
 variables:
   APP_NAME: "backend-service-"
   DOCKER_IMAGE: ""
-  DOCKER_FILE_PATH: ""
+  DOCKER_FILE_NAME: ""
   MANIFEST_STAGING_PATH: ""
   COMMIT_MESSAGE: ""
 
@@ -24,7 +22,7 @@ variables:
   before_script:
   - docker login -u $DOCKER_USER_NAME -p $DOCKER_PASSWORD
   script:
-  - docker buildx build -t $DOCKER_IMAGE  -f $DOCKER_FILE_PATH/Dockerfile   $DOCKER_FILE_PATH/
+  - docker  build -t $DOCKER_IMAGE  -f $DOCKER_FILE_NAME .
   - docker push $DOCKER_IMAGE
 
 
@@ -47,26 +45,13 @@ variables:
   - git commit -m "$COMMIT_MESSAGE [skip-ci]"
   - git push origin HEAD:$CI_COMMIT_REF_NAME
 
-generate_artifact:
-  stage: generate-artifact
-  image: maven:3.6.3
-  before_script:
-    - chmod +x build.sh
-  script: 
-    - ./build.sh
-  
-test_job:
-  image: busybox
-  before_script:
-  - sleep 10
-  script:
-  - echo "this is mocked test"
+
 
 build_service_discovery:
   extends: .docker_build
   stage: build
   variables:
-    DOCKER_FILE_PATH: "ServiceDiscovery"
+    DOCKER_FILE_NAME: "Dokcerfile.discovery"
     IMAGE_PATH: "servicediscovery-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
@@ -74,7 +59,7 @@ build_auth_service:
   extends: .docker_build
   stage: build
   variables:
-    DOCKER_FILE_PATH: "AuthService"
+    DOCKER_FILE_NAME: "Dokcerfile.auth"
     IMAGE_PATH: "authservice-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
@@ -82,7 +67,7 @@ build_inventory_managment:
   extends: .docker_build
   stage: build
   variables:
-    DOCKER_FILE_PATH: "InventoryManagement"
+    DOCKER_FILE_NAME: "Dokcerfile.inventory"
     IMAGE_PATH: "inventorymanagement-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
@@ -90,7 +75,7 @@ build_order_managment:
   extends: .docker_build
   stage: build
   variables:
-    DOCKER_FILE_PATH: "OrderManagement"
+    DOCKER_FILE_NAME: "Dokcerfile.order"
     IMAGE_PATH: "ordermanagement-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 

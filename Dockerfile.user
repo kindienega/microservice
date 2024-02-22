@@ -1,0 +1,23 @@
+
+FROM maven:3.8.4-openjdk-17-slim AS build
+
+WORKDIR /app
+
+COPY pom.xml .
+COPY user-service/pom.xml ./user-service/
+
+COPY user-service/src ./user-service/src
+
+
+RUN mvn clean install -f user-service/pom.xml -DskipTests
+
+
+FROM openjdk:17-jdk-alpine
+
+
+WORKDIR /app
+
+
+COPY --from=build /app/user-service/target/user-service.jar ./user-service.jar
+
+CMD ["java", "-jar", "user-service.jar"]

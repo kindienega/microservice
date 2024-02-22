@@ -1,0 +1,25 @@
+
+FROM maven:3.8.4-openjdk-17-slim AS build
+
+WORKDIR /app
+
+COPY pom.xml .
+COPY auth-service/pom.xml ./auth-service/
+
+
+COPY auth-service/src ./auth-service/src
+
+
+RUN mvn clean install -f auth-service/pom.xml -DskipTests
+
+
+FROM openjdk:17-jdk-alpine
+
+
+WORKDIR /app
+
+
+COPY --from=build /app/auth-service/target/auth-service.jar ./auth-service.jar
+
+
+CMD ["java", "-jar", "auth-service.jar"]
