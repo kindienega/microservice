@@ -51,7 +51,7 @@ build_service_discovery:
   extends: .docker_build
   stage: build
   variables:
-    DOCKER_FILE_NAME: "Dokcerfile.discovery"
+    DOCKER_FILE_NAME: "Dockerfile.discovery"
     IMAGE_PATH: "servicediscovery-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
@@ -59,7 +59,7 @@ build_auth_service:
   extends: .docker_build
   stage: build
   variables:
-    DOCKER_FILE_NAME: "Dokcerfile.auth"
+    DOCKER_FILE_NAME: "Dockerfile.auth"
     IMAGE_PATH: "authservice-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
@@ -67,7 +67,7 @@ build_inventory_managment:
   extends: .docker_build
   stage: build
   variables:
-    DOCKER_FILE_NAME: "Dokcerfile.inventory"
+    DOCKER_FILE_NAME: "Dockerfile.inventory"
     IMAGE_PATH: "inventorymanagement-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
@@ -75,7 +75,7 @@ build_order_managment:
   extends: .docker_build
   stage: build
   variables:
-    DOCKER_FILE_NAME: "Dokcerfile.order"
+    DOCKER_FILE_NAME: "Dockerfile.order"
     IMAGE_PATH: "ordermanagement-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
