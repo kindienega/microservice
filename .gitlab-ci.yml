@@ -16,6 +16,8 @@ variables:
   MANIFEST_STAGING_PATH: ""
   COMMIT_MESSAGE: ""
 
+# hidden jobs that can be reuse over other jobs 
+
 .docker_build:
   image: docker:24.0.7
   stage: build
@@ -46,6 +48,7 @@ variables:
   - git push origin HEAD:$CI_COMMIT_REF_NAME
 
 
+# build jobs
 
 build_apigateway_service:
   extends: .docker_build
@@ -86,6 +89,25 @@ build_order_service:
     IMAGE_PATH: "ordermanagement-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
+# update k8s manifest jobs 
+
+update_apigateway_manifest:
+  extends: .update_manifest
+  stage: update-manifests
+  variables:
+    MANIFEST_STAGING_PATH: "api-gateway/deployment.yaml"
+    COMMIT_MESSAGE: "update service managmanet image"
+    IMAGE_PATH: "apiservice-"
+    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
+update_service_discovery_manifest:
+  extends: .update_manifest
+  stage: update-manifests
+  variables:
+    MANIFEST_STAGING_PATH: "service-discovery/deployment.yaml"
+    COMMIT_MESSAGE: "update service managmanet image"
+    IMAGE_PATH: "servicediscovery-"
+    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
+
 update_order_service_manifest:
   extends: .update_manifest
   stage: update-manifests
@@ -105,14 +127,7 @@ update_inventory_service_manifest:
     IMAGE_PATH: "inventorymanagement-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
-update_service_discovery_manifest:
-  extends: .update_manifest
-  stage: update-manifests
-  variables:
-    MANIFEST_STAGING_PATH: "service-discovery/deployment.yaml"
-    COMMIT_MESSAGE: "update service managmanet image"
-    IMAGE_PATH: "servicediscovery-"
-    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
+
 
 update_auth_service-manifest:
   extends: .update_manifest
