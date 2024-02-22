@@ -21,7 +21,9 @@ services:
 
   # Auth service
   api-service:
-    build: ./Api_Gateway
+    build: 
+      context: .
+      dockerfile: Dockerfile.api
     restart: always
     depends_on:
       - service-discovery 
@@ -30,13 +32,13 @@ services:
     networks:
       - orderoptima-network
   auth-service:
-    build: ./Auth-Service
+    build: 
+      context: .
+      dockerfile: Dockerfile.auth
     restart: always
     depends_on:
       - postgres 
       - service-discovery 
-    # ports:
-    #   - "8080:8080" 
     environment:
       POSTGRES_HOST: postgres  
       POSTGRES_USER: your_username
@@ -46,7 +48,9 @@ services:
       - orderoptima-network
   # Service discovery
   service-discovery:
-    build: ./Service-Discovery
+    build: 
+      context: .
+      dockerfile: Dockerfile.discovery
     restart: always
     ports:
       - "8761:8761" 
@@ -55,7 +59,9 @@ services:
 
   # User service
   user-service:
-    build: ./User_Service
+    build: 
+      context: .
+      dockerfile: Dockerfile.user
     restart: always
     depends_on:
       - service-discovery  
@@ -64,7 +70,9 @@ services:
     networks:
       - orderoptima-network
   order-service:
-    build: ./Order_Service
+    build: 
+      context: .
+      dockerfile: Dockerfile.order
     restart: always
     depends_on:
       - service-discovery  
@@ -73,7 +81,9 @@ services:
     networks:
       - orderoptima-network    
   inventory-managment:
-    build: ./Inventory_Management
+    build: 
+      context: .
+      dockerfile: Dockerfile.inventory
     restart: always
     depends_on:
       - service-discovery  
