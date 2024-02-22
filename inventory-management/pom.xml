@@ -8,7 +8,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <groupId>et.com.gebeya</groupId>
-    <artifactId>inventory_management</artifactId>
+    <artifactId>inventory-management</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>inventory management</name>
     <description>inventory management</description>
