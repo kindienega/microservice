@@ -47,6 +47,13 @@ variables:
 
 
 
+build_apigateway_service:
+  extends: .docker_build
+  stage: build
+  variables:
+    DOCKER_FILE_NAME: "Dockerfile.api"
+    IMAGE_PATH: "apiservice-"
+    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 build_service_discovery:
   extends: .docker_build
   stage: build
@@ -63,7 +70,7 @@ build_auth_service:
     IMAGE_PATH: "authservice-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
-build_inventory_managment:
+build_inventory_service:
   extends: .docker_build
   stage: build
   variables:
@@ -71,7 +78,7 @@ build_inventory_managment:
     IMAGE_PATH: "inventorymanagement-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
-build_order_managment:
+build_order_service:
   extends: .docker_build
   stage: build
   variables:
@@ -79,7 +86,7 @@ build_order_managment:
     IMAGE_PATH: "ordermanagement-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
-update_order_managment_manifest:
+update_order_service_manifest:
   extends: .update_manifest
   stage: update-manifests
   variables:
@@ -89,7 +96,7 @@ update_order_managment_manifest:
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
 
-update_inventory_managment_manifest:
+update_inventory_service_manifest:
   extends: .update_manifest
   stage: update-manifests
   variables:
