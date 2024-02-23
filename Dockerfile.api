@@ -26,4 +26,4 @@ COPY --from=build /app/api-gateway/target/api-gateway-0.0.1-SNAPSHOT.jar  ./api-
 
 EXPOSE 8181
 
-CMD ["java", "-jar", "api-gateway-0.0.1-SNAPSHOT.jar "]
+CMD ["java", "-jar", "api-gateway-0.0.1-SNAPSHOT.jar"]
