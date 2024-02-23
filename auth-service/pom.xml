@@ -93,23 +93,9 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <plugin>
-                <groupId>com.google.cloud.tools</groupId>
-                <artifactId>jib-maven-plugin</artifactId>
-                <version>3.4.0</version>
-                <configuration>
-                    <from>
-                        <auth>
-                            <username>sondawitmekonnen</username>
-                            <password>@son1dawitmekonnen</password>
-                        </auth>
-                        <image>eclipse-temurin:17-jre-jammy</image>
-                    </from>
-                    <to>
-                        <image>${project.artifactId}:1.0</image>
-                    </to>
-                </configuration>
-            </plugin>
+
+
+
         </plugins>
     </build>
 

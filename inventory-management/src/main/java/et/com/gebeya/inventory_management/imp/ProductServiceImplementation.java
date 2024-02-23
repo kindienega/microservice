@@ -1,4 +1,4 @@
-package et.com.gebeya.inventory_management.service.imp;
+package et.com.gebeya.inventory_management.imp;
 
 import et.com.gebeya.inventory_management.Models.Category;
 import et.com.gebeya.inventory_management.Models.Product;
