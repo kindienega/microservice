@@ -4,15 +4,10 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    # url: jdbc:postgresql://localhost:5432/orderoptima
-    url: jdbc:postgresql://postgres:5432/orderoptima
-    username: postgres
-    password: Kill
-# ========
-#     url: jdbc:postgresql://localhost:5432/orderoptima
-#     username: ${DB_USERNAME}
-#     password: ${DB_PASSWORD}
-# >>>>>>>> main:Order Optima/User_Service/src/main/resources/application.yml
+    url: jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
 
   jpa:
     hibernate:
@@ -27,8 +22,8 @@ spring:
 eureka:
   client:
     serviceUrl:
-      # defaultZone: http://localhost:8761/eureka
-      defaultZone : http://service-discovery:8761/eureka
+       defaultZone: http://${DISCOVERY}:8761/eureka
+
 
 server:
   port: 7000
