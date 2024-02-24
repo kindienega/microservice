@@ -152,7 +152,7 @@ update_user_service-manifest:
   extends: .update_manifest
   stage: update-manifests
   variables:
-    MANIFEST_STAGING_PATH: "auth-service/deployment.yaml"
+    MANIFEST_STAGING_PATH: "user-service/deployment.yaml"
     COMMIT_MESSAGE: "update auth service image"
 
     IMAGE_PATH: "userservice-"
