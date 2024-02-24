@@ -1,6 +1,6 @@
 spring:
   application:
-    name: Inventory-Service
+    name: inventory-managment
 
 
   datasource:
@@ -24,6 +24,8 @@ eureka:
     serviceUrl:
       # defaultZone: http://localhost:8761/eureka
       defaultZone : http://${DISCOVERY}:8761/eureka
+  instance:
+    instanceId: "${spring.application.name}:${HOSTNAME}"
 
 
 server:

@@ -1,6 +1,7 @@
 spring:
   application:
-    name: Auth-Service
+    # name: Auth-Service
+    name:  auth-service
 
 
   datasource:
@@ -23,6 +24,8 @@ eureka:
     serviceUrl:
        defaultZone: http://${DISCOVERY}:8761/eureka
 #      defaultZone : http://service-discovery:8761/eureka
+  instance:
+    instanceId: "${spring.application.name}:${HOSTNAME}"
 
 
 server:
