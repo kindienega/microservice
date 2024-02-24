@@ -78,7 +78,7 @@ build_inventory_service:
   stage: build
   variables:
     DOCKER_FILE_NAME: "Dockerfile.inventory"
-    IMAGE_PATH: "inventorymanagement-"
+    IMAGE_PATH: "inventoryservice-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
 build_order_service:
@@ -86,7 +86,15 @@ build_order_service:
   stage: build
   variables:
     DOCKER_FILE_NAME: "Dockerfile.order"
-    IMAGE_PATH: "ordermanagement-"
+    IMAGE_PATH: "orderservice-"
+    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
+
+build_user_service:
+  extends: .docker_build
+  stage: build
+  variables:
+    DOCKER_FILE_NAME: "Dockerfile.user"
+    IMAGE_PATH: "userservice-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
 # update k8s manifest jobs 
@@ -99,6 +107,7 @@ update_apigateway_manifest:
     COMMIT_MESSAGE: "update service managmanet image"
     IMAGE_PATH: "apiservice-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
+
 update_service_discovery_manifest:
   extends: .update_manifest
   stage: update-manifests
@@ -114,7 +123,7 @@ update_order_service_manifest:
   variables:
     MANIFEST_STAGING_PATH: "order-management/deployment.yaml"
     COMMIT_MESSAGE: "update order  managmanet image"
-    IMAGE_PATH: "ordermanagement-"
+    IMAGE_PATH: "orderservice-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
 
@@ -124,7 +133,7 @@ update_inventory_service_manifest:
   variables:
     MANIFEST_STAGING_PATH: "inventory-management/deployment.yaml"
     COMMIT_MESSAGE: "update order  inventory image"
-    IMAGE_PATH: "inventorymanagement-"
+    IMAGE_PATH: "inventoryservice-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
 
@@ -137,4 +146,14 @@ update_auth_service-manifest:
     COMMIT_MESSAGE: "update auth service image"
 
     IMAGE_PATH: "authservice-"
+    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
+    
+update_user_service-manifest:
+  extends: .update_manifest
+  stage: update-manifests
+  variables:
+    MANIFEST_STAGING_PATH: "auth-service/deployment.yaml"
+    COMMIT_MESSAGE: "update auth service image"
+
+    IMAGE_PATH: "userservice-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
