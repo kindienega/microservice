@@ -43,7 +43,8 @@ spring:
 eureka:
   client:
     service-url:
-       defaultZone : http://${DISCOVERY}:8761/eureka
+      #  defaultZone : http://${DISCOVERY}:8761/eureka
+       defaultZone : https://discovery-orderoptima.gebeyalearning.com
 
 
 server:
