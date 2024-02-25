@@ -24,8 +24,7 @@ eureka:
   client:
     serviceUrl:
        defaultZone: http://${DISCOVERY}:8761/eureka
-  instance:
-    instanceId: "${spring.application.name}:${HOSTNAME}"
+
 
 
 server:
