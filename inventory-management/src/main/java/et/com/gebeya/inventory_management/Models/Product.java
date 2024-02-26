@@ -1,13 +1,10 @@
 package et.com.gebeya.inventory_management.Models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Digits;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
-
 @Getter
 @Setter
 @Entity
@@ -25,12 +22,14 @@ public class Product {
     private String discount;
     //private MultipartFile photo;
     @ManyToOne
-    @JoinColumn(name = "categoryId", nullable = true)
+    @JoinColumn(name = "catId", nullable = true)
     private Category category;
+//    @ManyToOne
+//    @JoinColumn(name = "vendorId", nullable = true)
+//    private Vendor vendor;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private Set<Review> reviews;
+    //private Long categoryId;
 
-//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-//    private Set<Discount> discounts;
 }

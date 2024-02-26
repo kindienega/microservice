@@ -1,9 +1,11 @@
 package et.com.gebeya.inventory_management.service.imp;
 
 import et.com.gebeya.inventory_management.Models.Category;
+import et.com.gebeya.inventory_management.Models.Product;
 import et.com.gebeya.inventory_management.dto.CategoryDTO;
 import et.com.gebeya.inventory_management.repos.CategoryRepository;
 import et.com.gebeya.inventory_management.service.listOfMethods.CategoryService;
+import et.com.gebeya.inventory_management.utility.MappingFunctions;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,44 +13,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+
 @Service
 @AllArgsConstructor
 public class CategoryServiceImplementation implements CategoryService {
     private CategoryRepository categoryRepository;
+    private MappingFunctions mapper;
 
     @Override
     public List<CategoryDTO> listAllCategory() {
         return categoryRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public CategoryDTO getCategoryById(Long id) {
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-        return convertToDTO(category);
-    }
-
-    @Override
-    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
-        Category category = convertToEntity(categoryDTO);
-        Category savedCategory = categoryRepository.save(category);
-        return convertToDTO(savedCategory);
-    }
-
-    @Override
-    public CategoryDTO updateCategory(Long id, CategoryDTO categoryDTO) {
-        Category ifExistCategory = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(" category doest not exist"));
-        updateEntityWithDto(categoryDTO, ifExistCategory);
-        Category updatedCategory = categoryRepository.save(ifExistCategory);
-        return convertToDTO(updatedCategory);
-    }
-
-    @Override
-    public void deleteCategory(Long id) {
-        categoryRepository.deleteById(id);
     }
     private CategoryDTO convertToDTO(Category category) {
         CategoryDTO dto = new CategoryDTO();
@@ -58,18 +34,37 @@ public class CategoryServiceImplementation implements CategoryService {
         dto.setImageUrl(category.getImageUrl());
         return dto;
     }
-    private Category convertToEntity(CategoryDTO categoryDTO){
-        Category category = new Category();
-        category.setId(categoryDTO.getId());
-        category.setName(categoryDTO.getName());
-        category.setDescription(categoryDTO.getDescription());
-        category.setImageUrl(categoryDTO.getImageUrl());
-        return category;
+    @Override
+    public CategoryDTO getCategoryById(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        return mapper.convertToDTOForCategory(category);
     }
-    private void updateEntityWithDto(CategoryDTO dto, Category category) {
-        category.setName(dto.getName());
-        category.setDescription(dto.getDescription());
-        category.setImageUrl(dto.getImageUrl());
+
+    @Override
+    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
+        Category category = mapper.convertToEntityForCategory(categoryDTO);
+        Category savedCategory = categoryRepository.save(category);
+        return mapper.convertToDTOForCategory(savedCategory);
+    }
+
+    @Override
+    public CategoryDTO updateCategory(Long id, CategoryDTO categoryDTO) {
+        Category ifExistCategory = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(" category doest not exist"));
+        mapper.updateEntityWithDtoForCategory(categoryDTO, ifExistCategory);
+        Category updatedCategory = categoryRepository.save(ifExistCategory);
+        return mapper.convertToDTOForCategory(updatedCategory);
+    }
+
+    @Override
+    public void deleteCategory(Long id) {
+        categoryRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Product> getProductsUnderCategory(Long id) {
+        return null;
     }
 }
 

@@ -1,6 +1,5 @@
 package et.com.gebeya.user_service.model;
 
-import et.com.gebeya.user_service.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -34,7 +33,6 @@ public class Vendor extends BaseModel {
     @JoinColumn(name = "vendorId")
     @NotEmpty
     private List<PhoneNumber> phoneNumber;
-
 
 
 }

@@ -1,5 +1,6 @@
 package et.com.gebeya.inventory_management.service.listOfMethods;
 
+import et.com.gebeya.inventory_management.Models.Product;
 import et.com.gebeya.inventory_management.dto.CategoryDTO;
 import org.springframework.stereotype.Component;
 
@@ -11,4 +12,5 @@ public interface CategoryService {
     CategoryDTO createCategory(CategoryDTO categoryDTO);
     CategoryDTO updateCategory(Long id, CategoryDTO categoryDTO);
     void deleteCategory(Long id);
+    List<Product> getProductsUnderCategory(Long id);
 }

@@ -25,9 +25,4 @@ public class RestaurantRequestDto {
     private String userName;
     private String password;
     private List<PhoneNumberDto> phoneNumber;
-
-
-
-
-
 }

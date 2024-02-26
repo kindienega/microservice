@@ -1,9 +1,10 @@
 package et.com.gebeya.inventory_management.controller;
 
+import et.com.gebeya.inventory_management.dto.CreateProductRequest;
 import et.com.gebeya.inventory_management.dto.ProductDTO;
 import et.com.gebeya.inventory_management.service.listOfMethods.ProductService;
-import jakarta.annotation.PostConstruct;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -36,6 +37,11 @@ public class ProductController {
     @PostMapping()
     public ProductDTO saveProduct(@RequestBody ProductDTO productDTO){
         return productService.savedProduct(productDTO);
+    }
+    @PostMapping("/procate")
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody CreateProductRequest createProductRequest) {
+        ProductDTO savedProductDTO = productService.savedProductWithCategory(createProductRequest);
+        return new ResponseEntity<>(savedProductDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")

@@ -3,6 +3,9 @@ package et.com.gebeya.inventory_management.service.imp;
 //import et.com.gebeya.inventory_management.config.Cloudinary;
 import com.cloudinary.Cloudinary;
 //import et.com.gebeya.inventory_management.config.Cloudinary;
+import et.com.gebeya.inventory_management.Models.Category;
+import et.com.gebeya.inventory_management.Models.Product;
+import et.com.gebeya.inventory_management.dto.ProductDTO;
 import et.com.gebeya.inventory_management.service.listOfMethods.FileUpload;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,7 +15,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class FileUploadImpl implements FileUpload{
+public class FileUploadImpl implements FileUpload {
     private final Cloudinary cloudinary;
 
     public FileUploadImpl(Cloudinary cloudinary) {
@@ -27,4 +30,5 @@ public class FileUploadImpl implements FileUpload{
                 .get("url")
                 .toString();
     }
+
 }

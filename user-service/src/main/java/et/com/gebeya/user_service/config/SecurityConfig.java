@@ -50,6 +50,7 @@ public class SecurityConfig {
 
     protected static final String [] VENDOR_MATCHERS = {
             "/api/v1/vendor/update",
+            "/api/v1/products/**"
 
     };
 
