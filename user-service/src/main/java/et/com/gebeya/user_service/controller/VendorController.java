@@ -2,14 +2,15 @@ package et.com.gebeya.user_service.controller;
 
 import et.com.gebeya.user_service.dto.requestDto.RestaurantRequestDto;
 import et.com.gebeya.user_service.dto.requestDto.VendorRequestDto;
+import et.com.gebeya.user_service.model.Restaurant;
+import et.com.gebeya.user_service.model.Vendor;
 import et.com.gebeya.user_service.service.VendorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,8 +23,30 @@ private final VendorService vendorService;
             VendorRequestDto registeredDto = vendorService.vendorRegistration(vendorRequestDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(registeredDto);
         } catch (Exception e) {
-            // to do :Handle exceptions appropriately, log errors, return meaningful error responses
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+    }
+    @GetMapping("/get/{vendorId}")
+    public ResponseEntity<Vendor> getVendorById(@PathVariable Integer vendorId) {
+        Vendor vendor = vendorService.getVendorById(vendorId);
+        return ResponseEntity.ok(vendor);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Vendor>> getAllVendors() {
+        List<Vendor> vendors = vendorService.getAllActiveVendors();
+        return ResponseEntity.ok(vendors);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Vendor>> getVendorsByName(@RequestParam String name) {
+        List<Vendor> vendors = vendorService.getVendorsByName(name);
+        return ResponseEntity.ok(vendors);
+    }
+    @DeleteMapping("/delete/{vendorId}")
+    public ResponseEntity<String> deleteVendor(@PathVariable Integer vendorId) {
+        vendorService.deleteVendor(vendorId);
+        return ResponseEntity.ok("Vendor deleted successfully");
     }
 }

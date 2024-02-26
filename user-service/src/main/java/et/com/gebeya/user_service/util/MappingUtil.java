@@ -15,6 +15,8 @@ public class MappingUtil {
         restaurant.setBusinessName(dto.getBusinessName());
         restaurant.setOwnerName(dto.getOwnerName());
         restaurant.setLicenseNumber(dto.getLicenseNumber());
+        restaurant.setEmail(dto.getEmail());
+
         List<Address> addresses = null;
         if (dto.getAddresses() != null) {
             addresses = dto.getAddresses()
@@ -35,6 +37,7 @@ public class MappingUtil {
         vendor.setBusinessName(dto.getBusinessName());
         vendor.setOwnerName(dto.getOwnerName());
         vendor.setLicenseNumber(dto.getLicenseNumber());
+        vendor.setEmail(dto.getEmail());
         List<Address> addresses=dto.getAddresses()
                 .stream()
                 .map(MappingUtil::mapAddressDtoToModel).toList();
@@ -59,7 +62,6 @@ public class MappingUtil {
     }
     private static Address mapAddressDtoToModel(AddressRequestDto dto) {
         Address address = new Address();
-        address.setEmail(dto.getEmail());
         address.setCity(dto.getCity());
         address.setSubCity(dto.getSubCity());
         address.setWereda(dto.getWereda());
@@ -69,7 +71,6 @@ public class MappingUtil {
 
 private static AddressResponseDto mapAddressModelToDto(Address address){
     AddressResponseDto responseDto = new AddressResponseDto();
-    responseDto.setEmail(address.getEmail());
     responseDto.setCity(address.getCity());
     responseDto.setSubCity(address.getSubCity());
     responseDto.setWereda(address.getWereda());

@@ -21,6 +21,7 @@ public class RestaurantRequestDto {
     private String BusinessName;
     private String OwnerName;
     private String LicenseNumber;
+    private String email;
     private List<AddressRequestDto> addresses;
     private String userName;
     private String password;

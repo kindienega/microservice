@@ -15,10 +15,6 @@ import java.util.List;
 @Data
 public class Address extends BaseModel {
 
-
-    @Column(length = 255)
-    @Email(message = "Email is mandatory")
-    private String email;
     @Column(length = 255)
     @NotBlank(message = "City is mandatory")
     private String city;
