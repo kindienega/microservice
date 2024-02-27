@@ -17,9 +17,15 @@ public class Product {
     private int quantity;
     private Double price;
     private String Description;
-    private String productDetail;
     private String imageUrl;
     private String discount;
+    private String calories;
+    private String fat;
+    private String protein;
+    private String weight;
+    private String size;
+    private String volume;
+    private String brands;
     //private MultipartFile photo;
     @ManyToOne
     @JoinColumn(name = "catId", nullable = true)
