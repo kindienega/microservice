@@ -74,7 +74,8 @@ variables:
   - export IMAGE_NAME=${DOCKER_USER_NAME}/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
 
     # Use sed with caution, consider alternative templating tools
-  -  sed -i "s#image:.*#image: $IMAGE_NAME#g" ./$MANIFEST_STAGING_PATH
+  - |
+    sed -i "s#image:.*#image: $IMAGE_NAME#g" ./$MANIFEST_STAGING_PATH
 
   -  git stage ./$MANIFEST_STAGING_PATH
   -  git commit -m "$COMMIT_MESSAGE [skip-ci]"
