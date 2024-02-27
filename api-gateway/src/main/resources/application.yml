@@ -14,9 +14,6 @@ spring:
           filters:
             - AuthenticationFilter
 
-
-
-
         - id: auth-service
           uri: lb://auth-service
           predicates:
@@ -30,7 +27,7 @@ spring:
             - Path=/api/v1/products/**
           filters:
             - AuthenticationFilter
-            # - Path=/api/v1/category/**
+            - Path=/api/v1/category/**
             
 
 
@@ -42,12 +39,12 @@ spring:
     name: api-service
 
 eureka:
+  instance:
+    hostname: ${spring.application.name}
+    preferIpAddress: true
   client:
     service-url:
       defaultZone : http://${DISCOVERY}:8761/eureka
-      # defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
-
-
 
 
 server:

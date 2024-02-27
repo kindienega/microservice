@@ -20,6 +20,9 @@ spring:
 
 
 eureka:
+  instance:
+    hostname: ${spring.application.name}
+    preferIpAddress: true
   client:
     serviceUrl:
       defaultZone : http://${DISCOVERY}:8761/eureka
