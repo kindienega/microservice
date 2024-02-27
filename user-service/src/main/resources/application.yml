@@ -26,8 +26,8 @@ eureka:
     preferIpAddress: true
   client:
     serviceUrl:
-      #  defaultZone: http://${DISCOVERY}:8761/eureka
-       defaultZone : https://discovery-orderoptima.gebeyalearning.com
+       defaultZone: http://${DISCOVERY}:8761/eureka
+      #  defaultZone : https://discovery-orderoptima.gebeyalearning.com
 
 
 
