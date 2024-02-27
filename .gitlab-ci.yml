@@ -28,6 +28,27 @@ variables:
   - docker push $DOCKER_IMAGE
 
 
+# .update_manifest:
+#   stage: update-manifests
+#   variables:
+#     MANIFEST_GIT_REPO: https://$USERNAME:$PAT_TOKEN@git.gebeya.training/order-optima/k8s-manifests.git
+
+#   before_script:
+#   - apk add git
+#   - git clone $MANIFEST_GIT_REPO
+#   - git config --global user.name "$GITLAB_USER_NAME"
+#   - git config --global user.email "$GITLAB_USER_EMAIL"
+#   script:
+#   - cd k8s-manifests
+#   - git remote set-url origin --push $MANIFEST_GIT_REPO
+#   - |
+#     sed -i "s#image:.*#image: ${DOCKER_IMAGE}#g" ./$MANIFEST_STAGING_PATH
+#   - git stage ./$MANIFEST_STAGING_PATH
+#   - git commit -m "$COMMIT_MESSAGE [skip-ci]"
+#   - git push origin HEAD:$CI_COMMIT_REF_NAME
+
+
+
 .update_manifest:
   stage: update-manifests
   variables:
@@ -35,20 +56,29 @@ variables:
 
   before_script:
   - apk add git
-  - git clone $MANIFEST_GIT_REPO
-  - git config --global user.name "$GITLAB_USER_NAME"
-  - git config --global user.email "$GITLAB_USER_EMAIL"
+
   script:
-  - cd k8s-manifests
-  - git remote set-url origin --push $MANIFEST_GIT_REPO
+    # Attempt to clone the repository with retry logic
   - |
-    sed -i "s#image:.*#image: ${DOCKER_IMAGE}#g" ./$MANIFEST_STAGING_PATH
-  - git stage ./$MANIFEST_STAGING_PATH
-  - git commit -m "$COMMIT_MESSAGE [skip-ci]"
-  - git push origin HEAD:$CI_COMMIT_REF_NAME
+    for i in {1..3}; do
+      git clone $MANIFEST_GIT_REPO || continue
+      break
+    done
+  
+  - git config --global user.name "$GITLAB_USER_NAME"
+  -  git config --global user.email "$GITLAB_USER_EMAIL"
+  -  cd k8s-manifests
 
+    # Set image name using environment variable (replace 'IMAGE_NAME' with actual variable name)
+  - export IMAGE_NAME=${DOCKER_USER_NAME}/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
-# build jobs
+    # Use sed with caution, consider alternative templating tools
+  -  sed -i "s#image:.*#image: $IMAGE_NAME#g" ./$MANIFEST_STAGING_PATH
+
+  -  git stage ./$MANIFEST_STAGING_PATH
+  -  git commit -m "$COMMIT_MESSAGE [skip-ci]"
+  -  git push origin HEAD:$CI_COMMIT_REF_NAME
+
 
 build_apigateway_service:
   extends: .docker_build
@@ -99,14 +129,23 @@ build_user_service:
 
 # update k8s manifest jobs 
 
+# update_apigateway_manifest:
+#   extends: .update_manifest
+#   stage: update-manifests
+#   variables:
+#     MANIFEST_STAGING_PATH: "api-gateway/deployment.yaml"
+#     COMMIT_MESSAGE: "update service managmanet image"
+#     IMAGE_PATH: "apiservice-"
+#     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
+
+
 update_apigateway_manifest:
   extends: .update_manifest
   stage: update-manifests
   variables:
     MANIFEST_STAGING_PATH: "api-gateway/deployment.yaml"
-    COMMIT_MESSAGE: "update service managmanet image"
+    COMMIT_MESSAGE: "update service management image"
     IMAGE_PATH: "apiservice-"
-    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
 update_service_discovery_manifest:
   extends: .update_manifest
@@ -115,7 +154,7 @@ update_service_discovery_manifest:
     MANIFEST_STAGING_PATH: "service-discovery/deployment.yaml"
     COMMIT_MESSAGE: "update service managmanet image"
     IMAGE_PATH: "servicediscovery-"
-    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
+    # DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
 update_order_service_manifest:
   extends: .update_manifest
@@ -124,7 +163,7 @@ update_order_service_manifest:
     MANIFEST_STAGING_PATH: "order-management/deployment.yaml"
     COMMIT_MESSAGE: "update order  managmanet image"
     IMAGE_PATH: "orderservice-"
-    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
+    # DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
 
 update_inventory_service_manifest:
@@ -134,7 +173,7 @@ update_inventory_service_manifest:
     MANIFEST_STAGING_PATH: "inventory-management/deployment.yaml"
     COMMIT_MESSAGE: "update order  inventory image"
     IMAGE_PATH: "inventoryservice-"
-    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
+    # DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
 
 
 
@@ -146,7 +185,7 @@ update_auth_service-manifest:
     COMMIT_MESSAGE: "update auth service image"
 
     IMAGE_PATH: "authservice-"
-    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
+    # DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
     
 update_user_service-manifest:
   extends: .update_manifest
@@ -156,4 +195,4 @@ update_user_service-manifest:
     COMMIT_MESSAGE: "update auth service image"
 
     IMAGE_PATH: "userservice-"
-    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
+    # DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHA
