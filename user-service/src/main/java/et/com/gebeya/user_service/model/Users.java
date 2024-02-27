@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import et.com.gebeya.user_service.enums.Role;
 import et.com.gebeya.user_service.enums.Status;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -23,15 +24,16 @@ import java.util.List;
 @Builder
 public class Users extends BaseModel implements UserDetails {
     @JsonIgnoreProperties(ignoreUnknown = true)
-    @Column(name = "username")
+    @Column(name = "username",unique = true)
     private String userName;
-
     @Column(name = "password")
     private String password;
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-
     private Role role;
+    @Column(length = 255,unique = true)
+    @Email(message = "Email is mandatory")
+    private String email;
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
@@ -51,6 +53,7 @@ public class Users extends BaseModel implements UserDetails {
             users.setUserName(this.userName);
             users.setPassword(this.password);
             users.setRole(this.role);
+            users.setEmail(this.email);
             users.setStatus(this.status);
             users.setRoleId(this.roleId);
             return users;

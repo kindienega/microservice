@@ -10,14 +10,21 @@ import et.com.gebeya.user_service.model.Restaurant;
 import et.com.gebeya.user_service.model.Users;
 import et.com.gebeya.user_service.repository.RestaurantRepository;
 import et.com.gebeya.user_service.repository.UsersRepository;
+import et.com.gebeya.user_service.repository.specification.RestaurantSpecification;
 import et.com.gebeya.user_service.util.MappingUtil;
+import et.com.gebeya.user_service.util.UserUtil;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,15 +32,16 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
-    // private final CloudinaryService cloudinaryService;
+     private final CloudinaryService cloudinaryService;
+     private UserUtil userUtil;
     @Transactional
-    public RestaurantRequestDto restaurantRegistration(RestaurantRequestDto restaurantRequestDto) {
+    public RestaurantRequestDto restaurantRegistration(RestaurantRequestDto restaurantRequestDto, MultipartFile imageFile) {
         try {
-            // String imageUrl=cloudinaryService.uploadImage(imageFile);
+             String imageUrl=cloudinaryService.uploadImage(imageFile);
             Restaurant restaurant = MappingUtil.mapRestaurantDtoToModel(restaurantRequestDto);
             restaurant.setStatus(Status.PENDING);
             restaurant.setIsActive(true);
-            // restaurant.setProfilePictureUrl(imageUrl);
+            restaurant.setProfilePictureUrl(imageUrl);
             restaurant = restaurantRepository.save(restaurant);
 
             Users users = Users.builder()
@@ -41,6 +49,7 @@ public class RestaurantService {
                     .password(passwordEncoder.encode(restaurantRequestDto.getPassword()))
                     .role(Role.RESTAURANT)
                     .status(Status.PENDING)
+                    .email(restaurantRequestDto.getEmail())
                     .roleId(restaurant.getId())
                     .isActive(true)
                     .build();
@@ -52,6 +61,45 @@ public class RestaurantService {
             throw new RegistrationException("Failed to register restaurant due to data integrity violation", ex);
         } catch (Exception ex) {
             throw new RegistrationException("Failed to register restaurant", ex);
+        }
+    }
+
+    public Restaurant deleteRestaurant(Integer id)
+    {
+        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(()->new RuntimeException(id + " can't be found"));
+        restaurant.setIsActive(false);
+        restaurant = restaurantRepository.save(restaurant);
+        Users users = usersRepository.findByRoleId(restaurant.getId());
+        userUtil.userDisabler(users);
+        return restaurant;
+
+    }
+
+
+//    @Transactional
+//    public Restaurant deleteRestaurant(Integer restaurantId) {
+//        Restaurant restaurant=restaurantRepository.findById(restaurantId).orElseThrow(()->new ErrorHandler(HttpStatus.NOT_FOUND,"id can't be found"));
+//           restaurantRepository.save(restaurant);
+//
+//
+//    }
+
+    public List<Restaurant> getRestaurantsByName(String name) {
+        Specification<Restaurant> spec = RestaurantSpecification.getRestaurantByName(name);
+        return restaurantRepository.findAll(spec);
+    }
+    public List<Restaurant> getAllActiveRestaurants() {
+        Specification<Restaurant> spec = RestaurantSpecification.getAllRestaurants();
+        return restaurantRepository.findAll(spec);
+    }
+
+    public Restaurant getRestaurantById(Integer id) {
+        Specification<Restaurant> spec = RestaurantSpecification.getRestaurantById(id);
+        Optional<Restaurant> restaurantOptional = restaurantRepository.findOne(spec);
+        if (restaurantOptional.isPresent()) {
+            return restaurantOptional.get();
+        } else {
+            throw new NotFoundException("Restaurant not found");
         }
     }
     public Restaurant approveRestaurant(Integer id) {

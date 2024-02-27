@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import et.com.gebeya.user_service.enums.Role;
 import et.com.gebeya.user_service.enums.Status;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -27,7 +28,11 @@ public class Restaurant extends BaseModel {
     @NotBlank
     private String OwnerName;
     @NotBlank
+    @Column(unique = true)
     private String LicenseNumber;
+    @Column(length = 255,unique = true)
+    @Email(message = "Email is mandatory")
+    private String email;
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurantId")
     @NotEmpty
