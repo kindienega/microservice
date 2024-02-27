@@ -1,6 +1,7 @@
 spring:
   application:
-    name: Auth-Service
+    # name: Auth-Service
+    name: auth-service
 
 
   datasource:
@@ -19,11 +20,14 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 eureka:
+  instance:
+    hostname: ${spring.application.name}
+    preferIpAddress: true
   client:
     serviceUrl:
-      #  defaultZone: http://${DISCOVERY}:8761/eureka
-#      defaultZone : http://service-discovery:8761/eureka
-       defaultZone : https://discovery-orderoptima.gebeyalearning.com
+      defaultZone: http://${DISCOVERY}:8761/eureka
+      # defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
 
 
 server:

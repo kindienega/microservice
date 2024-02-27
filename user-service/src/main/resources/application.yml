@@ -1,6 +1,7 @@
 spring:
   application:
-    name: User-Service
+    # name: User-Service
+    name: user-service
 
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -20,10 +21,14 @@ spring:
 
 #Service Discovery
 eureka:
+  instance:
+    hostname: ${spring.application.name}
+    preferIpAddress: true
   client:
     serviceUrl:
       #  defaultZone: http://${DISCOVERY}:8761/eureka
        defaultZone : https://discovery-orderoptima.gebeyalearning.com
+
 
 
 server:
