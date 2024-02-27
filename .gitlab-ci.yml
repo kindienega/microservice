@@ -15,7 +15,7 @@ variables:
   DOCKER_FILE_NAME: ""
   MANIFEST_STAGING_PATH: ""
   COMMIT_MESSAGE: ""
-  GIT_DEPTH: 200  # Set the depth to 100
+  GIT_DEPTH: 400  # Set the depth to 100
 
 
 # hidden jobs that can be reuse over other jobs 
