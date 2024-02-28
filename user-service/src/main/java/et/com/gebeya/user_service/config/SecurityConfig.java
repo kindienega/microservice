@@ -26,6 +26,9 @@ public class SecurityConfig {
 
     protected static final String [] UNAUTHORIZED_MATCHERS = {
             "/api/v1/user/restaurant/register",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+
     };
 
     protected static final String [] ADMIN_MATCHERS = {

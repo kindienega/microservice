@@ -1,6 +1,7 @@
  package et.com.gebeya.user_service.config;
 
  import com.cloudinary.Cloudinary;
+ import com.cloudinary.utils.ObjectUtils;
  import org.springframework.beans.factory.annotation.Value;
  import org.springframework.context.annotation.Bean;
  import org.springframework.context.annotation.Configuration;
@@ -10,20 +11,13 @@
 
  @Configuration
  public class CloudinaryConfig {
-     @Value("${CLOUD_NAME}")
-     private  String CLOUD_NAME;
-     @Value("${API_KEY}")
-     private String API_KEY;
-     @Value("${API_SECRET}")
-     private String API_SECRET;
 
      @Bean
-     public Cloudinary cloudinary(){
-         Map<String,String> config=new HashMap<>();
-         config.put("cloud_name",CLOUD_NAME);
-         config.put("api_key",API_KEY);
-         config.put("api_secret",API_SECRET);
-
-         return new Cloudinary(config);
+     public Cloudinary cloudinary() {
+         return new Cloudinary(ObjectUtils.asMap(
+                 "cloud_name", "dw60meomq",
+                 "api_key", "619347524538979",
+                 "api_secret", "6JpkcEsGx7jxv02Tr0tg4mQON0g",
+                 "secure", true));
      }
  }
