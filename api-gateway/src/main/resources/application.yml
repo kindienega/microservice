@@ -27,7 +27,7 @@ spring:
             - Path=/api/v1/products/**
           filters:
             - AuthenticationFilter
-            - Path=/api/v1/category/**
+            # - Path=/api/v1/category/**
             
 
 
