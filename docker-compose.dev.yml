@@ -77,6 +77,9 @@ services:
       DB_PASSWORD: kill
       DB_NAME: orderoptima
       DISCOVERY: "service-discovery"
+      API_KEY: 773292176862193
+      API_SECRET: uxmd-1KB9863lh2Uo2Qu44DLwVs
+      CLOUD_NAME: dbzniegok
 
     networks:
       - orderoptima-network
