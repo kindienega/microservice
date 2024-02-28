@@ -1,7 +1,7 @@
 package et.com.gebeya.inventory_management.config;
 
-import et.com.gebeya.user_service.security.RoleHeaderAuthenticationFilter;
-import et.com.gebeya.user_service.security.RoleHeaderAuthenticationProvider;
+// import et.com.gebeya.user_service.security.RoleHeaderAuthenticationFilter;
+// import et.com.gebeya.user_service.security.RoleHeaderAuthenticationProvider;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
