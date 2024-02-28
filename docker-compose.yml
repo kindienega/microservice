@@ -21,16 +21,18 @@ services:
 
   # Auth service
   api-service:
-    image: sondawitmekonnen/api-service:latest
+    image: api-gateway:0.0.1-SNAPSHOT
     restart: always
     depends_on:
       - service-discovery 
     ports:
       - "8181:8181" 
+    environment:
+      DISCOVERY: "service-discovery"
     networks:
       - orderoptima-network
   auth-service:
-    image: sondawitmekonnen/auth-service:latest
+    image: auth-service:0.0.1-SNAPSHOT
     restart: always
     depends_on:
       - postgres 
@@ -38,15 +40,16 @@ services:
     # ports:
     #   - "8080:8080" 
     environment:
-      POSTGRES_HOST: postgres  
-      POSTGRES_USER: your_username
-      POSTGRES_PASSWORD: your_password
-      POSTGRES_DB: your_database_name
+      DB_HOST: postgres  
+      DB_USERNAME: postgres
+      DB_PASSWORD: kill
+      DB_NAME: orderoptima
+      DISCOVERY: "service-discovery"
     networks:
       - orderoptima-network
   # Service discovery
   service-discovery:
-    image: sondawitmekonnen/service-discovery:latest
+    image: service-discovery:0.0.1-SNAPSHOT
     restart: always
     ports:
       - "8761:8761" 
@@ -55,30 +58,47 @@ services:
 
   # User service
   user-service:
-    image: sondawitmekonnen/user-service:latest
+    image: user-service:0.0.1-SNAPSHOT
     restart: always
     depends_on:
       - service-discovery  
-    # ports:
-    #   - "8081:8081"  
+    ports:
+      - "7000:7000"  
+    environment:
+      DB_HOST: postgres  
+      DB_USERNAME: postgres
+      DB_PASSWORD: kill
+      DB_NAME: orderoptima
+      DISCOVERY: "service-discovery"
+      API_KEY: 773292176862193
+      API_SECRET: uxmd-1KB9863lh2Uo2Qu44DLwVs
+      CLOUD_NAME: dbzniegok
     networks:
       - orderoptima-network
   order-service:
-    image: sondawitmekonnen/order-service:latest
+    image: order-service:0.0.1-SNAPSHOT
     restart: always
     depends_on:
       - service-discovery  
     # ports:
     #   - "8082:8082"  
+    environment:
+      DISCOVERY: "service-discovery"
     networks:
       - orderoptima-network    
   inventory-managment:
-    image: sondawitmekonnen/inventory-service:latest
+    image: inventory-management:0.0.1-SNAPSHOT
     restart: always
     depends_on:
       - service-discovery  
     ports:
       - "8086:8086"  
+    environment:
+      DB_HOST: postgres  
+      DB_USERNAME: postgres
+      DB_PASSWORD: kill
+      DB_NAME: orderoptima
+      DISCOVERY: "service-discovery"
     networks:
       - orderoptima-network
 
