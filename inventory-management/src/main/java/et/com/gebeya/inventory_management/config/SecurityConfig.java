@@ -1,6 +1,4 @@
-package et.com.gebeya.user_service.config;
-
-
+package et.com.gebeya.inventory_management.config;
 
 import et.com.gebeya.user_service.security.RoleHeaderAuthenticationFilter;
 import et.com.gebeya.user_service.security.RoleHeaderAuthenticationProvider;
@@ -25,39 +23,14 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfig {
 
     protected static final String [] UNAUTHORIZED_MATCHERS = {
-            "/api/v1/user/restaurant/register",
+            "/api/v1/products/order"
     };
-
     protected static final String [] ADMIN_MATCHERS = {
-//            "/api/v1/user/vendor/get/id",
-//            "/api/v1/user/vendor/get/all",
-            "api/v1/user/vendor/register",
-            "/api/v1/user/restaurant/approve/id",
-            "/api/v1/user/restaurant/get/id",
-            "/api/v1/user/restaurant/id",
-             "/api/v1/user/restaurant/search",
-             "/api/v1/user/restaurant/all",
-            "/api/v1/user/vendor/**",
-
-
-
-
-    };
-
-    protected static final String [] RESTAURANT_MATCHERS = {
-            "/api/v1/user/restaurant/get/id",
-            "/api/v1/user/restaurant/id",
-    };
-
-    protected static final String [] VENDOR_MATCHERS = {
-            "/api/v1/vendor/update",
             "/api/v1/products/**"
-
     };
-
-
-
-
+    protected static final String [] VENDOR_MATCHERS = {
+            "/api/v1/products/**"
+    };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -66,7 +39,6 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request.requestMatchers(UNAUTHORIZED_MATCHERS).permitAll())
                 .authorizeHttpRequests(request -> request.requestMatchers(ADMIN_MATCHERS).hasAuthority("ADMIN"))
-                .authorizeHttpRequests(request -> request.requestMatchers(RESTAURANT_MATCHERS).hasAuthority("RESTAURANT"))
                 .authorizeHttpRequests(request -> request.requestMatchers(VENDOR_MATCHERS).hasAuthority("VENDOR"))
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .exceptionHandling(handling -> {

@@ -1,20 +1,20 @@
-package et.com.gebeya.inventory_management.dto;
+package et.com.gebeya.inventory_management.dto.request;
 
-import et.com.gebeya.inventory_management.Models.Category;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
-public class ProductDTO {
-    private Long id;
+@Setter
+public class ProductCreationRequest {
     private String name;
-    private int quantity;
     private Double price;
-    private String Description;
+    private Integer quantity;
+    private String description;
     private String imageUrl;
-    private String discount;
-    private Category category;
     private String calories;
     private String fat;
     private String protein;
@@ -22,6 +22,6 @@ public class ProductDTO {
     private String size;
     private String volume;
     private String brands;
+    private Long categoryId;
 
-   // private MultipartFile photo;
 }
