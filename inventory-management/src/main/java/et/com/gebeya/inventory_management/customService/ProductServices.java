@@ -12,7 +12,6 @@ import et.com.gebeya.inventory_management.utility.CustomMappingFunctions;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +23,7 @@ public class ProductServices {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
     private final CustomMappingFunctions customMappingFunctions;
+    //private final AdminRepository adminRepository;
 
     public ListAllProductUnderCategoryResponse listAllProductsUnderCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
@@ -41,6 +41,22 @@ public class ProductServices {
 
         return response;
     }
+//    public ListOfAllProductUnderAdminResponse listAllProductsUnderAdmin(Long adminId) {
+//        Admins admins = adminRepository.findById(adminId)
+//                .orElseThrow(() -> new RuntimeException("Admin not found with ID: " + adminId));
+//        List<Product> products = productRepository.findAllByAdmin(admins);
+//        List<ProductDto> productDtos = products.stream()
+//                .map(product -> new ProductDto(product.getId(),
+//                        product.getName(),
+//                        product.getPrice(),
+//                        product.getQuantity(),
+//                        product.getDescription()))
+//                .collect(Collectors.toList());
+//        ListOfAllProductUnderAdminResponse response = new ListOfAllProductUnderAdminResponse();
+//        response.setProducts(productDtos);
+//
+//        return response;
+//    }
 
     public int getTotalQuantity(Long productId) {
         return productRepository.findById(productId)

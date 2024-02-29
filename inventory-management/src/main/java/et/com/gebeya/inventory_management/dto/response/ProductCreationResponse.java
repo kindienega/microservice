@@ -1,6 +1,5 @@
 package et.com.gebeya.inventory_management.dto.response;
 
-import et.com.gebeya.inventory_management.dto.CategoryDTO;
 import et.com.gebeya.inventory_management.dto.request.CategoryDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,5 +25,6 @@ public class ProductCreationResponse {
     private String volume;
     private String brands;
     private CategoryDto category;
+    //private Admins admins;
 
 }
