@@ -28,6 +28,7 @@ public class SecurityConfig {
             "/api/v1/user/restaurant/register",
             "/swagger-ui/**",
             "/v3/api-docs/**",
+            "/api/auth/log_in",
 
     };
 

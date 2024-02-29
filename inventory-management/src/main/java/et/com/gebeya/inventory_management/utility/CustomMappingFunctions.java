@@ -9,6 +9,7 @@ import et.com.gebeya.inventory_management.cloudinary.ImageModel;
 import et.com.gebeya.inventory_management.cloudinary.ImageServiceImpl;
 import et.com.gebeya.inventory_management.repos.CategoryRepository;
 import et.com.gebeya.inventory_management.repos.ProductRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -17,25 +18,19 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Map;
 
 @Component
+@AllArgsConstructor
 public class CustomMappingFunctions {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ImageServiceImpl imageService;
-
-    public CustomMappingFunctions(ProductRepository productRepository,
-                                  CategoryRepository categoryRepository,
-                                  ImageServiceImpl imageService) {
-        this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
-        this.imageService = imageService;
-    }
+    //private final AdminRepository adminRepository;
     //private final VendorRepository vendorRepository;
 
 
     public ProductCreationResponse createProductAndConvertToResponse(ProductCreationRequest request, MultipartFile imageFile) {
- //       Vendor vendor = vendorRepository.findById(request.getVendorId())
-  //              .orElseThrow(()->new RuntimeException("vendor with vendor id :" + request.getVendorId()));
+     //   Admins admins = adminRepository.findById(request.getAdminId())
+        //          .orElseThrow(()->new RuntimeException("vendor with vendor id :" + request.getAdminId()));
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found with ID: " + request.getCategoryId()));
 
@@ -59,7 +54,7 @@ public class CustomMappingFunctions {
         } else {
             throw new RuntimeException("Image upload failed");
         }
-       // product.setVendor(vendor);
+        //product.setAdmin(admins);
 
         Product savedProduct = productRepository.save(product);
 
@@ -82,6 +77,8 @@ public class CustomMappingFunctions {
         response.setVolume(product.getVolume());
         response.setBrands(product.getBrands());
         response.setCategory(new CategoryDto(product.getCategory().getId(), product.getCategory().getName()));
+        //response.setAdmins(new Admins(product.getAdmin().getId(),product.getAdmin().getName(),
+        //        product.getAdmin().getEmail(), product.getAdmin().getPassword(),product.getAdmin().getGender()));
 
         return response;
     }

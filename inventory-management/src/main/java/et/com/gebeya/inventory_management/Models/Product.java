@@ -31,8 +31,8 @@ public class Product {
     @JoinColumn(name = "catId", nullable = true)
     private Category category;
 //    @ManyToOne
-//    @JoinColumn(name = "vendorId", nullable = true)
-//    private Vendor vendor;
+//    @JoinColumn(name = "adminId", nullable = true)
+//    private Admins admin;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private Set<Review> reviews;
