@@ -19,16 +19,31 @@ spring:
           predicates:
             - Path=/api/v1/auth/**
 
-        - id: inventory-managment
+        - id: inventory-management
           # uri: lb://Inventory_Management
-          uri: lb://inventory-managment
+          uri: lb://inventory-management
           
           predicates:
             - Path=/api/v1/products/**
           filters:
             - AuthenticationFilter
-            # - Path=/api/v1/category/**
-            
+        - id: inventory-management
+          # uri: lb://Inventory_Management
+          uri: lb://inventory-management
+
+          predicates:
+            - Path=/api/v1/product/**
+          filters:
+            - AuthenticationFilter
+
+        - id: inventory-management
+          # uri: lb://Inventory_Management
+          uri: lb://inventory-management
+
+          predicates:
+            - Path=/api/v1/category/**
+          filters:
+            - AuthenticationFilter
 
 
 
