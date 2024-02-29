@@ -35,7 +35,6 @@ spring:
 
 
   application:
-    # name: API-GATEWAY
     name: api-service
 
 eureka:
