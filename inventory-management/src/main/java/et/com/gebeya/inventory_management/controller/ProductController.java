@@ -1,6 +1,9 @@
 package et.com.gebeya.inventory_management.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import et.com.gebeya.inventory_management.Models.Product;
+import et.com.gebeya.inventory_management.cloudinary.ImageModel;
+import et.com.gebeya.inventory_management.cloudinary.ImageServiceImpl;
 import et.com.gebeya.inventory_management.dto.ProductDTO;
 import et.com.gebeya.inventory_management.dto.request.ProductCreationRequest;
 import et.com.gebeya.inventory_management.dto.request.RequestForUpdate;
@@ -16,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -25,7 +29,6 @@ public class ProductController {
     private final ProductService productService;
     @Autowired
     private ObjectMapper objectMapper;
-
     @PostMapping(value = "/create", consumes = "multipart/form-data")
     public ResponseEntity<ProductCreationResponse> createProduct(
             @RequestPart("product") String productJson,
@@ -79,5 +82,10 @@ public class ProductController {
         } catch (RuntimeException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
+    }
+    @PostMapping
+    public ResponseEntity<Product> createProduct(@RequestBody ProductCreationRequest request) {
+        Product createdProduct = productService.createProductNew(request);
+        return ResponseEntity.ok(createdProduct);
     }
 }

@@ -23,6 +23,5 @@ public class ProductCreationRequest {
     private String volume;
     private String brands;
     private Long categoryId;
-   // private Long adminId;
 
 }

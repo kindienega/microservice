@@ -43,6 +43,13 @@ spring:
             - AuthenticationFilter
 
 
+        - id: inventory-management
+          uri: lb://inventory-management
+          predicates:
+            - Path=/api/v1/image/upload
+          filters:
+            - AuthenticationFilter
+
   application:
     name: api-service
 

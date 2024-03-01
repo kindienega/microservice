@@ -1,5 +1,6 @@
 package et.com.gebeya.inventory_management.service;
 
+import et.com.gebeya.inventory_management.Models.Category;
 import et.com.gebeya.inventory_management.Models.Product;
 import et.com.gebeya.inventory_management.dto.ProductDTO;
 import et.com.gebeya.inventory_management.dto.request.ProductCreationRequest;
@@ -71,6 +72,24 @@ public class ProductService {
     }
     public void updateStock(Long productId, int quantity) {
 
+    }
+
+    public Product createProductNew(ProductCreationRequest request) {
+        Product product = new Product();
+        product.setName(request.getName());
+        product.setPrice(request.getPrice());
+        product.setQuantity(request.getQuantity());
+        product.setDescription(request.getDescription());
+        product.setImageUrl(request.getImageUrl());
+        product.setCalories(request.getCalories());
+        product.setFat(request.getFat());
+        product.setSize(request.getSize());
+
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+        product.setCategory(category);
+
+        return productRepository.save(product);
     }
 
 }
