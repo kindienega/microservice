@@ -83,9 +83,4 @@ public class ProductController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
-    @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody ProductCreationRequest request) {
-        Product createdProduct = productService.createProductNew(request);
-        return ResponseEntity.ok(createdProduct);
-    }
 }

@@ -33,6 +33,8 @@ public class MappingFunctions {
     }
     public void updateEntityWithDtoForCategory(CategoryDTO dto, Category category) {
         category.setName(dto.getName());
+        category.setTittle(dto.getTittle());
+        category.setMetaTittle(dto.getMetaTittle());
         category.setDescription(dto.getDescription());
         category.setImageUrl(dto.getImageUrl());
     }
