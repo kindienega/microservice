@@ -1,6 +1,6 @@
 spring:
   application:
-    name: inventory-managment
+    name: inventory-management
 
 
   datasource:

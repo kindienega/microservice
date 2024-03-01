@@ -7,6 +7,7 @@ import et.com.gebeya.inventory_management.dto.response.ListAllProductUnderCatego
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -38,7 +39,7 @@ public class CustomController {
         int totalQuantity = productServices.getTotalQuantity(productId);
         return ResponseEntity.ok(totalQuantity);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/restock")
     public ResponseEntity<Void> restockProduct(@RequestBody StockAdjustmentDTO stockAdjustment) {
         productServices.restockProduct(stockAdjustment.getProductId(), stockAdjustment.getQuantity());

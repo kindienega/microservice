@@ -7,6 +7,8 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Setter
 @Getter
 @Entity
@@ -15,10 +17,9 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String tittle;
+    private String metaTittle;
     private String description;
     private String imageUrl;
-
-//    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-//    @JsonIgnore
-//    private Set<Product> products;
+    private Date createdDated;
 }

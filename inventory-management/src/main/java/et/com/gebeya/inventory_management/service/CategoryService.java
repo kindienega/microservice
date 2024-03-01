@@ -3,6 +3,7 @@ package et.com.gebeya.inventory_management.service;
 import et.com.gebeya.inventory_management.Models.Category;
 import et.com.gebeya.inventory_management.Models.Product;
 import et.com.gebeya.inventory_management.dto.CategoryDTO;
+import et.com.gebeya.inventory_management.dto.request.CategoryRegistrationRequest;
 import et.com.gebeya.inventory_management.repos.CategoryRepository;
 import et.com.gebeya.inventory_management.utility.MappingFunctions;
 import lombok.AllArgsConstructor;
@@ -30,17 +31,17 @@ public class CategoryService {
         dto.setImageUrl(category.getImageUrl());
         return dto;
     }
-    public CategoryDTO getCategoryById(Long id) {
+    public CategoryRegistrationRequest getCategoryById(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
         return mapper.convertToDTOForCategory(category);
     }
-    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
+    public CategoryRegistrationRequest createCategory(CategoryRegistrationRequest categoryDTO) {
         Category category = mapper.convertToEntityForCategory(categoryDTO);
         Category savedCategory = categoryRepository.save(category);
         return mapper.convertToDTOForCategory(savedCategory);
     }
-    public CategoryDTO updateCategory(Long id, CategoryDTO categoryDTO) {
+    public CategoryRegistrationRequest updateCategory(Long id, CategoryDTO categoryDTO) {
         Category ifExistCategory = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException(" category doest not exist"));
         mapper.updateEntityWithDtoForCategory(categoryDTO, ifExistCategory);
