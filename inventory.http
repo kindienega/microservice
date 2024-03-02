@@ -1,0 +1,32 @@
+# curl -X GET "http://localhost:8080/api/v1/search/products?name=ProductName"
+#     -H "accept: application/json"
+#     -H "Authorization: Bearer Your_JWT_Token_Here"
+GET http://localhost:8181/api/v1/products/search?name=Sample Product
+accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdHkiOlt7ImF1dGhvcml0eSI6IkFETUlOIn1dLCJzdWIiOiJhZG1pbiIsImlhdCI6MTcwOTM3OTczMywiZXhwIjoxNzA5MzgzMzMzfQ.5RCJOfpjK1pGx3KGHHc0Bkq2oQmCpytgsJNbhWgIkWw
+
+###
+
+
+###
+# curl -X POST "http://localhost:8080/upload"
+#     -H "Authorization: Bearer Your_JWT_Token_Here"
+#     -H "Content-Type: multipart/form-data"
+#     -H "accept: application/json"
+#     -F "file=@/path/to/your/image.jpg
+POST http://localhost:8181/api/v1/image/upload
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdHkiOlt7ImF1dGhvcml0eSI6IkFETUlOIn1dLCJzdWIiOiJhZG1pbiIsImlhdCI6MTcwOTM3OTczMywiZXhwIjoxNzA5MzgzMzMzfQ.5RCJOfpjK1pGx3KGHHc0Bkq2oQmCpytgsJNbhWgIkWw
+accept: application/json
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="imageFile"; filename="image.jpg"
+
+< C:\Users\kindi\Desktop\useCaseDia.png
+--WebAppBoundary--
+
+###
+POST http://localhost:8181/api/v1/products/create
+
+
+

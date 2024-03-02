@@ -2,7 +2,6 @@ package et.com.gebeya.inventory_management.utility;
 
 import et.com.gebeya.inventory_management.Models.Category;
 import et.com.gebeya.inventory_management.Models.Product;
-import et.com.gebeya.inventory_management.dto.CategoryDTO;
 import et.com.gebeya.inventory_management.dto.CreateProductRequest;
 import et.com.gebeya.inventory_management.dto.ProductDTO;
 import et.com.gebeya.inventory_management.dto.request.CategoryRegistrationRequest;
@@ -13,13 +12,13 @@ import org.springframework.stereotype.Component;
 public class MappingFunctions {
 
     public CategoryRegistrationRequest convertToDTOForCategory(Category category) {
-        CategoryRegistrationRequest dto = new CategoryRegistrationRequest();
-        dto.setName(category.getName());
-        dto.setTittle(category.getTittle());
-        dto.setMetaTittle(category.getMetaTittle());
-        dto.setDescription(category.getDescription());
-        dto.setImageUrl(category.getImageUrl());
-        return dto;
+        CategoryRegistrationRequest request = new CategoryRegistrationRequest();
+        request.setName(category.getName());
+        request.setTittle(category.getTittle());
+        request.setMetaTittle(category.getMetaTittle());
+        request.setDescription(category.getDescription());
+        request.setImageUrl(category.getImageUrl());
+        return request;
     }
     public Category convertToEntityForCategory(CategoryRegistrationRequest request){
         Category category = new Category();
@@ -31,7 +30,7 @@ public class MappingFunctions {
 
         return category;
     }
-    public void updateEntityWithDtoForCategory(CategoryDTO dto, Category category) {
+    public void updateEntityWithDtoForCategory(CategoryRegistrationRequest dto, Category category) {
         category.setName(dto.getName());
         category.setTittle(dto.getTittle());
         category.setMetaTittle(dto.getMetaTittle());
