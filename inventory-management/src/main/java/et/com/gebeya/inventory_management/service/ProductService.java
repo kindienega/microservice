@@ -73,5 +73,11 @@ public class ProductService {
     public void updateStock(Long productId, int quantity) {
 
     }
+    public List<ProductDTO> searchByName(String name) {
+        List<Product> products = productRepository.findByNameContainingIgnoreCase(name);
+        return products.stream()
+                .map(mappingFunctions::convertToDTOForProduct)
+                .collect(Collectors.toList());
+    }
 
 }

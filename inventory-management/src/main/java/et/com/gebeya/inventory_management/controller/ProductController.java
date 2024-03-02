@@ -83,4 +83,9 @@ public class ProductController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductDTO>> searchProductsByName(@RequestParam String name) {
+        List<ProductDTO> products = productService.searchByName(name);
+        return ResponseEntity.ok(products);
+    }
 }
