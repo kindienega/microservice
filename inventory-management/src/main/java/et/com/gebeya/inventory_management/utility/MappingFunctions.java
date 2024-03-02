@@ -2,7 +2,6 @@ package et.com.gebeya.inventory_management.utility;
 
 import et.com.gebeya.inventory_management.Models.Category;
 import et.com.gebeya.inventory_management.Models.Product;
-import et.com.gebeya.inventory_management.dto.CategoryDTO;
 import et.com.gebeya.inventory_management.dto.CreateProductRequest;
 import et.com.gebeya.inventory_management.dto.ProductDTO;
 import et.com.gebeya.inventory_management.dto.request.CategoryRegistrationRequest;
