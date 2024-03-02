@@ -14,8 +14,9 @@ public class RouteValidator {
             "/api/v1/category/all",
             //"api/v1/products",
             "/api/v1/product/*/stock",
-            "/api/v1/product/category/*"
-    );
+            "/api/v1/product/category/*",
+            "/api/v1/category/all"
+            );
 
     public Predicate<ServerHttpRequest> isSecured =
             request -> openApiEndpoints

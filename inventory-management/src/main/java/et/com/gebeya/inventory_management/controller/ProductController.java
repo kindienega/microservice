@@ -7,6 +7,8 @@ import et.com.gebeya.inventory_management.cloudinary.ImageServiceImpl;
 import et.com.gebeya.inventory_management.dto.ProductDTO;
 import et.com.gebeya.inventory_management.dto.request.ProductCreationRequest;
 import et.com.gebeya.inventory_management.dto.request.RequestForUpdate;
+import et.com.gebeya.inventory_management.dto.request.StockAdjustmentDTO;
+import et.com.gebeya.inventory_management.dto.response.ListAllProductUnderCategoryResponse;
 import et.com.gebeya.inventory_management.dto.response.ProductCreationResponse;
 import et.com.gebeya.inventory_management.service.ProductService;
 import lombok.AllArgsConstructor;
@@ -87,5 +89,27 @@ public class ProductController {
     public ResponseEntity<List<ProductDTO>> searchProductsByName(@RequestParam String name) {
         List<ProductDTO> products = productService.searchByName(name);
         return ResponseEntity.ok(products);
+    }
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<ListAllProductUnderCategoryResponse> listAllProductsUnderCategory(@PathVariable Long categoryId) {
+        ListAllProductUnderCategoryResponse response = productService.listAllProductsUnderCategory(categoryId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/{productId}/stock")
+    public ResponseEntity<Integer> getTotalStock(@PathVariable Long productId) {
+        int totalQuantity = productService.getTotalQuantity(productId);
+        return ResponseEntity.ok(totalQuantity);
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/restock")
+    public ResponseEntity<Void> restockProduct(@RequestBody StockAdjustmentDTO stockAdjustment) {
+        productService.restockProduct(stockAdjustment.getProductId(), stockAdjustment.getQuantity());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/order")
+    public ResponseEntity<Void> orderProduct(@RequestBody StockAdjustmentDTO stockAdjustment) {
+        productService.decreaseStock(stockAdjustment.getProductId(), stockAdjustment.getQuantity());
+        return ResponseEntity.ok().build();
     }
 }

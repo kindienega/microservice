@@ -23,11 +23,11 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfig {
 
     protected static final String [] UNAUTHORIZED_MATCHERS = {
-            "/api/v1/product/order",
+            "/api/v1/products/order",
             "/api/v1/category/all",
             //"api/v1/products",
-            "/api/v1/product/*/stock",
-            "/api/v1/product/category/*",
+            "/api/v1/products/*/stock",
+            "/api/v1/products/category/*",
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "api/v1/image/upload"
@@ -37,9 +37,9 @@ public class SecurityConfig {
     protected static final String [] ADMIN_MATCHERS = {
             "/api/v1/products/create",
             "/api/v1/category/**",
-            "/api/v1/product/restock",
-            "/upload",
+            "/api/v1/products/restock",
             "/api/v1/products",
+            "/api/v1/products/*",
             "/api/v1/products/upload",
             "/api/v1/image/upload"
 
@@ -47,13 +47,13 @@ public class SecurityConfig {
 
     };
     protected static final String [] VENDOR_MATCHERS = {
-            "/api/v1/product/order",
+            "/api/v1/products/order",
             "/api/v1/category/all",
            // "api/v1/products"
 
     };
     protected static final String [] RESTAURANT_MATCHERS ={
-            "/api/v1/product/order",
+            "/api/v1/products/order",
             "/api/v1/category/all",
            // "api/v1/products"
 
