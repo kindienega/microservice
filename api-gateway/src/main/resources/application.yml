@@ -23,13 +23,32 @@ spring:
           uri: lb://inventory-management
           predicates:
             - Path=/api/v1/products/**
-            - Path=/api/v1/product/**
+          filters:
+            - AuthenticationFilter
+
+
+        - id: inventory-management
+          uri: lb://inventory-management
+          predicates:
+            - Path=/api/v1/products/**
+          filters:
+            - AuthenticationFilter
+
+
+        - id: inventory-management
+          uri: lb://inventory-management
+          predicates:
             - Path=/api/v1/category/**
           filters:
             - AuthenticationFilter
 
 
-
+        - id: inventory-management
+          uri: lb://inventory-management
+          predicates:
+            - Path=/api/v1/image/upload
+          filters:
+            - AuthenticationFilter
 
   application:
     name: api-service

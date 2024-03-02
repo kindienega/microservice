@@ -1,7 +1,10 @@
 spring:
   application:
-    name: inventory-managment
-
+    name: inventory-management
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -36,4 +39,6 @@ management:
   tracing:
     sampling:
       probability: 1.0
-
+logging:
+  level:
+    web: debug

@@ -9,6 +9,8 @@ public class CategoryDTO {
     private Long id;
     private String name;
     private String description;
+    private String Tittle;;
+    private String metaTittle;
     private String imageUrl;
 
 }

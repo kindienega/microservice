@@ -1,8 +1,10 @@
 package et.com.gebeya.inventory_management.Models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Null;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Set;
 @Getter

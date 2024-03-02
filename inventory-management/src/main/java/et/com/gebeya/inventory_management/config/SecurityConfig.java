@@ -1,6 +1,5 @@
 package et.com.gebeya.inventory_management.config;
 
-
 import et.com.gebeya.inventory_management.security.RoleHeaderAuthenticationFilter;
 import et.com.gebeya.inventory_management.security.RoleHeaderAuthenticationProvider;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,27 +23,32 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfig {
 
     protected static final String [] UNAUTHORIZED_MATCHERS = {
-            "/api/v1/products",
-            "/api/v1/product/order",
+            "/api/v1/products/order",
+            "/api/v1/category/all",
+            "/api/v1/products/*/stock",
+            "/api/v1/products/category/*",
+            "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/v3/api-docs/**"
-
+            "/api/v1/products/search",
+            "api/v1/image/upload"
     };
     protected static final String [] ADMIN_MATCHERS = {
-            "/api/v1/products/**",
+            "/api/v1/products/create",
             "/api/v1/category/**",
-            "/api/v1/product"
-
+            "/api/v1/products/restock",
+            "/api/v1/products",
+            "/api/v1/products/*",
+            "/api/v1/products/upload",
+            "/api/v1/image/upload"
     };
     protected static final String [] VENDOR_MATCHERS = {
-            "/api/v1/products",
-            "/api/v1/product/order",
+            "/api/v1/products/order"
+           // "/api/v1/category/all"
 
     };
-    protected static final String [] RESTAURANT_MATCHERS = {
-            "/api/v1/products",
-            "/api/v1/product/order",
-
+    protected static final String [] RESTAURANT_MATCHERS ={
+            "/api/v1/products/order"
+           // "/api/v1/category/all"
 
     };
 
@@ -78,14 +82,14 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationEntryPoint unauthorizedEntryPoint() {
-        System.out.println("unauthorized");
+        //System.out.println("unauthorized");
         return (request, response, authException) ->
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
     }
 
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
-        System.out.println("unauthorized");
+        //System.out.println("unauthorized");
         return (request, response, accessDeniedException) ->
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
     }
