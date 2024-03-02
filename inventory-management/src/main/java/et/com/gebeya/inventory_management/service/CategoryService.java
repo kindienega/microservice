@@ -41,10 +41,10 @@ public class CategoryService {
         Category savedCategory = categoryRepository.save(category);
         return mapper.convertToDTOForCategory(savedCategory);
     }
-    public CategoryRegistrationRequest updateCategory(Long id, CategoryDTO categoryDTO) {
+    public CategoryRegistrationRequest updateCategory(Long id, CategoryRegistrationRequest request) {
         Category ifExistCategory = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException(" category doest not exist"));
-        mapper.updateEntityWithDtoForCategory(categoryDTO, ifExistCategory);
+        mapper.updateEntityWithDtoForCategory(request, ifExistCategory);
         Category updatedCategory = categoryRepository.save(ifExistCategory);
         return mapper.convertToDTOForCategory(updatedCategory);
     }

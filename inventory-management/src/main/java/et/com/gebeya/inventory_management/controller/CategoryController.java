@@ -28,8 +28,8 @@ public class CategoryController {
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public CategoryRegistrationRequest updateCategory(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO){
-        return categoryService.updateCategory(id, categoryDTO);
+    public CategoryRegistrationRequest updateCategory(@PathVariable Long id, @RequestBody CategoryRegistrationRequest request){
+        return categoryService.updateCategory(id, request);
     }
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
