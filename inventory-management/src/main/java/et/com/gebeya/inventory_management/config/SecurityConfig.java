@@ -24,13 +24,11 @@ public class SecurityConfig {
 
     protected static final String [] UNAUTHORIZED_MATCHERS = {
             "/api/v1/products/order",
-            "/api/v1/category/all",
             "/api/v1/products/*/stock",
             "/api/v1/products/category/*",
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/api/v1/products/search",
-            "api/v1/image/upload"
     };
     protected static final String [] ADMIN_MATCHERS = {
             "/api/v1/products/create",
@@ -39,7 +37,11 @@ public class SecurityConfig {
             "/api/v1/products",
             "/api/v1/products/*",
             "/api/v1/products/upload",
-            "/api/v1/image/upload"
+            "/api/v1/image/upload",
+            "/api/v1/category/all",
+            "api/v1/image/upload"
+
+
     };
     protected static final String [] VENDOR_MATCHERS = {
             "/api/v1/products/order"
