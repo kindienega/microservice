@@ -1,8 +1,6 @@
 package et.com.gebeya.user_service.controller;
 
-import et.com.gebeya.user_service.dto.requestDto.RestaurantRequestDto;
 import et.com.gebeya.user_service.dto.requestDto.VendorRequestDto;
-import et.com.gebeya.user_service.model.Restaurant;
 import et.com.gebeya.user_service.model.Vendor;
 import et.com.gebeya.user_service.service.VendorService;
 import lombok.RequiredArgsConstructor;

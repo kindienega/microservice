@@ -2,14 +2,25 @@ package et.com.gebeya.inventory_management.utility;
 
 import et.com.gebeya.inventory_management.Models.Category;
 import et.com.gebeya.inventory_management.Models.Product;
+import et.com.gebeya.inventory_management.cloudinary.ImageModel;
+import et.com.gebeya.inventory_management.cloudinary.ImageServiceImpl;
 import et.com.gebeya.inventory_management.dto.CreateProductRequest;
 import et.com.gebeya.inventory_management.dto.ProductDTO;
 import et.com.gebeya.inventory_management.dto.request.CategoryRegistrationRequest;
 import et.com.gebeya.inventory_management.dto.request.RequestForUpdate;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
 
 @Component
+@AllArgsConstructor
 public class MappingFunctions {
+
+    private final ImageServiceImpl imageService;
 
     public CategoryRegistrationRequest convertToDTOForCategory(Category category) {
         CategoryRegistrationRequest request = new CategoryRegistrationRequest();
@@ -20,13 +31,20 @@ public class MappingFunctions {
         request.setImageUrl(category.getImageUrl());
         return request;
     }
-    public Category convertToEntityForCategory(CategoryRegistrationRequest request){
+    public Category convertToEntityForCategory(CategoryRegistrationRequest request, MultipartFile imageFile){
         Category category = new Category();
         category.setName(request.getName());
         category.setTittle(request.getTittle());
         category.setMetaTittle(request.getMetaTittle());
         category.setDescription(request.getDescription());
-        category.setImageUrl(request.getImageUrl());
+       // category.setImageUrl(request.getImageUrl());
+        ResponseEntity<Map> imageResponse = imageService.uploadImage(new ImageModel(imageFile.getOriginalFilename(), imageFile));
+        if (imageResponse.getStatusCode() == HttpStatus.OK) {
+            String imageUrl = (String) imageResponse.getBody().get("url");
+            category.setImageUrl(imageUrl);
+        } else {
+            throw new RuntimeException("Image upload failed");
+        }
 
         return category;
     }

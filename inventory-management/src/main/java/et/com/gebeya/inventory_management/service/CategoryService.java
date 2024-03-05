@@ -8,6 +8,7 @@ import et.com.gebeya.inventory_management.repos.CategoryRepository;
 import et.com.gebeya.inventory_management.utility.MappingFunctions;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,8 +37,8 @@ public class CategoryService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
         return mapper.convertToDTOForCategory(category);
     }
-    public CategoryRegistrationRequest createCategory(CategoryRegistrationRequest categoryDTO) {
-        Category category = mapper.convertToEntityForCategory(categoryDTO);
+    public CategoryRegistrationRequest createCategory(CategoryRegistrationRequest request, MultipartFile imageFile) {
+        Category category = mapper.convertToEntityForCategory(request, imageFile);
         Category savedCategory = categoryRepository.save(category);
         return mapper.convertToDTOForCategory(savedCategory);
     }

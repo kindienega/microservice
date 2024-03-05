@@ -28,14 +28,9 @@ public class Product {
     private String size;
     private String volume;
     private String brands;
-    //private MultipartFile photo;
     @ManyToOne
     @JoinColumn(name = "catId", nullable = true)
     private Category category;
-//    @ManyToOne
-//    @JoinColumn(name = "adminId", nullable = true)
-//    private Admins admin;
-
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private Set<Review> reviews;
     //private Long categoryId;
