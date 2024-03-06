@@ -29,14 +29,10 @@ public class CategoryController {
 //    public CategoryRegistrationRequest addCategory(@RequestBody CategoryRegistrationRequest request, MultipartFile imageFile){
 //        return categoryService.createCategory(request, imageFile);
 //    }
-@PostMapping(value = "", consumes = "multipart/form-data")
-public CategoryRegistrationRequest addCategory(@RequestParam("category") String categoryJson,
-                                               @RequestParam("imageFile") MultipartFile imageFile)
-        throws JsonProcessingException {
-    ObjectMapper objectMapper = new ObjectMapper();
-    CategoryRegistrationRequest request = objectMapper.readValue(categoryJson, CategoryRegistrationRequest.class);
-    return categoryService.createCategory(request, imageFile);
-}
+@PostMapping()
+public CategoryRegistrationRequest addCategory(@RequestBody CategoryRegistrationRequest request) {
+    return categoryService.createCategory(request);
+    }
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public CategoryRegistrationRequest updateCategory(@PathVariable Long id, @RequestBody CategoryRegistrationRequest request){

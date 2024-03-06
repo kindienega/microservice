@@ -38,7 +38,8 @@ public class VendorProductService {
         ProductDto productDto = new ProductDto(product);
         VendorDto vendorDto = new VendorDto(vendor);
 
-        return new VendorProductCreationsResponse(productDto, vendorDto, request.getQuantity(), request.getPrice(), Status.PENDING);
+        return new VendorProductCreationsResponse(productDto, vendorDto,
+                request.getQuantity(), request.getPrice(), Status.PENDING);
     }
 
     @Transactional

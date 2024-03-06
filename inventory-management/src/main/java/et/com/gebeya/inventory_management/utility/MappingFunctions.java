@@ -20,32 +20,20 @@ import java.util.Map;
 @AllArgsConstructor
 public class MappingFunctions {
 
-    private final ImageServiceImpl imageService;
-
     public CategoryRegistrationRequest convertToDTOForCategory(Category category) {
         CategoryRegistrationRequest request = new CategoryRegistrationRequest();
         request.setName(category.getName());
         request.setTittle(category.getTittle());
         request.setMetaTittle(category.getMetaTittle());
         request.setDescription(category.getDescription());
-        request.setImageUrl(category.getImageUrl());
         return request;
     }
-    public Category convertToEntityForCategory(CategoryRegistrationRequest request, MultipartFile imageFile){
+    public Category convertToEntityForCategory(CategoryRegistrationRequest request){
         Category category = new Category();
         category.setName(request.getName());
         category.setTittle(request.getTittle());
         category.setMetaTittle(request.getMetaTittle());
         category.setDescription(request.getDescription());
-       // category.setImageUrl(request.getImageUrl());
-        ResponseEntity<Map> imageResponse = imageService.uploadImage(new ImageModel(imageFile.getOriginalFilename(), imageFile));
-        if (imageResponse.getStatusCode() == HttpStatus.OK) {
-            String imageUrl = (String) imageResponse.getBody().get("url");
-            category.setImageUrl(imageUrl);
-        } else {
-            throw new RuntimeException("Image upload failed");
-        }
-
         return category;
     }
     public void updateEntityWithDtoForCategory(CategoryRegistrationRequest dto, Category category) {
@@ -53,7 +41,6 @@ public class MappingFunctions {
         category.setTittle(dto.getTittle());
         category.setMetaTittle(dto.getMetaTittle());
         category.setDescription(dto.getDescription());
-        category.setImageUrl(dto.getImageUrl());
     }
 
 
