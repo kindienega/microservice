@@ -6,6 +6,7 @@ import et.com.gebeya.user_service.dto.requestDto.RestaurantRequestDto;
 import et.com.gebeya.user_service.model.Restaurant;
 import et.com.gebeya.user_service.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 

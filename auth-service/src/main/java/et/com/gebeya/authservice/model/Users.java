@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import et.com.gebeya.authservice.enums.Role;
 import et.com.gebeya.authservice.enums.Status;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,6 +36,10 @@ public class Users extends BaseModel implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name="status")
     private Status status;
+    @Column(length = 255,unique = true)
+    @Email(message = "Email is mandatory")
+    private String email;
+
 
     public boolean isApproved() {
         if(status==Status.APPROVED){
