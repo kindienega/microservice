@@ -19,7 +19,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   kafka:
-    bootstrap-servers: localhost:9092
+    # bootstrap-servers: localhost:9092
+    bootstrap-servers: broker:9092
 
 
 #Service Discovery

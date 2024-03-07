@@ -43,8 +43,7 @@ public class Restaurant extends BaseModel {
     @JoinColumn(name = "restaurantId")
     @NotEmpty
     private List<PhoneNumber> phoneNumber;
-    @Column(name = "profile_picture_url")
-    private String profilePictureUrl;
+   
 
 
 
