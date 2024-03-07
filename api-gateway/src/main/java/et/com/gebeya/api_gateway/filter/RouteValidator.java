@@ -14,7 +14,12 @@ public class RouteValidator {
             //"api/v1/products",
             "/api/v1/products/*/stock",
             "/api/v1/products/category/*",
+            "/api/v1/category/all",
             "/api/v1/products/search",
+            "/api/v1/auth/**",
+            "/eureka",
+            "/v3/api-docs",
+            "/swagger-ui/index.html#/**",
             "/api/v1/user/restaurant/register"
             );
 

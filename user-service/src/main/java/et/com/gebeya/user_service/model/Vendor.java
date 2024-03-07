@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "vendor")
@@ -38,5 +39,12 @@ public class Vendor extends BaseModel {
     @Column(length = 255,unique = true)
     @Email(message = "Email is mandatory")
     private String email;
-
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "vendor-product",
+            joinColumns = @JoinColumn(name = "vendor-id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    @NotEmpty(message = "Products are a mandatory")
+    private List<Product> products;
 }
