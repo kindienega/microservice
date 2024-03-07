@@ -60,7 +60,7 @@ public class MappingFunctions {
         dto.setVolume(product.getVolume());
         dto.setBrands(product.getBrands());
         dto.setImageUrl(product.getImageUrl());
-        //dto.setCategory(product.getCategory());
+        dto.setCategory(product.getCategory());
         return dto;
     }
 
