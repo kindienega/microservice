@@ -32,16 +32,14 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
-     private final CloudinaryService cloudinaryService;
      private UserUtil userUtil;
     @Transactional
-    public RestaurantRequestDto restaurantRegistration(RestaurantRequestDto restaurantRequestDto, MultipartFile imageFile) {
+    public RestaurantRequestDto restaurantRegistration(RestaurantRequestDto restaurantRequestDto) {
         try {
-             String imageUrl=cloudinaryService.uploadImage(imageFile);
+
             Restaurant restaurant = MappingUtil.mapRestaurantDtoToModel(restaurantRequestDto);
             restaurant.setStatus(Status.PENDING);
             restaurant.setIsActive(true);
-            restaurant.setProfilePictureUrl(imageUrl);
             restaurant = restaurantRepository.save(restaurant);
 
             Users users = Users.builder()
@@ -76,13 +74,7 @@ public class RestaurantService {
     }
 
 
-//    @Transactional
-//    public Restaurant deleteRestaurant(Integer restaurantId) {
-//        Restaurant restaurant=restaurantRepository.findById(restaurantId).orElseThrow(()->new ErrorHandler(HttpStatus.NOT_FOUND,"id can't be found"));
-//           restaurantRepository.save(restaurant);
-//
-//
-//    }
+
 
     public List<Restaurant> getRestaurantsByName(String name) {
         Specification<Restaurant> spec = RestaurantSpecification.getRestaurantByName(name);

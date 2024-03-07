@@ -2,13 +2,22 @@ package et.com.gebeya.inventory_management.utility;
 
 import et.com.gebeya.inventory_management.Models.Category;
 import et.com.gebeya.inventory_management.Models.Product;
+import et.com.gebeya.inventory_management.cloudinary.ImageModel;
+import et.com.gebeya.inventory_management.cloudinary.ImageServiceImpl;
 import et.com.gebeya.inventory_management.dto.CreateProductRequest;
 import et.com.gebeya.inventory_management.dto.ProductDTO;
 import et.com.gebeya.inventory_management.dto.request.CategoryRegistrationRequest;
 import et.com.gebeya.inventory_management.dto.request.RequestForUpdate;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
 
 @Component
+@AllArgsConstructor
 public class MappingFunctions {
 
     public CategoryRegistrationRequest convertToDTOForCategory(Category category) {
@@ -17,7 +26,6 @@ public class MappingFunctions {
         request.setTittle(category.getTittle());
         request.setMetaTittle(category.getMetaTittle());
         request.setDescription(category.getDescription());
-        request.setImageUrl(category.getImageUrl());
         return request;
     }
     public Category convertToEntityForCategory(CategoryRegistrationRequest request){
@@ -26,8 +34,6 @@ public class MappingFunctions {
         category.setTittle(request.getTittle());
         category.setMetaTittle(request.getMetaTittle());
         category.setDescription(request.getDescription());
-        category.setImageUrl(request.getImageUrl());
-
         return category;
     }
     public void updateEntityWithDtoForCategory(CategoryRegistrationRequest dto, Category category) {
@@ -35,7 +41,6 @@ public class MappingFunctions {
         category.setTittle(dto.getTittle());
         category.setMetaTittle(dto.getMetaTittle());
         category.setDescription(dto.getDescription());
-        category.setImageUrl(dto.getImageUrl());
     }
 
 

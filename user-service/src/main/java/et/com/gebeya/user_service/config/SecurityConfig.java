@@ -42,6 +42,7 @@ public class SecurityConfig {
              "/api/v1/user/restaurant/search",
              "/api/v1/user/restaurant/all",
             "/api/v1/user/vendor/**",
+            "api/admin/users/**"
 
 
 
