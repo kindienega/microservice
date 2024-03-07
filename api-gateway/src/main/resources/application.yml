@@ -11,6 +11,13 @@ spring:
           uri: lb://user-service
           predicates:
             - Path=/api/v1/user/**
+            - Path=/api/admin/users/**
+          filters:
+            - AuthenticationFilter
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/admin/users/**
           filters:
             - AuthenticationFilter
 
@@ -33,11 +40,17 @@ spring:
           filters:
             - AuthenticationFilter
 
+        - id: inventory-management
+          uri: lb://inventory-management
+          predicates:
+            - Path=/api/v1/vendorProducts/**
+          filters:
+            - AuthenticationFilter
 
         - id: inventory-management
           uri: lb://inventory-management
           predicates:
-            - Path=/api/v1/products/**
+            - Path=/api/v1/vendors/**
           filters:
             - AuthenticationFilter
 

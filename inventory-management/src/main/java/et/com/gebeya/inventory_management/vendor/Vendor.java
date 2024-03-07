@@ -1,24 +1,25 @@
-package et.com.gebeya.inventory_management.Models;
+package et.com.gebeya.inventory_management.vendor;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-
-@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
+@Setter
 @Entity
-public class Category {
+public class Vendor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String tittle;
-    private String metaTittle;
     private String description;
-    private Date createdDated;
+    private String contactEmail;
+    private String phoneNumber;
 }

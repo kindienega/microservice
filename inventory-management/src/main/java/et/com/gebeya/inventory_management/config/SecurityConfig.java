@@ -38,10 +38,9 @@ public class SecurityConfig {
             "/api/v1/products/*",
             "/api/v1/products/upload",
             "/api/v1/image/upload",
-            "/api/v1/category/all",
-            "api/v1/image/upload"
-
-
+            "/api/v1/vendors/**",
+            "/api/v1/vendorProducts",
+            "/api/v1/vendorProducts/{vendorProductId}/status/{status}"
     };
     protected static final String [] VENDOR_MATCHERS = {
             "/api/v1/products/order"

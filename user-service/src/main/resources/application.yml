@@ -33,3 +33,4 @@ eureka:
 
 server:
   port: 7000
+

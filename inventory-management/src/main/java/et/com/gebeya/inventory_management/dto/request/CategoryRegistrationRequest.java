@@ -8,5 +8,4 @@ public class CategoryRegistrationRequest {
     private String Tittle;;
     private String metaTittle;
     private String description;
-    private String imageUrl;
 }
