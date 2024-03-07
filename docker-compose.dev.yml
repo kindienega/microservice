@@ -144,9 +144,13 @@ services:
     depends_on:
       - service-discovery  
     environment:
+      DB_HOST: postgres  
+      DB_USERNAME: postgres
+      DB_PASSWORD: kill
+      DB_NAME: orderoptima
       DISCOVERY: "service-discovery"
     networks:
-      - orderoptima-network    
+      - orderoptima-network  
   inventory-managment:
     build: 
       context: .
