@@ -14,19 +14,19 @@ spring:
             - Path=/api/admin/users/**
           filters:
             - AuthenticationFilter
-        - id: user-service
-          uri: lb://user-service
-          predicates:
-            - Path=/api/admin/users/**
-          filters:
-            - AuthenticationFilter
+        # - id: user-service
+        #   uri: lb://user-service
+        #   predicates:
+        #     - Path=/api/admin/users/**
+        #   filters:
+        #     - AuthenticationFilter
 
-        - id: user-service
-          uri: lb://user-service
-          predicates:
-            - Path=/api/v1/user/vendor/**
-          filters:
-            - AuthenticationFilter
+        # - id: user-service
+        #   uri: lb://user-service
+        #   predicates:
+        #     - Path=/api/v1/user/vendor/**
+        #   filters:
+        #     - AuthenticationFilter
 
         - id: auth-service
           uri: lb://auth-service
