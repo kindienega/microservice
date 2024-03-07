@@ -25,10 +25,9 @@ public class RestaurantController {
 
 
     @PostMapping("/restaurant/register")
-    public ResponseEntity<RestaurantRequestDto> registerRestaurant(@RequestBody RestaurantRequestDto restaurantRequestDto,
-                                                                   @RequestParam("imageFile") MultipartFile imageFile) {
+    public ResponseEntity<RestaurantRequestDto> registerRestaurant(@RequestBody RestaurantRequestDto restaurantRequestDto) {
         try {
-            RestaurantRequestDto registeredRestaurant = restaurantService.restaurantRegistration(restaurantRequestDto, imageFile);
+            RestaurantRequestDto registeredRestaurant = restaurantService.restaurantRegistration(restaurantRequestDto);
             return ResponseEntity.ok(registeredRestaurant);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
