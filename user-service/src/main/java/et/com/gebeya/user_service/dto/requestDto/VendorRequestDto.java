@@ -20,4 +20,6 @@ public class VendorRequestDto {
     private String email;
     private List<PhoneNumberDto> phoneNumber;
     private List<Long> productId;
+//    private String userName;
+//    private String password;
 }

@@ -25,16 +25,15 @@ public class RestaurantController {
 
 
     @PostMapping("/restaurant/register")
-    public ResponseEntity<RestaurantRequestDto> registerRestaurant(@RequestBody RestaurantRequestDto restaurantRequestDto,
-                                                                   @RequestParam("imageFile") MultipartFile imageFile) {
+    public ResponseEntity<RestaurantRequestDto> registerRestaurant(@RequestBody RestaurantRequestDto restaurantRequestDto) {
         try {
-            RestaurantRequestDto registeredRestaurant = restaurantService.restaurantRegistration(restaurantRequestDto, imageFile);
+            RestaurantRequestDto registeredRestaurant = restaurantService.restaurantRegistration(restaurantRequestDto);
             return ResponseEntity.ok(registeredRestaurant);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    @GetMapping("/restaurant/{id}")
+    @GetMapping("/restaurant/get/{id}")
     public Restaurant getRestaurantById(@PathVariable Integer id) {
         return restaurantService.getRestaurantById(id);
     }
@@ -49,7 +48,7 @@ public class RestaurantController {
         return restaurantService.getRestaurantsByName(name);
     }
 
-    @DeleteMapping("/restaurant/{id}")
+    @DeleteMapping("/restaurant/delete/{id}")
     public ResponseEntity<Restaurant> deleteRestaurant(@PathVariable("id") int id){
         return ResponseEntity.ok(restaurantService.deleteRestaurant(id));
     }

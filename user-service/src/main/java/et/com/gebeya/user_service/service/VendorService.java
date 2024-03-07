@@ -1,5 +1,6 @@
 package et.com.gebeya.user_service.service;
 
+import et.com.gebeya.user_service.dto.requestDto.AddAccountRequestDto;
 import et.com.gebeya.user_service.dto.requestDto.RestaurantRequestDto;
 import et.com.gebeya.user_service.dto.requestDto.UserCredential;
 import et.com.gebeya.user_service.dto.requestDto.VendorRequestDto;
@@ -44,13 +45,16 @@ public class VendorService {
 
     public VendorRequestDto vendorRegistration(VendorRequestDto vendorRequestDto) {
         try {
+
             Vendor vendor = MappingUtil.mapVendorDtoToModel(vendorRequestDto);
             List<Product> product=getProductById(vendorRequestDto.getProductId());
             vendor.setProducts(product);
             vendor.setIsActive(true);
             vendor = vendorRepository.save(vendor);
             userUtil.createUser(vendor.getBusinessName(), vendor.getOwnerName(), vendor.getId(), Role.VENDOR, Status.APPROVED, vendorRequestDto.getEmail());
-
+//            AddAccountRequestDto addAccountRequestDto=new AddAccountRequestDto();
+//            vendorRequestDto.setUserName(addAccountRequestDto.getUsername());
+//            vendorRequestDto.setPassword(addAccountRequestDto.getPassword());
             return vendorRequestDto;
         } catch (Exception e) {
             log.error(e.getMessage(),e);
