@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
+
+import java.util.Map;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,6 +28,9 @@ public class ProductCreationResponse {
     private String volume;
     private String brands;
     private CategoryDto category;
+
+
+
     //private Admins admins;
 
 }

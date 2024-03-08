@@ -7,6 +7,8 @@ import et.com.gebeya.inventory_management.dto.request.ProductCreationRequest;
 import et.com.gebeya.inventory_management.dto.response.ProductCreationResponse;
 import et.com.gebeya.inventory_management.cloudinary.ImageModel;
 import et.com.gebeya.inventory_management.cloudinary.ImageServiceImpl;
+import et.com.gebeya.inventory_management.exceptions.GlobalExceptionHandler;
+import et.com.gebeya.inventory_management.exceptions.ResourceNotFoundException;
 import et.com.gebeya.inventory_management.repos.CategoryRepository;
 import et.com.gebeya.inventory_management.repos.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -24,15 +26,14 @@ public class CustomMappingFunctions {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ImageServiceImpl imageService;
+    private final GlobalExceptionHandler globalExceptionHandler;
     //private final AdminRepository adminRepository;
     //private final VendorRepository vendorRepository;
 
 
     public ProductCreationResponse createProductAndConvertToResponse(ProductCreationRequest request, MultipartFile imageFile) {
-     //   Admins admins = adminRepository.findById(request.getAdminId())
-        //          .orElseThrow(()->new RuntimeException("vendor with vendor id :" + request.getAdminId()));
         Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found with ID: " + request.getCategoryId()));
+                .orElseThrow(() -> new ResourceNotFoundException(("Category with not found  ID: " + request.getCategoryId())));
 
         Product product = new Product();
         product.setName(request.getName());
@@ -54,7 +55,6 @@ public class CustomMappingFunctions {
         } else {
             throw new RuntimeException("Image upload failed");
         }
-        //product.setAdmin(admins);
 
         Product savedProduct = productRepository.save(product);
 
