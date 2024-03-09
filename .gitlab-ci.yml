@@ -31,7 +31,7 @@ stage_build:
   image: docker:24.0.7
   stage: build
   before_script:
-    - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+    - docker login -u $DOCKER_USER_NAME -p $DOCKER_PASSWORD
   script:
     - docker build -t $DOCKER_USERNAME/${API_SERVICE_IMG}:$CI_COMMIT_SHORT_SHA -f Dockerfile.api .
     - docker push $DOCKER_USERNAME/${API_SERVICE_IMG}:$CI_COMMIT_SHORT_SHA
