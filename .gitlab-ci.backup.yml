@@ -5,34 +5,55 @@ workflow:
       when: never 
     - when: always
 
+
 stages:
-- build
-- update-manifests
+  - build
+  - update-manifests
 
 cache:
   paths:
     - .m2/repository
   key: "$CI_JOB_NAME"
 
+
+
 variables:
-  DOCKER_IMAGE: ""
-  DOCKER_FILE_NAME: ""
-  MANIFEST_STAGING_PATH: ""
-  COMMIT_MESSAGE: ""
-  GIT_DEPTH: 500  
+  SERVICE_DISCOVERY_IMG: "service-discovery-"
+  API_SERVICE_IMG: "api-service-"
+  EMAIL_SERVICE_IMG: "email-service-"
+  AUTH_SERVICE: "auth-service-"
+  INVENTORY_SERVICE: "inventory-service-"
+  ORDER_SERVICE: "order-service-"
+  USER_SERVICE: "user-service-"
 
 
-# hidden jobs that can be reuse over other jobs 
-.docker_build:
+stage_build:
   image: docker:24.0.7
   stage: build
   before_script:
     - docker login -u $DOCKER_USER_NAME -p $DOCKER_PASSWORD
   script:
-    - docker  build -t $DOCKER_IMAGE  -f $DOCKER_FILE_NAME .
+    - docker build -t $DOCKER_USER_NAME/${API_SERVICE_IMG}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA -f Dockerfile.api .
+    - docker push $DOCKER_USER_NAME/${API_SERVICE_IMG}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
+    
+    - docker build -t $DOCKER_USER_NAME/${AUTH_SERVICE}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA -f Dockerfile.auth .
+    - docker push $DOCKER_USER_NAME/${AUTH_SERVICE}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
+    
+    - docker build -t $DOCKER_USER_NAME/${INVENTORY_SERVICE}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA -f Dockerfile.inventory .
+    - docker push $DOCKER_USER_NAME/${INVENTORY_SERVICE}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
 
-    - docker push $DOCKER_IMAGE
+    - docker build -t $DOCKER_USER_NAME/${EMAIL_SERVICE_IMG}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA -f Dockerfile.email .
+    - docker push $DOCKER_USER_NAME/${EMAIL_SERVICE_IMG}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
+    
+    - |
+      docker build -t $DOCKER_USER_NAME/${SERVICE_DISCOVERY_IMG}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA -f Dockerfile.discovery .
+    - docker push $DOCKER_USER_NAME/${SERVICE_DISCOVERY_IMG}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
 
+    - docker build -t $DOCKER_USER_NAME/${ORDER_SERVICE}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA -f Dockerfile.order .
+    - docker push $DOCKER_USER_NAME/${ORDER_SERVICE}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
+
+    - docker build -t $DOCKER_USER_NAME/${USER_SERVICE}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA -f Dockerfile.user .
+    - docker push $DOCKER_USER_NAME/${USER_SERVICE}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
 
 .update_manifest:
   stage: update-manifests
@@ -40,79 +61,20 @@ variables:
     MANIFEST_GIT_REPO: https://$USERNAME:$PAT_TOKEN@git.gebeya.training/order-optima/k8s-manifests.git
 
   before_script:
-    - apk add git
-    - git clone $MANIFEST_GIT_REPO
-    - git config --global user.name "$GITLAB_USER_NAME"
-    - git config --global user.email "$GITLAB_USER_EMAIL"
+  - apk add git
+  - git clone $MANIFEST_GIT_REPO
+  - git config --global user.name "$GITLAB_USER_NAME"
+  - git config --global user.email "$GITLAB_USER_EMAIL"
   script:
-    - cd k8s-manifests
-    - git remote set-url origin --push $MANIFEST_GIT_REPO
-    - |
-      sed -i "s#image:.*#image: ${DOCKER_IMAGE}#g" ./$MANIFEST_STAGING_PATH
-    - git stage ./$MANIFEST_STAGING_PATH
-    - git commit -m "$COMMIT_MESSAGE [skip-ci]"
-    - git push origin HEAD:$CI_COMMIT_REF_NAME
+  - cd k8s-manifests
+  - git remote set-url origin --push $MANIFEST_GIT_REPO
+  - |
+    sed -i "s#image:.*#image: ${DOCKER_IMAGE}#g" ./$MANIFEST_STAGING_PATH
+  - git stage ./$MANIFEST_STAGING_PATH
+  - git commit -m "$COMMIT_MESSAGE [skip-ci]"
+  - git push origin HEAD:$CI_COMMIT_REF_NAME
 
 
-
-
-
-build_apigateway_service:
-  extends: .docker_build
-  stage: build
-  variables:
-    DOCKER_FILE_NAME: "Dockerfile.api"
-    IMAGE_PATH: "api-service-"
-    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
-
-build_email_service:
-  extends: .docker_build
-  stage: build
-  variables:
-    DOCKER_FILE_NAME: "Dockerfile.email"
-    IMAGE_PATH: "email-service-"
-    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
-
-
-build_service_discovery:
-  extends: .docker_build
-  stage: build
-  variables:
-    DOCKER_FILE_NAME: "Dockerfile.discovery"
-    IMAGE_PATH: "service-discovery-"
-    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
-
-build_auth_service:
-  extends: .docker_build
-  stage: build
-  variables:
-    DOCKER_FILE_NAME: "Dockerfile.auth"
-    IMAGE_PATH: "auth-service-"
-    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
-
-build_inventory_service:
-  extends: .docker_build
-  stage: build
-  variables:
-    DOCKER_FILE_NAME: "Dockerfile.inventory"
-    IMAGE_PATH: "inventory-service-"
-    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
-
-build_order_service:
-  extends: .docker_build
-  stage: build
-  variables:
-    DOCKER_FILE_NAME: "Dockerfile.order"
-    IMAGE_PATH: "order-service-"
-    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
-
-build_user_service:
-  extends: .docker_build
-  stage: build
-  variables:
-    DOCKER_FILE_NAME: "Dockerfile.user"
-    IMAGE_PATH: "user-service-"
-    DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
 
 # update k8s manifest jobs 
 
