@@ -36,22 +36,23 @@ stage_build:
     - docker build -t $DOCKER_USER_NAME/${API_SERVICE_IMG}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA -f Dockerfile.api .
     - docker push $DOCKER_USER_NAME/${API_SERVICE_IMG}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
     
-    - docker build -t $DOCKER_USER_NAME/${AUTH_SERVICE}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA -f Dockerfile.auth
+    - docker build -t $DOCKER_USER_NAME/${AUTH_SERVICE}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA -f Dockerfile.auth .
     - docker push $DOCKER_USER_NAME/${AUTH_SERVICE}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
     
-    - docker build -t $DOCKER_USER_NAME/${INVENTORY_SERVICE}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA -f Dockerfile.inventory
+    - docker build -t $DOCKER_USER_NAME/${INVENTORY_SERVICE}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA -f Dockerfile.inventory .
     - docker push $DOCKER_USER_NAME/${INVENTORY_SERVICE}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
 
-    - docker build -t $DOCKER_USER_NAME/${EMAIL_SERVICE_IMG}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA -f Dockerfile.email
+    - docker build -t $DOCKER_USER_NAME/${EMAIL_SERVICE_IMG}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA -f Dockerfile.email .
     - docker push $DOCKER_USER_NAME/${EMAIL_SERVICE_IMG}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
     
-    - docker build -t $DOCKER_USER_NAME/${SERVICE_DISCOVERY_IMG}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA -f Dockerfile.discovery
+    - |
+      docker build -t $DOCKER_USER_NAME/${SERVICE_DISCOVERY_IMG}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA -f Dockerfile.discovery .
     - docker push $DOCKER_USER_NAME/${SERVICE_DISCOVERY_IMG}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
 
-    - docker build -t $DOCKER_USER_NAME/${ORDER_SERVICE}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA -f Dockerfile.order
+    - docker build -t $DOCKER_USER_NAME/${ORDER_SERVICE}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA -f Dockerfile.order .
     - docker push $DOCKER_USER_NAME/${ORDER_SERVICE}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
 
-    - docker build -t $DOCKER_USER_NAME/${USER_SERVICE}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA -f Dockerfile.user
+    - docker build -t $DOCKER_USER_NAME/${USER_SERVICE}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA -f Dockerfile.user .
     - docker push $DOCKER_USER_NAME/${USER_SERVICE}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
 
 .update_manifest:
