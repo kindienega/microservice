@@ -68,6 +68,8 @@ build_apigateway_service:
 build_email_service:
   extends: .docker_build
   stage: build
+  needs:
+    - build_apigateway_service
   variables:
     DOCKER_FILE_NAME: "Dockerfile.email"
     IMAGE_PATH: "email-service-"
@@ -77,6 +79,8 @@ build_email_service:
 build_service_discovery:
   extends: .docker_build
   stage: build
+  needs:
+    - build_email_service
   variables:
     DOCKER_FILE_NAME: "Dockerfile.discovery"
     IMAGE_PATH: "service-discovery-"
@@ -85,6 +89,8 @@ build_service_discovery:
 build_auth_service:
   extends: .docker_build
   stage: build
+  needs:
+    - build_service_discovery
   variables:
     DOCKER_FILE_NAME: "Dockerfile.auth"
     IMAGE_PATH: "auth-service-"
@@ -93,6 +99,8 @@ build_auth_service:
 build_inventory_service:
   extends: .docker_build
   stage: build
+  needs:
+    - build_auth_service
   variables:
     DOCKER_FILE_NAME: "Dockerfile.inventory"
     IMAGE_PATH: "inventory-service-"
@@ -101,6 +109,8 @@ build_inventory_service:
 build_order_service:
   extends: .docker_build
   stage: build
+  needs:
+    - build_inventory_service
   variables:
     DOCKER_FILE_NAME: "Dockerfile.order"
     IMAGE_PATH: "order-service-"
@@ -109,6 +119,8 @@ build_order_service:
 build_user_service:
   extends: .docker_build
   stage: build
+  needs:
+    - build_order_service
   variables:
     DOCKER_FILE_NAME: "Dockerfile.user"
     IMAGE_PATH: "user-service-"
