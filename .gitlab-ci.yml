@@ -1,29 +1,34 @@
-# workflow:
-#   rules:
-#   - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-#   - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
-#     when: never
-#   - if: $CI_COMMIT_BRANCH
-
 workflow:
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: never
-    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
-      when: never
-    - if: $CI_COMMIT_BRANCH == "main"
+    # if the branch is not main and the pipeline trigger is not merge request never excute it, otherwise always excute.
+    - if: $CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE != "merge_request_event"
+      when: never 
+    - when: always
+
+# workflow:
+#   rules:
+#     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+#       when: never
+#     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+#       when: never
+#     - if: $CI_COMMIT_BRANCH == "main"
 
 
 stages:
 - build
 - update-manifests
 
+cache:
+  paths:
+    - .m2/repository
+  key: "$CI_JOB_NAME"
+
 variables:
   DOCKER_IMAGE: ""
   DOCKER_FILE_NAME: ""
   MANIFEST_STAGING_PATH: ""
   COMMIT_MESSAGE: ""
-  GIT_DEPTH: 400  
+  GIT_DEPTH: 800  
 
 
 # hidden jobs that can be reuse over other jobs 
@@ -68,6 +73,7 @@ build_apigateway_service:
     DOCKER_FILE_NAME: "Dockerfile.api"
     IMAGE_PATH: "api-service-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
+
 build_email_service:
   extends: .docker_build
   stage: build
