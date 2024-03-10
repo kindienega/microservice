@@ -1,5 +1,6 @@
 package et.com.gebeya.order_service.controller;
 
+import et.com.gebeya.order_service.dto.requestDto.OrderPaymentInfo;
 import et.com.gebeya.order_service.dto.requestDto.OrderRequestDto;
 import et.com.gebeya.order_service.dto.responseDto.OrderResponseDto;
 import et.com.gebeya.order_service.model.Orders;
@@ -53,8 +54,8 @@ public class OrderController {
     }
 
     @PutMapping("/{orderId}/complete")
-    public ResponseEntity<String> completeOrder(@PathVariable("orderId") Integer orderId) {
-        orderService.updateOrderStatusToCompleted(orderId);
-        return ResponseEntity.ok("Order completed successfully");
+    public ResponseEntity<OrderPaymentInfo> completeOrder(@PathVariable("orderId") Integer orderId) {
+        OrderPaymentInfo orderPaymentInfo = orderService.updateOrderStatusToCompleted(orderId);
+        return ResponseEntity.ok(orderPaymentInfo);
     }
 }

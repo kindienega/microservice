@@ -2,6 +2,7 @@ package et.com.gebeya.order_service.service;
 
 import et.com.gebeya.order_service.Enum.OrderStatus;
 import et.com.gebeya.order_service.dto.requestDto.OrderItemRequestDto;
+import et.com.gebeya.order_service.dto.requestDto.OrderPaymentInfo;
 import et.com.gebeya.order_service.dto.requestDto.OrderRequestDto;
 import et.com.gebeya.order_service.dto.responseDto.OrderResponseDto;
 import et.com.gebeya.order_service.model.*;
@@ -104,7 +105,8 @@ public class OrderService {
     public List<Orders> getOrdersByRestaurantId(Integer restaurantId) {
         return orderRepository.findByRestaurantId(restaurantId);
     }
-    public void updateOrderStatusToCompleted(Integer orderId) {
+    // add a return type of OrderPaymentInfo
+    public OrderPaymentInfo updateOrderStatusToCompleted(Integer orderId) {
         // Retrieve the order from the repository
         Orders orders = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found"));
@@ -134,9 +136,14 @@ public class OrderService {
             productRepository.save(product);
         }
 
-        // Update order status to completed
+        // Update order status to complete
         orders.setOrderStatus(OrderStatus.COMPLETED);
         orderRepository.save(orders);
+        double totalPrice = orders.getOrderItems().stream()
+                .mapToDouble(orderItem -> orderItem.getProduct().getPrice() * orderItem.getQuantity())
+                .sum();
+
+        return new OrderPaymentInfo(orderId, totalPrice);
     }
 
 }
