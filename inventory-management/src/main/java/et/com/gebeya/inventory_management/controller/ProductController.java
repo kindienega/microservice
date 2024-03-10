@@ -1,12 +1,14 @@
 package et.com.gebeya.inventory_management.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import et.com.gebeya.inventory_management.Models.Product;
 import et.com.gebeya.inventory_management.dto.ProductDTO;
 import et.com.gebeya.inventory_management.dto.request.ProductCreationRequest;
 import et.com.gebeya.inventory_management.dto.request.RequestForUpdate;
 import et.com.gebeya.inventory_management.dto.request.StockAdjustmentDTO;
 import et.com.gebeya.inventory_management.dto.response.ListAllProductUnderCategoryResponse;
 import et.com.gebeya.inventory_management.dto.response.ProductCreationResponse;
+import et.com.gebeya.inventory_management.dto.response.ProductUpdateResponse;
 import et.com.gebeya.inventory_management.dto.response.QuantityResponse;
 import et.com.gebeya.inventory_management.service.ProductService;
 import jakarta.validation.Valid;
@@ -105,9 +107,15 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/order")
-    public ResponseEntity<Void> orderProduct(@RequestBody StockAdjustmentDTO stockAdjustment) {
-        productService.decreaseStock(stockAdjustment.getProductId(), stockAdjustment.getQuantity());
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping("/order")
+//    public ResponseEntity<Void> orderProduct(@RequestBody StockAdjustmentDTO stockAdjustment) {
+//        productService.decreaseStock(stockAdjustment.getProductId(), stockAdjustment.getQuantity());
+//        return ResponseEntity.ok().build();
+//    }
+@PostMapping("/order")
+public ResponseEntity<ProductUpdateResponse> orderProduct(@RequestBody StockAdjustmentDTO stockAdjustment) {
+    Product product = productService.decreaseStock(stockAdjustment.getProductId(), stockAdjustment.getQuantity());
+    ProductUpdateResponse response = new ProductUpdateResponse(product.getName(), product.getQuantity());
+    return ResponseEntity.ok(response);
+}
 }
