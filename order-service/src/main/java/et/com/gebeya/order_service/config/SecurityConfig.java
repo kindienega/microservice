@@ -1,10 +1,10 @@
-package et.com.gebeya.user_service.config;
+package et.com.gebeya.order_service.config;
 
 
-
-import et.com.gebeya.user_service.security.RoleHeaderAuthenticationFilter;
-import et.com.gebeya.user_service.security.RoleHeaderAuthenticationProvider;
+import et.com.gebeya.order_service.security.RoleHeaderAuthenticationFilter;
+import et.com.gebeya.order_service.security.RoleHeaderAuthenticationProvider;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,54 +22,32 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
+@Slf4j
 public class SecurityConfig {
 
-    protected static final String [] UNAUTHORIZED_MATCHERS = {
-            "/api/v1/user/restaurant/register",
-            "/swagger-ui/**",
-            "/v3/api-docs/**",
-            "/api/auth/log_in",
-
-    };
-
     protected static final String [] ADMIN_MATCHERS = {
-            "api/v1/user/vendor/register",
-            "/api/v1/user/restaurant/approve/*",
-            "/api/v1/user/restaurant/get/*",
-             "/api/v1/user/restaurant/search",
-             "/api/v1/user/restaurant/all",
-            "/api/v1/user/vendor/**",
-            "api/admin/users/**"
-
-
-
+            "/api/v1/orders/all",
+            "/api/v1/orders/restaurant/*",
+            "/api/v1/orders/*/complete"
 
     };
 
     protected static final String [] RESTAURANT_MATCHERS = {
-            "/api/v1/user/restaurant/get/*",
-            "/api/v1/user/restaurant/delete/*",
-    };
 
-    protected static final String [] VENDOR_MATCHERS = {
-            "/api/v1/vendor/update",
-            "/api/v1/products/**"
+            "/api/v1/orders/*/cancel",
+            "/api/v1/orders/restaurant/*",
+            "/api/v1/orders/place",
+
 
     };
-
-
-
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> request.requestMatchers(UNAUTHORIZED_MATCHERS).permitAll())
                 .authorizeHttpRequests(request -> request.requestMatchers(ADMIN_MATCHERS).hasAuthority("ADMIN"))
                 .authorizeHttpRequests(request -> request.requestMatchers(RESTAURANT_MATCHERS).hasAuthority("RESTAURANT"))
-                .authorizeHttpRequests(request -> request.requestMatchers(VENDOR_MATCHERS).hasAuthority("VENDOR"))
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .exceptionHandling(handling -> {
                     handling.authenticationEntryPoint(unauthorizedEntryPoint());
@@ -99,8 +77,10 @@ public class SecurityConfig {
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
 
+
         return (request, response, accessDeniedException) ->
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
+
     }
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
@@ -108,3 +88,4 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 }
+

@@ -53,6 +53,7 @@ public class AuthenticationService {
         AuthenticationResponse response = AuthenticationResponse.builder()
                 .token(jwt)
                 .role(user.getRole())
+                .roleId(user.getRoleId())
                 .build();
 
         return ResponseEntity.ok(response);

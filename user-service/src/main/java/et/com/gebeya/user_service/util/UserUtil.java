@@ -3,9 +3,11 @@ package et.com.gebeya.user_service.util;
 
 import et.com.gebeya.user_service.dto.requestDto.AddAccountRequestDto;
 import et.com.gebeya.user_service.dto.requestDto.UserDto;
+import et.com.gebeya.user_service.dto.requestDto.VendorRequestDto;
 import et.com.gebeya.user_service.enums.Role;
 import et.com.gebeya.user_service.enums.Status;
 import et.com.gebeya.user_service.model.Users;
+import et.com.gebeya.user_service.model.Vendor;
 import et.com.gebeya.user_service.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -21,7 +23,7 @@ import static et.com.gebeya.user_service.util.Constant.ADD_ACCOUNT_TOPIC;
 public class UserUtil {
    private final UsersRepository usersRepository;
        private final PasswordEncoder passwordEncoder;
-    private final KafkaTemplate<String, AddAccountRequestDto> addAccountRequestDtoKafkaTemplate;
+   private final KafkaTemplate<String, AddAccountRequestDto> addAccountRequestDtoKafkaTemplate;
 
     private static StringBuilder randomStringGenerator() {
         final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
@@ -51,6 +53,7 @@ public class UserUtil {
                 .build();
 
         usersRepository.save(users);
+      //  VendorRequestDto vendorRequestDto=VendorRequestDto.builder().userName(username).password(password).build();
 
 //        UserDto dto = UserDto.builder()
 //                .userName(username)
