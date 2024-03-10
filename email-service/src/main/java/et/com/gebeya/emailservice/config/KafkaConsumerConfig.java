@@ -19,12 +19,11 @@ import java.util.Map;
 
 @Configuration
 public class KafkaConsumerConfig {
+    // private final String bootstrapServer = "http://localhost:9092";
+    private final String bootstrapServer = "http://broker:9092";
 
     public Map<String, Object> consumerConfig() {
         Map<String, Object> props = new HashMap<>();
-        // private final String bootstrapServer = "http://localhost:9092";
-       // String bootstrapServer = "http://broker:9092";
-        String bootstrapServer = "localhost:9092";
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
