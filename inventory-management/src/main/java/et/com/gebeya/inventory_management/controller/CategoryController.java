@@ -1,14 +1,12 @@
 package et.com.gebeya.inventory_management.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import et.com.gebeya.inventory_management.dto.CategoryDTO;
 import et.com.gebeya.inventory_management.dto.request.CategoryRegistrationRequest;
 import et.com.gebeya.inventory_management.service.CategoryService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -30,7 +28,7 @@ public class CategoryController {
 //        return categoryService.createCategory(request, imageFile);
 //    }
 @PostMapping()
-public CategoryRegistrationRequest addCategory(@RequestBody CategoryRegistrationRequest request) {
+public CategoryRegistrationRequest addCategory(@RequestBody @Valid CategoryRegistrationRequest request){
     return categoryService.createCategory(request);
     }
     @PreAuthorize("hasRole('ADMIN')")
