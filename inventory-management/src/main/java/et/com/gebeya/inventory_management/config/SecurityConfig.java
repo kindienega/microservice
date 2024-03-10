@@ -33,6 +33,7 @@ public class SecurityConfig {
     protected static final String [] ADMIN_MATCHERS = {
             "/api/v1/products/create",
             "/api/v1/category/**",
+            "/api/v1/category/all",
             "/api/v1/products/restock",
             "/api/v1/products",
             "/api/v1/products/**",

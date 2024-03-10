@@ -14,7 +14,6 @@ import et.com.gebeya.inventory_management.repos.CategoryRepository;
 import et.com.gebeya.inventory_management.repos.ProductRepository;
 import et.com.gebeya.inventory_management.utility.CustomMappingFunctions;
 import et.com.gebeya.inventory_management.utility.MappingFunctions;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
