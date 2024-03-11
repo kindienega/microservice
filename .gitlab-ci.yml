@@ -4,9 +4,9 @@ workflow:
     - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "merge_request_event"
     #   when: never
     # - when: always
-    - if: $CI_COMMIT_BRANCH == "production" && $CI_PIPELINE_TRIGGERED == "true"
+    - if: $CI_COMMIT_BRANCH == "production"
       # Runs for manual triggers on the production branch
-      when: manual
+      only: tags
 
 stages:
 - build
