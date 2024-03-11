@@ -1,15 +1,13 @@
 workflow:
   rules:
-    # if the branch is  main and the pipeline trigger is  merge request excute it excute it
+    # if the branch is main and the pipeline trigger is merge request execute it
     - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "merge_request_event"
       when: always 
 
-        # if the branch is production  and the pipeline trigger is manual excute it,.
-    - if: $CI_COMMIT_BRANCH == "production" && $CI_PIPELINE_SOURCE == "manual"
-      when: always 
+    # if the branch is production and the pipeline trigger is manual, or the branch matches the versioning pattern, execute it
+    - if: $CI_COMMIT_BRANCH == "production" && $CI_PIPELINE_SOURCE == "manual" || $CI_COMMIT_BRANCH =~ /v\d.+/
+      when: always
 
-    - if: '$CI_COMMIT_BRANCH =~ /v\d.+/'
-      when: manual
 
 stages:
 - build
