@@ -1,9 +1,9 @@
 workflow:
   rules:
     # if the branch is main and the pipeline trigger is merge request execute it
-    - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: always 
-    - when: never
+    - if: $CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE != "merge_request_event"
+      when: never
+    - when: always
 
 
     # # if the branch is production and the pipeline trigger is manual, or the branch matches the versioning pattern, execute it
