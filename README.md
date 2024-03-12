@@ -140,10 +140,9 @@ The logs are as follows, notice the `[appname,traceId,spanId,exportable]` entrie
 ## Infrastructure automation
 
 Here is a simple Continuous Delivery workflow, implemented in this project:
+[![](https://app.eraser.io/workspace/ON9G8nZqoZOjA9qjpLQ1/preview?elements=vbrUMi01z7Q_UAitwTrvoA&type=embed)](https://app.eraser.io/workspace/ON9G8nZqoZOjA9qjpLQ1?elements=vbrUMi01z7Q_UAitwTrvoA)
 
-<img width="880" src="https://cloud.githubusercontent.com/assets/6069066/14159789/0dd7a7ce-f6e9-11e5-9fbb-a7fe0f4431e3.png">
-
-In this [configuration](https://github.com/sqshq/PiggyMetrics/blob/master/.travis.yml), Travis CI builds tagged images for each successful git push. So, there are always the `latest` images for each microservice on [Docker Hub](https://hub.docker.com/r/sqshq/) and older images, tagged with git commit hash. It's easy to deploy any of them and quickly rollback, if needed.
+In this [configuration](http://git.gebeya.training/order-optima/backend-services/backend-microservice.git/.gitlab-ci.yml), Gitlab CI builds tagged images for each successful git push. So, there are always the `latest` images for each microservice on [Docker Hub](https://hub.docker.com/r/sondawitmekonnen/) and older images, tagged with git commit hash. It's easy to deploy any of them and quickly rollback, if needed.
 
 ## Let's try it out
 
