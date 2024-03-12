@@ -1,45 +1,36 @@
-[![Build Status](https://travis-ci.org/sqshq/PiggyMetrics.svg?branch=master)](https://travis-ci.org/sqshq/PiggyMetrics)
-[![codecov.io](https://codecov.io/github/sqshq/PiggyMetrics/coverage.svg?branch=master)](https://codecov.io/github/sqshq/PiggyMetrics?branch=master)
-[![GitHub license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/sqshq/PiggyMetrics/blob/master/LICENCE)
-[![Join the chat at https://gitter.im/sqshq/PiggyMetrics](https://badges.gitter.im/sqshq/PiggyMetrics.svg)](https://gitter.im/sqshq/PiggyMetrics?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Order optima
-
 Order optima is a simple financial advisor app built to demonstrate the [Microservice Architecture Pattern](http://martinfowler.com/microservices/) using Spring Boot, Spring Cloud and Docker. The project is intended as a tutorial, but you are welcome to fork it and turn it into something else!
 
 <br>
 
-<!-- ![](https://cloud.githubusercontent.com/assets/6069066/13864234/442d6faa-ecb9-11e5-9929-34a9539acde0.png)
-![Order optima](https://cloud.githubusercontent.com/assets/6069066/13830155/572e7552-ebe4-11e5-918f-637a49dff9a2.gif) -->
-
-[View on Eraser![](https://app.eraser.io/workspace/NINw1zDx4sdwuyg424ZY/preview?elements=ZLhUWgGHwdQUxw0FG4ppHA&type=embed)](https://app.eraser.io/workspace/NINw1zDx4sdwuyg424ZY?elements=ZLhUWgGHwdQUxw0FG4ppHA)
 ## Functional services
 
 Order optima is decomposed into three core microservices. All of them are independently deployable applications organized around certain business domains.
 
 <img width="880" alt="Functional services" src="https://cloud.githubusercontent.com/assets/6069066/13900465/730f2922-ee20-11e5-8df0-e7b51c668847.png">
 
-#### Account service
+#### Auth service
 Contains general input logic and validation: incomes/expenses items, savings and account settings.
 
 Method	| Path	| Description	| User authenticated	| Available from UI
 ------------- | ------------------------- | ------------- |:-------------:|:----------------:|
-GET	| /accounts/{account}	| Get specified account data	|  | 	
-GET	| /accounts/current	| Get current account data	| × | ×
-GET	| /accounts/demo	| Get demo account data (pre-filled incomes/expenses items, etc)	|   | 	×
-PUT	| /accounts/current	| Save current account data	| × | ×
-POST	| /accounts/	| Register new account	|   | ×
+GET	| /api/v1/auth/{login}	| Get specified account data	|  | 	
+GET	| /api/v1/auth/current	| Get current account data	| × | ×
+GET	| /api/v1/auth/demo	| Get demo account data (pre-filled incomes/expenses items, etc)	|   | 	×
+PUT	| /api/v1/auth/current	| Save current account data	| × | ×
+POST	| /api/v1/auth/	| Register new account	|   | ×
 
 
-#### Statistics service
-Performs calculations on major statistics parameters and captures time series for each account. Datapoint contains values normalized to base currency and time period. This data is used to track cash flow dynamics during the account lifetime.
+#### user service
+Performs calculations on major api/v1/user parameters and captures time series for each account. Datapoint contains values normalized to base currency and time period. This data is used to track cash flow dynamics during the account lifetime.
 
 Method	| Path	| Description	| User authenticated	| Available from UI
 ------------- | ------------------------- | ------------- |:-------------:|:----------------:|
-GET	| /statistics/{account}	| Get specified account statistics	          |  | 	
-GET	| /statistics/current	| Get current account statistics	| × | × 
-GET	| /statistics/demo	| Get demo account statistics	|   | × 
-PUT	| /statistics/{account}	| Create or update time series datapoint for specified account	|   | 
+GET	| /api/v1/user/{account}	| Get specified account api/v1/user	          |  | 	
+GET	| /api/v1/user/current	| Get current account api/v1/user	| × | × 
+GET	| /api/v1/user/demo	| Get demo account api/v1/user	|   | × 
+PUT	| /api/v1/user/{account}	| Create or update time series datapoint for specified account	|   | 
 
 
 #### Notification service
@@ -56,8 +47,10 @@ PUT	| /notifications/settings/current	| Save current account notification settin
 - All services are talking to each other via the Rest API
 
 ## Infrastructure
-[Spring cloud](https://spring.io/projects/spring-cloud) provides powerful tools for developers to quickly implement common distributed systems patterns -
-<img width="880" alt="Infrastructure services" src="https://cloud.githubusercontent.com/assets/6069066/13906840/365c0d94-eefa-11e5-90ad-9d74804ca412.png">
+<!-- [Spring cloud](https://spring.io/projects/spring-cloud) provides powerful tools for developers to quickly implement common distributed systems patterns -
+<img width="880" alt="Infrastructure services" src="https://cloud.githubusercontent.com/assets/6069066/13906840/365c0d94-eefa-11e5-90ad-9d74804ca412.png"> -->
+
+![](https://app.eraser.io/workspace/NINw1zDx4sdwuyg424ZY/preview?elements=ZLhUWgGHwdQUxw0FG4ppHA&type=embed)](https://app.eraser.io/workspace/NINw1zDx4sdwuyg424ZY?elements=ZLhUWgGHwdQUxw0FG4ppHA)
 ### Config service
 [Spring Cloud Config](http://cloud.spring.io/spring-cloud-config/spring-cloud-config.html) is horizontally scalable centralized configuration service for the distributed systems. It uses a pluggable repository layer that currently supports local storage, Git, and Subversion.
 
@@ -102,9 +95,9 @@ Each PiggyMetrics client has a scope: `server` for backend services and `ui` - f
 
 ``` java
 @PreAuthorize("#oauth2.hasScope('server')")
-@RequestMapping(value = "accounts/{name}", method = RequestMethod.GET)
-public List<DataPoint> getStatisticsByAccountName(@PathVariable String name) {
-	return statisticsService.findByAccountName(name);
+@RequestMapping(value = "api/v1/auth/{name}", method = RequestMethod.GET)
+public List<DataPoint> getapi/v1/userByAccountName(@PathVariable String name) {
+	return api/v1/userService.findByAccountName(name);
 }
 ```
 
@@ -162,31 +155,31 @@ Feign is a declarative Http client which seamlessly integrates with Ribbon and H
 Here is an example from the Account Service:
 
 ``` java
-@FeignClient(name = "statistics-service")
-public interface StatisticsServiceClient {
+@FeignClient(name = "api/v1/user-service")
+public interface api/v1/userServiceClient {
 
-	@RequestMapping(method = RequestMethod.PUT, value = "/statistics/{accountName}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	void updateStatistics(@PathVariable("accountName") String accountName, Account account);
+	@RequestMapping(method = RequestMethod.PUT, value = "/api/v1/user/{accountName}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	void updateapi/v1/user(@PathVariable("accountName") String accountName, Account account);
 
 }
 ```
 
 - Everything you need is just an interface
 - You can share `@RequestMapping` part between Spring MVC controller and Feign methods
-- Above example specifies just a desired service id - `statistics-service`, thanks to auto-discovery through Eureka
+- Above example specifies just a desired service id - `api/v1/user-service`, thanks to auto-discovery through Eureka
 
 ### Monitor dashboard
 
 In this project configuration, each microservice with Hystrix on board pushes metrics to Turbine via Spring Cloud Bus (with AMQP broker). The Monitoring project is just a small Spring boot application with the [Turbine](https://github.com/Netflix/Turbine) and [Hystrix Dashboard](https://github.com/Netflix-Skunkworks/hystrix-dashboard).
 
-Let's see observe the behavior of our system under load: Statistics Service imitates a delay during the request processing. The response timeout is set to 1 second:
+Let's see observe the behavior of our system under load: api/v1/user Service imitates a delay during the request processing. The response timeout is set to 1 second:
 
 <img width="880" src="https://cloud.githubusercontent.com/assets/6069066/14194375/d9a2dd80-f7be-11e5-8bcc-9a2fce753cfe.png">
 
 <img width="212" src="https://cloud.githubusercontent.com/assets/6069066/14127349/21e90026-f628-11e5-83f1-60108cb33490.gif">	| <img width="212" src="https://cloud.githubusercontent.com/assets/6069066/14127348/21e6ed40-f628-11e5-9fa4-ed527bf35129.gif"> | <img width="212" src="https://cloud.githubusercontent.com/assets/6069066/14127346/21b9aaa6-f628-11e5-9bba-aaccab60fd69.gif"> | <img width="212" src="https://cloud.githubusercontent.com/assets/6069066/14127350/21eafe1c-f628-11e5-8ccd-a6b6873c046a.gif">
 --- |--- |--- |--- |
 | `0 ms delay` | `500 ms delay` | `800 ms delay` | `1100 ms delay`
-| Well behaving system. Throughput is about 22 rps. Small number of active threads in the Statistics service. Median service time is about 50 ms. | The number of active threads is growing. We can see purple number of thread-pool rejections and therefore about 40% of errors, but the circuit is still closed. | Half-open state: the ratio of failed commands is higher than 50%, so the circuit breaker kicks in. After sleep window amount of time, the next request goes through. | 100 percent of the requests fail. The circuit is now permanently open. Retry after sleep time won't close the circuit again because a single request is too slow.
+| Well behaving system. Throughput is about 22 rps. Small number of active threads in the api/v1/user service. Median service time is about 50 ms. | The number of active threads is growing. We can see purple number of thread-pool rejections and therefore about 40% of errors, but the circuit is still closed. | Half-open state: the ratio of failed commands is higher than 50%, so the circuit breaker kicks in. After sleep window amount of time, the next request goes through. | 100 percent of the requests fail. The circuit is now permanently open. Retry after sleep time won't close the circuit again because a single request is too slow.
 
 ### Log analysis
 
@@ -202,7 +195,7 @@ The logs are as follows, notice the `[appname,traceId,spanId,exportable]` entrie
 
 ```text
 2018-07-26 23:13:49.381  WARN [gateway,3216d0de1384bb4f,3216d0de1384bb4f,false] 2999 --- [nio-4000-exec-1] o.s.c.n.z.f.r.s.AbstractRibbonCommand    : The Hystrix timeout of 20000ms for the command account-service is set lower than the combination of the Ribbon read and connect timeout, 80000ms.
-2018-07-26 23:13:49.562  INFO [account-service,3216d0de1384bb4f,404ff09c5cf91d2e,false] 3079 --- [nio-6000-exec-1] c.p.account.service.AccountServiceImpl   : new account has been created: test
+2018-07-26 23:13:49.562  INFO [account-service,3216d0de1384bb4f,404ff09c5cf91d2e,false] 3079 --- [nio-6000-exec-1] c.p.account.service.api/v1/autherviceImpl   : new account has been created: test
 ```
 
 - *`appname`*: The name of the application that logged the span from the property `spring.application.name`
