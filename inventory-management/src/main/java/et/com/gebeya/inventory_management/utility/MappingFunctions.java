@@ -23,23 +23,23 @@ public class MappingFunctions {
     public CategoryRegistrationRequest convertToDTOForCategory(Category category) {
         CategoryRegistrationRequest request = new CategoryRegistrationRequest();
         request.setName(category.getName());
-        request.setTittle(category.getTittle());
-        request.setMetaTittle(category.getMetaTittle());
+        request.setTitle(category.getTitle());
+        request.setMetaTitle(category.getMetaTitle());
         request.setDescription(category.getDescription());
         return request;
     }
     public Category convertToEntityForCategory(CategoryRegistrationRequest request){
         Category category = new Category();
         category.setName(request.getName());
-        category.setTittle(request.getTittle());
-        category.setMetaTittle(request.getMetaTittle());
+        category.setTitle(request.getTitle());
+        category.setMetaTitle(request.getMetaTitle());
         category.setDescription(request.getDescription());
         return category;
     }
     public void updateEntityWithDtoForCategory(CategoryRegistrationRequest dto, Category category) {
         category.setName(dto.getName());
-        category.setTittle(dto.getTittle());
-        category.setMetaTittle(dto.getMetaTittle());
+        category.setTitle(dto.getTitle());
+        category.setMetaTitle(dto.getMetaTitle());
         category.setDescription(dto.getDescription());
     }
 

@@ -8,13 +8,15 @@ import et.com.gebeya.inventory_management.dto.request.ProductDto;
 import et.com.gebeya.inventory_management.dto.request.RequestForUpdate;
 import et.com.gebeya.inventory_management.dto.response.ListAllProductUnderCategoryResponse;
 import et.com.gebeya.inventory_management.dto.response.ProductCreationResponse;
+import et.com.gebeya.inventory_management.dto.response.QuantityResponse;
+import et.com.gebeya.inventory_management.exceptions.ResourceNotFoundException;
 import et.com.gebeya.inventory_management.repos.CategoryRepository;
 import et.com.gebeya.inventory_management.repos.ProductRepository;
 import et.com.gebeya.inventory_management.utility.CustomMappingFunctions;
 import et.com.gebeya.inventory_management.utility.MappingFunctions;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,12 +60,12 @@ public class ProductService {
     }
     public ProductDTO getProductById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product with id not  found " + id));
         return mappingFunctions.convertToDTOForProduct(product);
     }
     public ProductDTO updateProduct(Long id, RequestForUpdate update) {
         Product existingProduct = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with  "+id));
         mappingFunctions.updateEntityWithDTOForProduct(update, existingProduct);
         Product updatedProduct = productRepository.save(existingProduct);
         return mappingFunctions.convertToDTOForProduct(updatedProduct);
@@ -85,14 +87,25 @@ public class ProductService {
     }
     public ListAllProductUnderCategoryResponse listAllProductsUnderCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found with ID: " + categoryId));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + categoryId));
         List<Product> products = productRepository.findAllByCategory(category);
         List<ProductDto> productDtos = products.stream()
                 .map(product -> new ProductDto(product.getId(),
                         product.getName(),
-                        product.getPrice(),
                         product.getQuantity(),
-                        product.getDescription()))
+                        product.getPrice(),
+                        product.getDescription(),
+                        product.getImageUrl(),
+                        product.getDiscount(),
+                        product.getCategory(),
+                        product.getCalories(),
+                        product.getFat(),
+                        product.getProtein(),
+                        product.getWeight(),
+                        product.getSize(),
+                        product.getVolume(),
+                        product.getBrands()
+                        ))
                 .collect(Collectors.toList());
         ListAllProductUnderCategoryResponse response = new ListAllProductUnderCategoryResponse();
         response.setProducts(productDtos);
@@ -100,23 +113,30 @@ public class ProductService {
         return response;
     }
 
+//    public int getTotalQuantity(Long productId) {
+//        return productRepository.findById(productId)
+//                .map(Product::getQuantity)
+//                .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + productId));
+//    }
+public ResponseEntity<QuantityResponse> getTotalQuantity(Long productId) {
+    int quantity = productRepository.findById(productId)
+            .map(Product::getQuantity)
+            .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + productId));
 
-    public int getTotalQuantity(Long productId) {
-        return productRepository.findById(productId)
-                .map(Product::getQuantity)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + productId));
-    }
+    QuantityResponse response = new QuantityResponse(quantity);
+    return ResponseEntity.ok(response);
+}
     @Transactional
     public Product restockProduct(Long productId, int quantityToAdd) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + productId));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + productId));
         product.setQuantity(product.getQuantity() + quantityToAdd);
         return productRepository.save(product);
     }
     @Transactional
     public Product decreaseStock(Long productId, int quantityToDecrease) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + productId));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + productId));
         int newQuantity = product.getQuantity() - quantityToDecrease;
 
         if (newQuantity < 0) {
