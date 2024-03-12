@@ -6,9 +6,7 @@ Order optima is a simple financial advisor app built to demonstrate the [Microse
 
 ## Functional services
 
-Order optima is decomposed into three core microservices. All of them are independently deployable applications organized around certain business domains.
-
-<img width="880" alt="Functional services" src="https://cloud.githubusercontent.com/assets/6069066/13900465/730f2922-ee20-11e5-8df0-e7b51c668847.png">
+Order optima is decomposed into 4 core microservices. All of them are independently deployable applications organized around certain business domains.
 
 #### Auth service
 Contains general input logic and validation: incomes/expenses items, savings and account settings.
@@ -16,10 +14,7 @@ Contains general input logic and validation: incomes/expenses items, savings and
 Method	| Path	| Description	| User authenticated	| Available from UI
 ------------- | ------------------------- | ------------- |:-------------:|:----------------:|
 GET	| /api/v1/auth/{login}	| Get specified account data	|  | 	
-GET	| /api/v1/auth/current	| Get current account data	| × | ×
-GET	| /api/v1/auth/demo	| Get demo account data (pre-filled incomes/expenses items, etc)	|   | 	×
-PUT	| /api/v1/auth/current	| Save current account data	| × | ×
-POST	| /api/v1/auth/	| Register new account	|   | ×
+POST	| /api/v1/auth/login	| Register new account	|   | ×
 
 
 #### user service
@@ -33,7 +28,7 @@ GET	| /api/v1/user/demo	| Get demo account api/v1/user	|   | ×
 PUT	| /api/v1/user/{account}	| Create or update time series datapoint for specified account	|   | 
 
 
-#### Notification service
+#### Inventory service
 Stores user contact information and notification settings (reminders, backup frequency etc). Scheduled worker collects required information from other services and sends e-mail messages to subscribed customers.
 
 Method	| Path	| Description	| User authenticated	| Available from UI
@@ -41,46 +36,17 @@ Method	| Path	| Description	| User authenticated	| Available from UI
 GET	| /notifications/settings/current	| Get current account notification settings	| × | ×	
 PUT	| /notifications/settings/current	| Save current account notification settings	| × | ×
 
-#### Notes
-- Each microservice has its own database, so there is no way to bypass API and access persistence data directly.
-- MongoDB is used as a primary database for each of the services.
-- All services are talking to each other via the Rest API
+#### Order service
+Stores user contact information and notification settings (reminders, backup frequency etc). Scheduled worker collects required information from other services and sends e-mail messages to subscribed customers.
+
+Method	| Path	| Description	| User authenticated	| Available from UI
+------------- | ------------------------- | ------------- |:-------------:|:----------------:|
+GET	| /notifications/settings/current	| Get current account notification settings	| × | ×	
+PUT	| /notifications/settings/current	| Save current account notification settings	| × | ×
 
 ## Infrastructure
-<!-- [Spring cloud](https://spring.io/projects/spring-cloud) provides powerful tools for developers to quickly implement common distributed systems patterns -
-<img width="880" alt="Infrastructure services" src="https://cloud.githubusercontent.com/assets/6069066/13906840/365c0d94-eefa-11e5-90ad-9d74804ca412.png"> -->
 
-![](https://app.eraser.io/workspace/NINw1zDx4sdwuyg424ZY/preview?elements=ZLhUWgGHwdQUxw0FG4ppHA&type=embed)](https://app.eraser.io/workspace/NINw1zDx4sdwuyg424ZY?elements=ZLhUWgGHwdQUxw0FG4ppHA)
-### Config service
-[Spring Cloud Config](http://cloud.spring.io/spring-cloud-config/spring-cloud-config.html) is horizontally scalable centralized configuration service for the distributed systems. It uses a pluggable repository layer that currently supports local storage, Git, and Subversion.
-
-In this project, we are going to use `native profile`, which simply loads config files from the local classpath. You can see `shared` directory in [Config service resources](https://github.com/sqshq/PiggyMetrics/tree/master/config/src/main/resources). Now, when Notification-service requests its configuration, Config service responses with `shared/notification-service.yml` and `shared/application.yml` (which is shared between all client applications).
-
-##### Client side usage
-Just build Spring Boot application with `spring-cloud-starter-config` dependency, autoconfiguration will do the rest.
-
-Now you don't need any embedded properties in your application. Just provide `bootstrap.yml` with application name and Config service url:
-```yml
-spring:
-  application:
-    name: notification-service
-  cloud:
-    config:
-      uri: http://config:8888
-      fail-fast: true
-```
-
-##### With Spring Cloud Config, you can change application config dynamically. 
-For example, [EmailService bean](https://github.com/sqshq/PiggyMetrics/blob/master/notification-service/src/main/java/com/piggymetrics/notification/service/EmailServiceImpl.java) is annotated with `@RefreshScope`. That means you can change e-mail text and subject without rebuild and restart the Notification service.
-
-First, change required properties in Config server. Then make a refresh call to the Notification service:
-`curl -H "Authorization: Bearer #token#" -XPOST http://127.0.0.1:8000/notifications/refresh`
-
-You could also use Repository [webhooks to automate this process](http://cloud.spring.io/spring-cloud-config/spring-cloud-config.html#_push_notifications_and_spring_cloud_bus)
-
-##### Notes
-- `@RefreshScope` doesn't work with `@Configuration` classes and doesn't ignores `@Scheduled` methods
-- `fail-fast` property means that Spring Boot application will fail startup immediately, if it cannot connect to the Config Service.
+[![](https://app.eraser.io/workspace/NINw1zDx4sdwuyg424ZY/preview?elements=ZLhUWgGHwdQUxw0FG4ppHA&type=embed)](https://app.eraser.io/workspace/NINw1zDx4sdwuyg424ZY?elements=ZLhUWgGHwdQUxw0FG4ppHA)
 
 ### Auth service
 Authorization responsibilities are extracted to a separate server, which grants [OAuth2 tokens](https://tools.ietf.org/html/rfc6749) for the backend resource services. Auth Server is used for user authorization as well as for secure machine-to-machine communication inside the perimeter.
@@ -102,71 +68,39 @@ public List<DataPoint> getapi/v1/userByAccountName(@PathVariable String name) {
 ```
 
 ### API Gateway
-API Gateway is a single entry point into the system, used to handle requests and routing them to the appropriate backend service or by [aggregating results from a scatter-gather call](http://techblog.netflix.com/2013/01/optimizing-netflix-api.html). Also, it can be used for authentication, insights, stress and canary testing, service migration, static response handling and active traffic management.
+API Gateway is a single entry point into the system, used to handle requests and routing them to the appropriate backend service or by [aggregating results from a scatter-gather call](http://techblog.netflix.com/2013/01/optimizing-netflix-api.html). 
 
-Netflix opensourced [such an edge service](http://techblog.netflix.com/2013/06/announcing-zuul-edge-service-in-cloud.html) and Spring Cloud allows to use it with a single `@EnableZuulProxy` annotation. In this project, we use Zuul to store some static content (the UI application) and to route requests to appropriate the microservices. Here's a simple prefix-based routing configuration for the Notification service:
 
 ```yml
-zuul:
-  routes:
-    notification-service:
-        path: /notifications/**
-        serviceId: notification-service
-        stripPrefix: false
+spring:
+  application:
+    name: api-service
 
+eureka:
+  client:
+    service-url:
+      defaultZone : http://localhost:8761/eureka
+server:
+  port: 8181
 ```
-
-That means all requests starting with `/notifications` will be routed to the Notification service. There is no hardcoded addresses, as you can see. Zuul uses [Service discovery](https://github.com/sqshq/PiggyMetrics/blob/master/README.md#service-discovery) mechanism to locate Notification service instances and also [Circuit Breaker and Load Balancer](https://github.com/sqshq/PiggyMetrics/blob/master/README.md#http-client-load-balancer-and-circuit-breaker), described below.
 
 ### Service Discovery
 
 Service Discovery allows automatic detection of the network locations for all registered services. These locations might have dynamically assigned addresses due to auto-scaling, failures or upgrades.
 
-The key part of Service discovery is the Registry. In this project, we use Netflix Eureka. Eureka is a good example of the client-side discovery pattern, where client is responsible for looking up the locations of available service instances and load balancing between them.
-
+The key part of Service discovery is the Registry. In this project, we use Netflix Eureka.
 With Spring Boot, you can easily build Eureka Registry using the `spring-cloud-starter-eureka-server` dependency, `@EnableEurekaServer` annotation and simple configuration properties.
 
-Client support enabled with `@EnableDiscoveryClient` annotation a `bootstrap.yml` with application name:
+Client support enabled with `@EnableDiscoveryClient` annotation a `application.yml` with application name:
 ``` yml
 spring:
   application:
-    name: notification-service
+    name: auth-service
 ```
 
 This service will be registered with the Eureka Server and provided with metadata such as host, port, health indicator URL, home page etc. Eureka receives heartbeat messages from each instance belonging to the service. If the heartbeat fails over a configurable timetable, the instance will be removed from the registry.
 
 Also, Eureka provides a simple interface where you can track running services and a number of available instances: `http://localhost:8761`
-
-### Load balancer, Circuit breaker and Http client
-
-#### Ribbon
-Ribbon is a client side load balancer which gives you a lot of control over the behaviour of HTTP and TCP clients. Compared to a traditional load balancer, there is no need in additional network hop - you can contact desired service directly.
-
-Out of the box, it natively integrates with Spring Cloud and Service Discovery. [Eureka Client](https://github.com/sqshq/PiggyMetrics#service-discovery) provides a dynamic list of available servers so Ribbon could balance between them.
-
-#### Hystrix
-Hystrix is the implementation of [Circuit Breaker Pattern](http://martinfowler.com/bliki/CircuitBreaker.html), which gives us a control over latency and network failures while communicating with other services. The main idea is to stop cascading failures in the distributed environment - that helps to fail fast and recover as soon as possible - important aspects of a fault-tolerant system that can self-heal.
-
-Moreover, Hystrix generates metrics on execution outcomes and latency for each command, that we can use to [monitor system's behavior](https://github.com/sqshq/PiggyMetrics#monitor-dashboard).
-
-#### Feign
-Feign is a declarative Http client which seamlessly integrates with Ribbon and Hystrix. Actually, a single `spring-cloud-starter-feign` dependency and `@EnableFeignClients` annotation gives us a full set of tools, including Load balancer, Circuit Breaker and Http client with reasonable default configuration.
-
-Here is an example from the Account Service:
-
-``` java
-@FeignClient(name = "api/v1/user-service")
-public interface api/v1/userServiceClient {
-
-	@RequestMapping(method = RequestMethod.PUT, value = "/api/v1/user/{accountName}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	void updateapi/v1/user(@PathVariable("accountName") String accountName, Account account);
-
-}
-```
-
-- Everything you need is just an interface
-- You can share `@RequestMapping` part between Spring MVC controller and Feign methods
-- Above example specifies just a desired service id - `api/v1/user-service`, thanks to auto-discovery through Eureka
 
 ### Monitor dashboard
 
@@ -205,12 +139,6 @@ The logs are as follows, notice the `[appname,traceId,spanId,exportable]` entrie
 
 ## Infrastructure automation
 
-Deploying microservices, with their interdependence, is much more complex process than deploying a monolithic application. It is really important to have a fully automated infrastructure. We can achieve following benefits with Continuous Delivery approach:
-
-- The ability to release software anytime
-- Any build could end up being a release
-- Build artifacts once - deploy as needed
-
 Here is a simple Continuous Delivery workflow, implemented in this project:
 
 <img width="880" src="https://cloud.githubusercontent.com/assets/6069066/14159789/0dd7a7ce-f6e9-11e5-9fbb-a7fe0f4431e3.png">
@@ -219,30 +147,24 @@ In this [configuration](https://github.com/sqshq/PiggyMetrics/blob/master/.travi
 
 ## Let's try it out
 
-Note that starting 8 Spring Boot applications, 4 MongoDB instances and a RabbitMq requires at least 4Gb of RAM.
+Note that starting 6 Spring Boot applications, postgres  instances  requires at least 4Gb of RAM.
 
 #### Before you start
 - Install Docker and Docker Compose.
-- Change environment variable values in `.env` file for more security or leave it as it is.
-- Build the project: `mvn package [-DskipTests]`
+- Change environment variable values in `.env` file 
 
 #### Production mode
 In this mode, all latest images will be pulled from Docker Hub.
 Just copy `docker-compose.yml` and hit `docker-compose up`
 
 #### Development mode
-If you'd like to build images yourself, you have to clone the repository and build artifacts using maven. After that, run `docker-compose -f docker-compose.yml -f docker-compose.dev.yml up`
+If you'd like to build images yourself, you have to clone the repository and  run `docker-compose -f docker-compose.yml -f docker-compose.dev.yml up`
 
 `docker-compose.dev.yml` inherits `docker-compose.yml` with additional possibility to build images locally and expose all containers ports for convenient development.
 
 If you'd like to start applications in Intellij Idea you need to either use [EnvFile plugin](https://plugins.jetbrains.com/plugin/7861-envfile) or manually export environment variables listed in `.env` file (make sure they were exported: `printenv`)
 
 #### Important endpoints
-- http://localhost:80 - Gateway
+- http://localhost:8181 - Gateway
 - http://localhost:8761 - Eureka Dashboard
-- http://localhost:9000/hystrix - Hystrix Dashboard (Turbine stream link: `http://turbine-stream-service:8080/turbine/turbine.stream`)
-- http://localhost:15672 - RabbitMq management (default login/password: guest/guest)
 
-## Contributions are welcome!
-
-PiggyMetrics is open source, and would greatly appreciate your help. Feel free to suggest and implement any improvements.
