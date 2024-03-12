@@ -45,12 +45,11 @@ cache:
     - git commit -m "$COMMIT_MESSAGE [skip-ci]"
     - git push origin HEAD:$CI_COMMIT_REF_NAME
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH  # Automatic on main branch
+    - if: $CI_COMMIT_BRANCH == 'main'  # Example: Run on main branch
       when: always
-    - if: $CI_COMMIT_BRANCH == 'production'  # Manual on production branch
+    - if: $CI_COMMIT_BRANCH == 'production'  # Example: Run on production branch
       when: manual
-    - else:  # Prevent execution on other branches
-      when: never
+    - when: never 
 
 
 
