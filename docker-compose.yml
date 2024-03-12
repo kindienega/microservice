@@ -20,7 +20,6 @@ services:
       - orderoptima-network
 
   zookeeper:
-  #  image: confluentinc/cp-zookeeper:7.0.1
    image: bitnami/zookeeper:latest
    container_name: zookeeper
    environment:
