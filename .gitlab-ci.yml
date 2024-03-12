@@ -33,7 +33,7 @@ cache:
 
   before_script:
     - apk add git
-    - git clone --single-branch --branch production $MANIFEST_GIT_REPO
+    - git clone --single-branch --branch $CI_COMMIT_BRANCH $MANIFEST_GIT_REPO
     - git config --global user.name "$GITLAB_USER_NAME"
     - git config --global user.email "$GITLAB_USER_EMAIL"
   script:
@@ -43,8 +43,8 @@ cache:
       sed -i "s#image:.*#image: ${DOCKER_IMAGE}#g" ./$MANIFEST_STAGING_PATH
     - git stage ./$MANIFEST_STAGING_PATH
     - git commit -m "$COMMIT_MESSAGE [skip-ci]"
-    # - git push origin HEAD:$CI_COMMIT_REF_NAME
-    - git push origin production
+    - git push origin  $CI_COMMIT_BRANCH
+    # - git push origin production
   rules:
     - if: $CI_COMMIT_BRANCH == 'main'  
       when: always
