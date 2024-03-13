@@ -1,7 +1,6 @@
 version: "3.8"
 
 services:
-  # Postgres database
   postgres:
     image: postgres
     shm_size: 128mb
@@ -31,7 +30,6 @@ services:
    volumes:
       - zookeeper-data:/bitnami/zookeeper
   broker:
-    # image: confluentinc/cp-kafka:7.0.1
     image:  docker.io/bitnami/kafka:latest
     container_name: broker
     ports:
@@ -52,7 +50,7 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
   # Auth service
   api-service:
-    image: api-gateway:0.0.1-SNAPSHOT
+    image: sondawitmekonnen/api-service-backend-microservice
     restart: always
     depends_on:
       - service-discovery 
@@ -63,7 +61,7 @@ services:
     networks:
       - orderoptima-network
   auth-service:
-    image: auth-service:0.0.1-SNAPSHOT
+    image: sondawitmekonnen/auth-service-backend-microservice
     restart: always
     depends_on:
       - postgres 
@@ -80,7 +78,7 @@ services:
       - orderoptima-network
   # Service discovery
   service-discovery:
-    image: service-discovery:0.0.1-SNAPSHOT
+    image: sondawitmekonnen/service-discovery-backend-microservice
     restart: always
     ports:
       - "8761:8761" 
@@ -89,7 +87,7 @@ services:
 
   # User service
   user-service:
-    image: user-service:0.0.1-SNAPSHOT
+    image: sondawitmekonnen/user-service-backend-microservice
     restart: always
     depends_on:
       - service-discovery  
@@ -107,7 +105,7 @@ services:
     networks:
       - orderoptima-network
   order-service:
-    image: order-service:0.0.1-SNAPSHOT
+    image: sondawitmekonnen/order-service-backend-microservice
     restart: always
     depends_on:
       - service-discovery  
@@ -118,7 +116,7 @@ services:
     networks:
       - orderoptima-network    
   inventory-managment:
-    image: inventory-management:0.0.1-SNAPSHOT
+    image: sondawitmekonnen/inventory-service-backend-microservice
     restart: always
     depends_on:
       - service-discovery  
@@ -132,8 +130,6 @@ services:
       DISCOVERY: "service-discovery"
     networks:
       - orderoptima-network
-
-
 
 networks:
   orderoptima-network:
