@@ -38,12 +38,13 @@ cache:
     - git config --global user.email "$GITLAB_USER_EMAIL"
   script:
     - cd k8s-manifests
-    - git remote set-url origin --push $MANIFEST_GIT_REPO
+    # - git remote set-url origin --push $MANIFEST_GIT_REPO
+    - git clone --single-branch --branch $CI_COMMIT_BRANCH $MANIFEST_GIT_REPO
     - |
       sed -i "s#image:.*#image: ${DOCKER_IMAGE}#g" ./$MANIFEST_STAGING_PATH
     - git stage ./$MANIFEST_STAGING_PATH
     - git commit -m "$COMMIT_MESSAGE [skip-ci]"
-    - git push origin HEAD:$CI_COMMIT_REF_NAME
+    - git push origin $CI_COMMIT_BRANCH
   rules:
     - if: $CI_COMMIT_BRANCH == 'main'  # Example: Run on main branch
       when: always
