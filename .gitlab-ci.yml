@@ -1,6 +1,6 @@
 stages:
 - build
-- update-manifests
+- deploy
 
 variables:
   DOCKER_IMAGE: ""
@@ -8,16 +8,16 @@ variables:
   MANIFEST_STAGING_PATH: ""
   COMMIT_MESSAGE: ""
   GIT_DEPTH: 500  
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-
-cache:
-  paths:
-    - .m2/repository/
+ 
 
 # hidden jobs that can be reuse over other jobs 
 .docker_build:
   image: docker:24.0.7
   stage: build
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - .m2/repository/
   before_script:
     - docker login -u $DOCKER_USER_NAME -p $DOCKER_PASSWORD
   script:
@@ -27,7 +27,7 @@ cache:
 
 
 .update_manifest:
-  stage: update-manifests
+  stage: deploy
   variables:
     MANIFEST_GIT_REPO: https://$USERNAME:$PAT_TOKEN@git.gebeya.training/order-optima/k8s-manifests.git
 
@@ -46,9 +46,9 @@ cache:
     - git commit -m "$COMMIT_MESSAGE [skip-ci]"
     - git push origin $CI_COMMIT_BRANCH
   rules:
-    - if: $CI_COMMIT_BRANCH == 'main'  # Example: Run on main branch
+    - if: $CI_COMMIT_BRANCH == 'main'  
       when: always
-    - if: $CI_COMMIT_BRANCH == 'production'  # Example: Run on production branch
+    - if: $CI_COMMIT_BRANCH == 'production'
       when: manual
     - when: never 
 
@@ -129,7 +129,7 @@ build_user_service:
 
 update_apigateway_manifest:
   extends: .update_manifest
-  stage: update-manifests
+  stage: deploy
   variables:
     MANIFEST_STAGING_PATH: "api-gateway/deployment.yaml"
     COMMIT_MESSAGE: "update service managmanet image"
@@ -138,7 +138,7 @@ update_apigateway_manifest:
 
 update_email_service_manifest:
   extends: .update_manifest
-  stage: update-manifests
+  stage: deploy
   needs:
     - update_apigateway_manifest
   variables:
@@ -150,7 +150,7 @@ update_email_service_manifest:
 
 update_service_discovery_manifest:
   extends: .update_manifest
-  stage: update-manifests
+  stage: deploy
   needs:
     - update_email_service_manifest
   variables:
@@ -161,7 +161,7 @@ update_service_discovery_manifest:
 
 update_order_service_manifest:
   extends: .update_manifest
-  stage: update-manifests
+  stage: deploy
   needs:
     - update_service_discovery_manifest
   variables:
@@ -173,7 +173,7 @@ update_order_service_manifest:
 
 update_inventory_service_manifest:
   extends: .update_manifest
-  stage: update-manifests
+  stage: deploy
   needs:
     - update_order_service_manifest
   variables:
@@ -186,7 +186,7 @@ update_inventory_service_manifest:
 
 update_auth_service-manifest:
   extends: .update_manifest
-  stage: update-manifests
+  stage: deploy
   needs:
     - update_inventory_service_manifest
   variables:
@@ -197,7 +197,7 @@ update_auth_service-manifest:
     
 update_user_service-manifest:
   extends: .update_manifest
-  stage: update-manifests
+  stage: deploy
   needs:
     - update_auth_service-manifest
   variables:
