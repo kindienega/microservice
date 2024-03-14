@@ -1,10 +1,12 @@
 package et.com.gebeya.authservice.controller;
 
 import et.com.gebeya.authservice.dto.requestdto.AddUserRequest;
+import et.com.gebeya.authservice.dto.requestdto.ForgotPasswordRequestDto;
 import et.com.gebeya.authservice.dto.requestdto.UsersCredential;
 import et.com.gebeya.authservice.dto.requestdto.ValidationRequest;
 import et.com.gebeya.authservice.dto.responsedto.AuthenticationResponse;
 import et.com.gebeya.authservice.dto.responsedto.ValidationResponse;
+import et.com.gebeya.authservice.exceptions.InvalidOtpException;
 import et.com.gebeya.authservice.exceptions.InvalidPhoneNumberException;
 import et.com.gebeya.authservice.service.AuthenticationService;
 import et.com.gebeya.authservice.service.ForgotPasswordService;
@@ -59,6 +61,19 @@ public class AuthController {
         } catch (RuntimeException e) {
             log.error(e.getMessage(),e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error initiating forgot password: " + e.getMessage());
+        }
+    }
+    @PostMapping("/resetpassword")
+    public ResponseEntity<Object> resetPassword(@RequestBody ForgotPasswordRequestDto forgotPasswordRequestDto) {
+        try {
+            forgotPasswordService.resetPassword(forgotPasswordRequestDto);
+            return ResponseEntity.ok("Password reset successfully");
+        } catch (InvalidOtpException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
     }
 

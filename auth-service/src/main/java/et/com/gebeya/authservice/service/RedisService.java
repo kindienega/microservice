@@ -28,4 +28,11 @@ public class RedisService {
             throw new RuntimeException("Error getting OTP from Redis: " + e.getMessage(), e);
         }
     }
+    public void deleteOtp(String key) {
+        try {
+            otpRedisTemplate.delete(key);
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting OTP from Redis: " + e.getMessage(), e);
+        }
+    }
 }
