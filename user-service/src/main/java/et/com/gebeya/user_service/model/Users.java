@@ -6,6 +6,7 @@ import et.com.gebeya.user_service.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,13 +32,11 @@ public class Users extends BaseModel implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
-    @Column(length = 255,unique = true)
-    @Email(message = "Email is mandatory")
-    private String email;
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
     private Integer roleId;
+    private String  phoneNumber;
 
     public static class UsersBuilder{
         private boolean isActive;
@@ -53,9 +52,9 @@ public class Users extends BaseModel implements UserDetails {
             users.setUserName(this.userName);
             users.setPassword(this.password);
             users.setRole(this.role);
-            users.setEmail(this.email);
             users.setStatus(this.status);
             users.setRoleId(this.roleId);
+            users.setPhoneNumber(this.phoneNumber);
             return users;
         }
     }

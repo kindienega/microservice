@@ -25,6 +25,8 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class AuthConfig {
     private final UsersService usersService;
 
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http

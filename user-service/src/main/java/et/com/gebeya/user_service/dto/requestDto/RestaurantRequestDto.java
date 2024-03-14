@@ -18,6 +18,9 @@ import java.util.List;
 @Builder
 @ToString
 public class RestaurantRequestDto {
+    private Integer id;
+    private  Role role;
+    private Status status;
     private String BusinessName;
     private String OwnerName;
     private String LicenseNumber;
