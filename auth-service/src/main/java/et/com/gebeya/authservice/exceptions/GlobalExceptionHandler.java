@@ -22,13 +22,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorCode errorCode=ErrorCode.GENERAL_ERROR;
         int httpStatusCode=HttpStatus.INTERNAL_SERVER_ERROR.value();
 
-        if (e instanceof  InvalidEmailException){
+        if (e instanceof InvalidPhoneNumberException){
             errorCode=ErrorCode.INVALID_EMAIL;
             httpStatusCode=HttpStatus.BAD_REQUEST.value();
         } else if (e instanceof ExpiredJwtException) {
             errorCode = ErrorCode.TOKEN_EXPIRED;
             httpStatusCode = HttpStatus.UNAUTHORIZED.value();
 
+        }
+        if (e instanceof  PasswordChangeException){
+            errorCode=ErrorCode.RESOURCE_NOT_FOUND;
+            httpStatusCode=HttpStatus.NOT_FOUND.value();
         }
 
         ErrorMessageDto errorMessageDto = ErrorMessageDto.builder()

@@ -10,7 +10,9 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Table(name = "restaurant")
 @EqualsAndHashCode(callSuper = true)
@@ -20,7 +22,8 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @Builder
-public class Restaurant extends BaseModel {
+public class Restaurant extends BaseModel{
+
     @Column(length = 255)
     @NotBlank
     private String BusinessName;

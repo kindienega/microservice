@@ -1,5 +1,5 @@
 # Order optima
-Order optima is a simple financial advisor app built to demonstrate the [Microservice Architecture Pattern](http://martinfowler.com/microservices/) using Spring Boot, Spring Cloud and Docker. The project is intended as a tutorial, but you are welcome to fork it and turn it into something else!
+The Order Optima application is a comprehensive solution designed to streamline ordering processes and enhance collaboration between vendors/suppliers and restaurants. This documentation provides detailed information on the Order Optima microservices architecture.
 
 <br>
 
@@ -8,62 +8,78 @@ Order optima is a simple financial advisor app built to demonstrate the [Microse
 Order optima is decomposed into 4 core microservices. All of them are independently deployable applications organized around certain business domains.
 
 #### Auth service
-Contains general input logic and validation: incomes/expenses items, savings and account settings.
+ Handles user authentication and authorization for secure access to Order Optima microservices.
 
-Method	| Path	| Description	| User authenticated	| Available from UI
+Method	| Path	| Description	| User authenticated	| Admin
 ------------- | ------------------------- | ------------- |:-------------:|:----------------:|
-GET	| /api/v1/auth/{login}	| Get specified account data	|  | 	
-POST	| /api/v1/auth/login	| Register new account	|   | ×
+POST	| /api/v1/auth/login	| login user to system	|   |
+POST	| /api/v1/auth/forgot-password	| reset user password	|   | 
+
 
 
 #### user service
-Performs calculations on major api/v1/user parameters and captures time series for each account. Datapoint contains values normalized to base currency and time period. This data is used to track cash flow dynamics during the account lifetime.
+Manages user accounts, including registration, login, and profile information.
 
-Method	| Path	| Description	| User authenticated	| Available from UI
+Method	| Path	| Description	| User authenticated	| Admin
 ------------- | ------------------------- | ------------- |:-------------:|:----------------:|
-GET	| /api/v1/user/{account}	| Get specified account api/v1/user	          |  | 	
-GET	| /api/v1/user/current	| Get current account api/v1/user	| × | × 
-GET	| /api/v1/user/demo	| Get demo account api/v1/user	|   | × 
-PUT	| /api/v1/user/{account}	| Create or update time series datapoint for specified account	|   | 
+POST	| /api/v1/user/restaurant/register	| register restaurants          |  | 	
+GET	| /api/v1/user/restaurant/get/{id}	| Get current specified restaurant 	| × | 
+GET	| /api/v1/user/restaurant/all	| get all registerd restaurant	|   | × 
+GET	| /api/v1/user/restaurant/search	| search restaurant by name	|   |  
+PUT	| /api/v1/user/restaurant/approve/{id}	| approve specific  restuarant registerd 	| x  | 
+DELETE	| /api/v1/user/restaurant/delete/{id}	| delete specific restauarnt	|   | x |
+POST	| /api/v1/user/api/v1/user/vendor/register	| register vendors         |  | 	
+GET	| /api/v1/user/api/v1/user/vendor/get/{vendorId}	| get specified vendor          |  | 	
+GET	| /api/v1/user/api/v1/user/vendor/all	| return all registed vendors        |  | 	
+GET	| /api/v1/user/api/v1/user/vendor/search	| search vendors by name       |  | 	
+DELETE	| /api/v1/user/api/v1/user/vendor/delete/{vendorId}	| delete specified vendor       |  | 	
+
+
+
+
 
 
 #### Inventory service
-Stores user contact information and notification settings (reminders, backup frequency etc). Scheduled worker collects required information from other services and sends e-mail messages to subscribed customers.
+Provides  inventory data and stock management functionalities for vendors and restaurants.
 
-Method	| Path	| Description	| User authenticated	| Available from UI
+Method	| Path	| Description	| User authenticated	| Admin
 ------------- | ------------------------- | ------------- |:-------------:|:----------------:|
-GET	| /notifications/settings/current	| Get current account notification settings	| × | ×	
-PUT	| /notifications/settings/current	| Save current account notification settings	| × | ×
+GET	| /api/v1/category/all	| get all catagory	|   | × 
+GET	| /api/v1/category/{id}	| get specified catagory	|   | × 
+POST	| /api/v1/products/create	| create product	|   | 
+GET	| /api/v1/products/{id}	| return specified product 	|   | 
+GET	| /api/v1/products/search	| search products by name 	|   | 	|   | 
+
 
 #### Order service
-Stores user contact information and notification settings (reminders, backup frequency etc). Scheduled worker collects required information from other services and sends e-mail messages to subscribed customers.
+Orchestrates the ordering process, handling order creation, modification, and fulfillment.
 
-Method	| Path	| Description	| User authenticated	| Available from UI
+Method	| Path	| Description	| User authenticated	| Admin
 ------------- | ------------------------- | ------------- |:-------------:|:----------------:|
-GET	| /notifications/settings/current	| Get current account notification settings	| × | ×	
-PUT	| /notifications/settings/current	| Save current account notification settings	| × | ×
+POST	| /api/v1/orders/place	| create an order	|   | 
+GET	| /api/v1/orders/all	| return specified order 	|   | 
+GET	| /api/v1/orders/restaurant/{restaurantId}	| get  orderd restaurant	|   | 	|   | 
+PUT	| /api/v1/orders/{orderId}/complete	| update order status	|   | 	|   | 
 
 ## Infrastructure
 
 [![](https://app.eraser.io/workspace/NINw1zDx4sdwuyg424ZY/preview?elements=ZLhUWgGHwdQUxw0FG4ppHA&type=embed)](https://app.eraser.io/workspace/NINw1zDx4sdwuyg424ZY?elements=ZLhUWgGHwdQUxw0FG4ppHA)
 
 ### Auth service
-Authorization responsibilities are extracted to a separate server, which grants [OAuth2 tokens](https://tools.ietf.org/html/rfc6749) for the backend resource services. Auth Server is used for user authorization as well as for secure machine-to-machine communication inside the perimeter.
-
-In this project, I use [`Password credentials`](https://tools.ietf.org/html/rfc6749#section-4.3) grant type for users authorization (since it's used only by the UI) and [`Client Credentials`](https://tools.ietf.org/html/rfc6749#section-4.4) grant for service-to-service communciation.
+ Handles user authentication and authorization for secure access to Order Optima microservices.
 
 Spring Cloud Security provides convenient annotations and autoconfiguration to make this really easy to implement on both server and client side. You can learn more about that in [documentation](http://cloud.spring.io/spring-cloud-security/spring-cloud-security.html).
 
 On the client side, everything works exactly the same as with traditional session-based authorization. You can retrieve `Principal` object from the request, check user roles using the expression-based access control and `@PreAuthorize` annotation.
 
-Each PiggyMetrics client has a scope: `server` for backend services and `ui` - for the browser. We can use `@PreAuthorize` annotation to protect controllers from  an external access:
+Each orderoptima client has a scope: `server` for backend services  We can use `@PreAuthorize` annotation to protect controllers from  an external access:
 
 ``` java
-@PreAuthorize("#oauth2.hasScope('server')")
-@RequestMapping(value = "api/v1/auth/{name}", method = RequestMethod.GET)
-public List<DataPoint> getapi/v1/userByAccountName(@PathVariable String name) {
-	return api/v1/userService.findByAccountName(name);
-}
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}")
+    public CategoryRegistrationRequest updateCategory(@PathVariable Long id, @RequestBody CategoryRegistrationRequest request){
+        return categoryService.updateCategory(id, request);
+    }
 ```
 
 ### API Gateway

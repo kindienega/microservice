@@ -1,52 +1,66 @@
 package et.com.gebeya.authservice.service;
 
 import et.com.gebeya.authservice.dto.requestdto.ForgotPasswordRequestDto;
-import et.com.gebeya.authservice.exceptions.InvalidEmailException;
+import et.com.gebeya.authservice.exceptions.InvalidOtpException;
+import et.com.gebeya.authservice.exceptions.InvalidPhoneNumberException;
 import et.com.gebeya.authservice.model.Users;
 import et.com.gebeya.authservice.repository.UsersRepository;
 import et.com.gebeya.authservice.util.SecureOtpGenerator;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.core.KafkaProducerException;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static et.com.gebeya.authservice.util.Constant.FORGOT_PASSWORD_TOPIC;
 
 @Service
 @RequiredArgsConstructor
 public class ForgotPasswordService {
-    private final KafkaTemplate<String, ForgotPasswordRequestDto> forgotPasswordKafkaTemplate;
+    private final SmsService smsService;
     private final RedisService redisService;
     private final UsersRepository usersRepository;
 
-    public void initiateForgotPassword(String email){
-        try{
-            if(isValidEmail(email)){
-                throw new InvalidEmailException("invalid email format");
+    public void initiateForgotPassword(String phoneNumber) throws IOException {
+
+            if(isValidPhoneNumber(phoneNumber)){
+                throw new InvalidPhoneNumberException("invalid email format");
             }
-            Users users=usersRepository.findByEmail(email);
+            Users users=  usersRepository.findByPhoneNumber(phoneNumber);
             if (users==null){
-                throw new NotFoundException("User with email"+email+"not found");
+                throw new NotFoundException("User with email"+phoneNumber+"not found");
             }
             String otp= SecureOtpGenerator.generateOTP();
-            redisService.setOtp(email,otp,10);
-            ForgotPasswordRequestDto requestDto=ForgotPasswordRequestDto.builder().email(email).otp(otp).build();
-            forgotPasswordKafkaTemplate.send(FORGOT_PASSWORD_TOPIC,requestDto);
+            redisService.setOtp(phoneNumber,otp,10);
 
-        }catch (KafkaProducerException e){
-            throw new RuntimeException("Error Initiating forgot password: "+e.getMessage());
-        }
+            String message="the password reset otp is: "+otp;
+        smsService.sendSms(phoneNumber,"e80ad9d8-adf3-463f-80f4-7c4b39f7f164","",message);
+
+
     }
-    private boolean isValidEmail(String email) {
+    public void resetPassword(ForgotPasswordRequestDto forgotPasswordRequestDto){
+        String storedOtp= redisService.getOtp(forgotPasswordRequestDto.getPhoneNumber());
+        if (storedOtp==null||!storedOtp.equals(forgotPasswordRequestDto.getOtp())){
+            throw new InvalidOtpException("Invalid Otp");
+        }
+        Users user=usersRepository.findByPhoneNumber(forgotPasswordRequestDto.getPhoneNumber());
+        if (user == null) {
+            throw new NotFoundException("User with phone number " + forgotPasswordRequestDto.getPhoneNumber() + " not found");
+        }
+        user.setPassword(forgotPasswordRequestDto.getNewPassword());
+        usersRepository.save(user);
+
+        // Invalidate the OTP after password reset
+        redisService.deleteOtp(forgotPasswordRequestDto.getPhoneNumber());
+    }
+    private boolean isValidPhoneNumber(String phoneNumber) {
         // Regex pattern for email validation
-        String emailRegex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$";
-        Pattern pattern = Pattern.compile(emailRegex);
-        Matcher matcher = pattern.matcher(email);
+        String phoneRegex ="^\\+251\\d{9}$";
+        Pattern pattern = Pattern.compile(phoneRegex);
+        Matcher matcher = pattern.matcher(phoneNumber);
         return matcher.matches();
     }
+
+
 
 }
