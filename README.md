@@ -10,7 +10,7 @@ Order optima is decomposed into 4 core microservices. All of them are independen
 #### Auth service
  Handles user authentication and authorization for secure access to Order Optima microservices.
 
-Method	| Path	| Description	| User authenticated	| Available from UI
+Method	| Path	| Description	| User authenticated	| Admin
 ------------- | ------------------------- | ------------- |:-------------:|:----------------:|
 POST	| /api/v1/auth/login	| login user to system	|   |
 POST	| /api/v1/auth/forgot-password	| reset user password	|   | 
@@ -20,14 +20,14 @@ POST	| /api/v1/auth/forgot-password	| reset user password	|   |
 #### user service
 Manages user accounts, including registration, login, and profile information.
 
-Method	| Path	| Description	| User authenticated	| Available from UI
+Method	| Path	| Description	| User authenticated	| Admin
 ------------- | ------------------------- | ------------- |:-------------:|:----------------:|
 POST	| /api/v1/user/restaurant/register	| register restaurants          |  | 	
-GET	| /api/v1/user/restaurant/get/{id}	| Get current specified restaurant 	| × | × 
+GET	| /api/v1/user/restaurant/get/{id}	| Get current specified restaurant 	| × | 
 GET	| /api/v1/user/restaurant/all	| get all registerd restaurant	|   | × 
-GET	| /api/v1/user/restaurant/search	| search restaurant by name	|   | × 
-PUT	| /api/v1/user/restaurant/approve/{id}	| approve specific  restuarant registerd 	|   | 
-DELETE	| /api/v1/user/restaurant/delete/{id}	| delete specific restauarnt	|   | 
+GET	| /api/v1/user/restaurant/search	| search restaurant by name	|   |  
+PUT	| /api/v1/user/restaurant/approve/{id}	| approve specific  restuarant registerd 	| x  | 
+DELETE	| /api/v1/user/restaurant/delete/{id}	| delete specific restauarnt	|   | x |
 POST	| /api/v1/user/api/v1/user/vendor/register	| register vendors         |  | 	
 GET	| /api/v1/user/api/v1/user/vendor/get/{vendorId}	| get specified vendor          |  | 	
 GET	| /api/v1/user/api/v1/user/vendor/all	| return all registed vendors        |  | 	
@@ -42,7 +42,7 @@ DELETE	| /api/v1/user/api/v1/user/vendor/delete/{vendorId}	| delete specified ve
 #### Inventory service
 Provides  inventory data and stock management functionalities for vendors and restaurants.
 
-Method	| Path	| Description	| User authenticated	| Available from UI
+Method	| Path	| Description	| User authenticated	| Admin
 ------------- | ------------------------- | ------------- |:-------------:|:----------------:|
 GET	| /api/v1/category/all	| get all catagory	|   | × 
 GET	| /api/v1/category/{id}	| get specified catagory	|   | × 
@@ -54,7 +54,7 @@ GET	| /api/v1/products/search	| search products by name 	|   | 	|   |
 #### Order service
 Orchestrates the ordering process, handling order creation, modification, and fulfillment.
 
-Method	| Path	| Description	| User authenticated	| Available from UI
+Method	| Path	| Description	| User authenticated	| Admin
 ------------- | ------------------------- | ------------- |:-------------:|:----------------:|
 POST	| /api/v1/orders/place	| create an order	|   | 
 GET	| /api/v1/orders/all	| return specified order 	|   | 
