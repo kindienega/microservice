@@ -14,10 +14,6 @@ variables:
 .docker_build:
   image: docker:24.0.7
   stage: build
-  cache:
-    key: "$CI_COMMIT_REF_SLUG"
-    paths:
-      - .m2/repository/
   before_script:
     - docker login -u $DOCKER_USER_NAME -p $DOCKER_PASSWORD
   script:
