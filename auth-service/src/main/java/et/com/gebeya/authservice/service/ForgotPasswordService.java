@@ -1,6 +1,7 @@
 package et.com.gebeya.authservice.service;
 
 import et.com.gebeya.authservice.dto.requestdto.ForgotPasswordRequestDto;
+import et.com.gebeya.authservice.exceptions.InvalidOtpException;
 import et.com.gebeya.authservice.exceptions.InvalidPhoneNumberException;
 import et.com.gebeya.authservice.model.Users;
 import et.com.gebeya.authservice.repository.UsersRepository;
@@ -31,11 +32,26 @@ public class ForgotPasswordService {
             }
             String otp= SecureOtpGenerator.generateOTP();
             redisService.setOtp(phoneNumber,otp,10);
-            ForgotPasswordRequestDto requestDto=ForgotPasswordRequestDto.builder().email(phoneNumber).otp(otp).build();
+
             String message="the password reset otp is: "+otp;
         smsService.sendSms(phoneNumber,"e80ad9d8-adf3-463f-80f4-7c4b39f7f164","",message);
 
 
+    }
+    public void resetPassword(ForgotPasswordRequestDto forgotPasswordRequestDto){
+        String storedOtp= redisService.getOtp(forgotPasswordRequestDto.getPhoneNumber());
+        if (storedOtp==null||!storedOtp.equals(forgotPasswordRequestDto.getOtp())){
+            throw new InvalidOtpException("Invalid Otp");
+        }
+        Users user=usersRepository.findByPhoneNumber(forgotPasswordRequestDto.getPhoneNumber());
+        if (user == null) {
+            throw new NotFoundException("User with phone number " + forgotPasswordRequestDto.getPhoneNumber() + " not found");
+        }
+        user.setPassword(forgotPasswordRequestDto.getNewPassword());
+        usersRepository.save(user);
+
+        // Invalidate the OTP after password reset
+        redisService.deleteOtp(forgotPasswordRequestDto.getPhoneNumber());
     }
     private boolean isValidPhoneNumber(String phoneNumber) {
         // Regex pattern for email validation
@@ -44,5 +60,7 @@ public class ForgotPasswordService {
         Matcher matcher = pattern.matcher(phoneNumber);
         return matcher.matches();
     }
+
+
 
 }
