@@ -1,29 +1,32 @@
 package et.com.gebeya.user_service.util;
 
 
-import et.com.gebeya.user_service.dto.requestDto.AddAccountRequestDto;
-import et.com.gebeya.user_service.dto.requestDto.UserDto;
-import et.com.gebeya.user_service.dto.requestDto.VendorRequestDto;
+import et.com.gebeya.user_service.dto.requestDto.AddUserRequest;
 import et.com.gebeya.user_service.enums.Role;
 import et.com.gebeya.user_service.enums.Status;
 import et.com.gebeya.user_service.model.Users;
-import et.com.gebeya.user_service.model.Vendor;
 import et.com.gebeya.user_service.repository.UsersRepository;
+import et.com.gebeya.user_service.service.AuthService;
+import et.com.gebeya.user_service.service.SmsService;
+import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
+import java.io.IOException;
 import java.util.Random;
 
-import static et.com.gebeya.user_service.util.Constant.ADD_ACCOUNT_TOPIC;
+
 
 @Component
 @RequiredArgsConstructor
 public class UserUtil {
    private final UsersRepository usersRepository;
        private final PasswordEncoder passwordEncoder;
-   private final KafkaTemplate<String, AddAccountRequestDto> addAccountRequestDtoKafkaTemplate;
+       private final AuthService authService;
+       private final SmsService smsService;
+
 
     private static StringBuilder randomStringGenerator() {
         final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
@@ -39,32 +42,34 @@ public class UserUtil {
         return stringBuilder;
     }
 
-    public void createUser(String businessName, String ownerName, Integer id, Role role, Status status,String email ) {
+    public void createUser(String businessName, String ownerName, Integer id, Role role, Status status, String email , String phoneNumber) throws AuthException, IOException {
         String username = businessName.toLowerCase() + "." + ownerName.toLowerCase().charAt(0);
         String password = String.valueOf(randomStringGenerator());
-        Users users = Users.builder()
-                .userName(username)
-                .password(passwordEncoder.encode(password))
-                .role(role)
-                .email(email)
-                .isActive(true)
-                .status(status)
-                .roleId(id)
-                .build();
+        AddUserRequest userRequest=new AddUserRequest();
+        userRequest.setUserName(username);
+        userRequest.setPhoneNumber(phoneNumber);
+        userRequest.setRole(role);
+        userRequest.setStatus(status);
+        userRequest.setPassword(password);
+        userRequest.setRoleId(id);
+        Mono<String> responseMono=authService.getAuthServiceResponseEntityMono(userRequest);
+        String responseBody=responseMono.blockOptional().orElseThrow(()->new AuthException("Error occurred during saving the user"));
+        if (responseBody==null||responseBody.isEmpty()){
+            throw new AuthException("Empty response received from authentication service" );
+        }
 
-        usersRepository.save(users);
-      //  VendorRequestDto vendorRequestDto=VendorRequestDto.builder().userName(username).password(password).build();
-
-//        UserDto dto = UserDto.builder()
+//        Users users = Users.builder()
 //                .userName(username)
-//                .password(password)
-//                .role(role.name())
-//                .email(users.getEmail())
+//                .password(passwordEncoder.encode(password))
+//                .role(role)
+//                .isActive(true)
+//                .status(status)
+//                .roleId(id)
 //                .build();
-        AddAccountRequestDto request = AddAccountRequestDto.builder().ownerName(ownerName).email(email).username(username).password(password).build();
-        addAccountRequestDtoKafkaTemplate.send(ADD_ACCOUNT_TOPIC,request);
+//        usersRepository.save(users);
 
-
+        String message="The username is :"+userRequest.getUserName()+"the password is"+userRequest.getPassword();
+        smsService.sendSms(phoneNumber,"e80ad9d8-adf3-463f-80f4-7c4b39f7f164","",message);
     }
 
     public void userDisabler(Users users)

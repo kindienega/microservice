@@ -95,4 +95,16 @@ private static AddressResponseDto mapAddressModelToDto(Address address){
         return responseDto;
 
     }
+
+    public static AddUserRequest mapCustomerToUser(RestaurantRequestDto dto){
+        AddUserRequest userRequest=new AddUserRequest();
+        userRequest.setUserName(dto.getUserName());
+        userRequest.setPassword(dto.getPassword());
+        userRequest.setRole(dto.getRole());
+        userRequest.setStatus(dto.getStatus());
+        userRequest.setRoleId(dto.getId());
+        userRequest.setPhoneNumber(dto.getPhoneNumber().get(0).getPhoneNumber());
+        return userRequest;
+
+    }
 }

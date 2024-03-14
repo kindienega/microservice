@@ -51,10 +51,7 @@ public class VendorService {
             vendor.setProducts(product);
             vendor.setIsActive(true);
             vendor = vendorRepository.save(vendor);
-            userUtil.createUser(vendor.getBusinessName(), vendor.getOwnerName(), vendor.getId(), Role.VENDOR, Status.APPROVED, vendorRequestDto.getEmail());
-//            AddAccountRequestDto addAccountRequestDto=new AddAccountRequestDto();
-//            vendorRequestDto.setUserName(addAccountRequestDto.getUsername());
-//            vendorRequestDto.setPassword(addAccountRequestDto.getPassword());
+            userUtil.createUser(vendor.getBusinessName(), vendor.getOwnerName(), vendor.getId(), Role.VENDOR, Status.APPROVED, vendorRequestDto.getEmail(),vendorRequestDto.getPhoneNumber().get(0).getPhoneNumber());
             return vendorRequestDto;
         } catch (Exception e) {
             log.error(e.getMessage(),e);
