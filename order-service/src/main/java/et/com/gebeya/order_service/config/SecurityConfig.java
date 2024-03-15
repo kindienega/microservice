@@ -28,9 +28,8 @@ public class SecurityConfig {
     protected static final String [] ADMIN_MATCHERS = {
             "/api/v1/orders/all",
            "/api/v1/orders/restaurant/*",
-
             "/api/v1/orders/*/update-status",
-            "/api/v1/orders/complete/*",
+            "/api/v1/orders/*/complete",
 
 
     };
@@ -72,6 +71,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationEntryPoint unauthorizedEntryPoint() {
+
 
         return (request, response, authException) ->
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");

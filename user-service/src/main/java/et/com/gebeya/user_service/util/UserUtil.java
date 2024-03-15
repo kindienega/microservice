@@ -53,6 +53,7 @@ public class UserUtil {
                 .roleId(id)
                 .build();
         UserCredential userCredential=UserCredential.builder().userName(username).password(password).build();
+
         usersRepository.save(users);
 
         String message="The username is :"+userCredential.getUserName()+"the password is"+userCredential.getPassword();

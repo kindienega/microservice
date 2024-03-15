@@ -39,3 +39,4 @@ management:
 afroMessage:
   token: eyJhbGciOiJIUzI1NiJ9.eyJpZGVudGlmaWVyIjoiSDJlYXlmNllnTFFFSTJpeDBWNDNPTEFYYjFaZ24wRTciLCJleHAiOjE4Njc5MjA2MDQsImlhdCI6MTcxMDE1NDIwNCwianRpIjoiMTgzYmIwYjItNDM1ZS00ZjAwLWEwNzItMzZjZjU4YjNjZGI4In0.ho7JGfwoB7SjhE7h4Wlq0_sz0Nu3sHPgvW6iAbyvyHg
   baseUrl: https://api.afromessage.com/api/send
+
