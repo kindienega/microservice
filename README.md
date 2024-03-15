@@ -23,16 +23,16 @@ Manages user accounts, including registration, login, and profile information.
 Method	| Path	| Description	| User	| Admin
 ------------- | ------------------------- | ------------- |:-------------:|:----------------:|
 POST	| /api/v1/user/restaurant/register	| register restaurants          |  | 	
-GET	| /api/v1/user/restaurant/get/{id}	| Get current specified restaurant 	| × | 
-GET	| /api/v1/user/restaurant/all	| get all registerd restaurant	|   | × 
+GET	| /api/v1/user/restaurant/get/{id}	| Get current specified restaurant 	|  | 
+GET	| /api/v1/user/restaurant/all	| get all registerd restaurant	|  x | 
 GET	| /api/v1/user/restaurant/search	| search restaurant by name	|   |  
 PUT	| /api/v1/user/restaurant/approve/{id}	| approve specific  restuarant registerd 	| x  | 
-DELETE	| /api/v1/user/restaurant/delete/{id}	| delete specific restauarnt	|   | x |
-POST	| /api/v1/user/api/v1/user/vendor/register	| register vendors         |  | 	
-GET	| /api/v1/user/api/v1/user/vendor/get/{vendorId}	| get specified vendor          |  | 	
-GET	| /api/v1/user/api/v1/user/vendor/all	| return all registed vendors        |  | 	
-GET	| /api/v1/user/api/v1/user/vendor/search	| search vendors by name       |  | 	
-DELETE	| /api/v1/user/api/v1/user/vendor/delete/{vendorId}	| delete specified vendor       |  | 	
+DELETE	| /api/v1/user/restaurant/delete/{id}	| delete specific restauarnt	|  x |  |
+POST	| /api/v1/user/api/v1/user/vendor/register	| register vendors         | x | 	
+GET	| /api/v1/user/api/v1/user/vendor/get/{vendorId}	| get specified vendor          | x | 	
+GET	| /api/v1/user/api/v1/user/vendor/all	| return all registed vendors        | x | 	
+GET	| /api/v1/user/api/v1/user/vendor/search	| search vendors by name       | x | 	
+DELETE	| /api/v1/user/api/v1/user/vendor/delete/{vendorId}	| delete specified vendor       |  x| 	
 
 
 
@@ -44,8 +44,8 @@ Provides  inventory data and stock management functionalities for vendors and re
 
 Method	| Path	| Description	| User	| Admin
 ------------- | ------------------------- | ------------- |:-------------:|:----------------:|
-GET	| /api/v1/category/all	| get all catagory	|   | × 
-GET	| /api/v1/category/{id}	| get specified catagory	|   | × 
+GET	| /api/v1/category/all	| get all catagory	|   |  
+GET	| /api/v1/category/{id}	| get specified catagory	|   | 
 POST	| /api/v1/products/create	| create product	|   | 
 GET	| /api/v1/products/{id}	| return specified product 	|   | 
 GET	| /api/v1/products/search	| search products by name 	|   | 	|   | 
@@ -59,7 +59,7 @@ Method	| Path	| Description	| User	| Admin
 POST	| /api/v1/orders/place	| create an order	|   | 
 GET	| /api/v1/orders/all	| return specified order 	|   | 
 GET	| /api/v1/orders/restaurant/{restaurantId}	| get  orderd restaurant	|   | 	|   | 
-PUT	| /api/v1/orders/{orderId}/complete	| update order status	|   | 	|   | 
+PUT	| /api/v1/orders/{orderId}/complete	| update order status	|   | x	|  | 
 
 ## Infrastructure
 
