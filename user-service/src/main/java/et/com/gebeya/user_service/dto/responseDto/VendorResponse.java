@@ -2,6 +2,7 @@ package et.com.gebeya.user_service.dto.responseDto;
 
 import et.com.gebeya.user_service.dto.requestDto.AddressRequestDto;
 import et.com.gebeya.user_service.dto.requestDto.PhoneNumberDto;
+import et.com.gebeya.user_service.dto.requestDto.ProductId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,5 +23,6 @@ public class VendorResponse {
     private List<AddressRequestDto> addresses;
     private String email;
     private List<PhoneNumberDto> phoneNumber;
-    private Set<Long> productId;
+    //private Set<Long> productId;
+    private List<ProductId> productId;
 }

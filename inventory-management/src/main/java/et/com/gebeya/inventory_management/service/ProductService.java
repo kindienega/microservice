@@ -31,7 +31,13 @@ public class ProductService {
     private final CustomMappingFunctions customMappingFunctions;
 
     private MappingFunctions mappingFunctions;
-    public ProductCreationResponse createProduct(ProductCreationRequest request, MultipartFile imageFile) {
+
+    public ProductCreationResponse createProduct(ProductCreationRequest request) {
+        Product product = mappingFunctions.mapToProduct(request);
+        Product savedProduct = productRepository.save(product);
+        return mappingFunctions.mapToProductCreationResponse(savedProduct);
+    }
+    public ProductCreationResponse createProducts(ProductCreationRequest request, MultipartFile imageFile) {
         return customMappingFunctions.createProductAndConvertToResponse(request, imageFile);
     }
     public List<ProductDTO> listAllProducts() {

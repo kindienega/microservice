@@ -1,9 +1,7 @@
 package et.com.gebeya.user_service.service;
 
-import et.com.gebeya.user_service.dto.requestDto.AddAccountRequestDto;
-import et.com.gebeya.user_service.dto.requestDto.RestaurantRequestDto;
-import et.com.gebeya.user_service.dto.requestDto.UserCredential;
-import et.com.gebeya.user_service.dto.requestDto.VendorRequestDto;
+import et.com.gebeya.user_service.callMethods.InventoryServiceClient;
+import et.com.gebeya.user_service.dto.requestDto.*;
 import et.com.gebeya.user_service.enums.Role;
 import et.com.gebeya.user_service.enums.Status;
 import et.com.gebeya.user_service.exception.ErrorHandler;
@@ -18,10 +16,12 @@ import et.com.gebeya.user_service.repository.specification.RestaurantSpecificati
 import et.com.gebeya.user_service.repository.specification.VendorSpecification;
 import et.com.gebeya.user_service.util.MappingUtil;
 import et.com.gebeya.user_service.util.UserUtil;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,14 +42,17 @@ public class VendorService {
     private  final UserUtil userUtil;
     private final ProductRepository productRepository;
     private  Users users;
+    @Autowired
+    private InventoryServiceClient inventoryServiceClient;
     @Transactional
-
     public VendorRequestDto vendorRegistration(VendorRequestDto vendorRequestDto) {
         try {
 
             Vendor vendor = MappingUtil.mapVendorDtoToModel(vendorRequestDto);
-            List<Product> product=getProductById(vendorRequestDto.getProductId());
-            vendor.setProducts(product);
+            //List<Product> product=getProductById(vendorRequestDto.getProductId());
+            List<Product> products = inventoryServiceClient.getProductsById(vendorRequestDto.getProductId())
+                    .collectList().block();
+            vendor.setProducts(products);
             vendor.setIsActive(true);
             vendor = vendorRepository.save(vendor);
             userUtil.createUser(vendor.getBusinessName(), vendor.getOwnerName(), vendor.getId(), Role.VENDOR, Status.APPROVED,vendorRequestDto.getPhoneNumber().get(0).getPhoneNumber());
@@ -90,6 +94,17 @@ public class VendorService {
             return vendorOptional.get();
         } else {
             throw new NotFoundException("Vendor not found");
+        }
+    }
+
+    public List<ProductDTO> findProductsByVendorId(Integer vendorId) {
+        Optional<Vendor> vendor = vendorRepository.findById(vendorId);
+        if (vendor.isPresent()) {
+            return vendor.get().getProducts().stream()
+                    .map(product -> new ProductDTO(product.getName(), product.getQuantity()))
+                    .collect(Collectors.toList());
+        } else {
+            throw new EntityNotFoundException("Vendor not found");
         }
     }
 

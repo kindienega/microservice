@@ -15,7 +15,7 @@ public class AddUserRequest {
     private String userName;
     private String password;
     private String email;
-private Integer roleId;
+    private Integer roleId;
     private String phoneNumber;
     private Role role;
     private Status status;

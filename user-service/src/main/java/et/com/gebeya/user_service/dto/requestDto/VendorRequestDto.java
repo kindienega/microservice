@@ -1,11 +1,8 @@
 package et.com.gebeya.user_service.dto.requestDto;
 
-import et.com.gebeya.user_service.enums.Role;
-import et.com.gebeya.user_service.enums.Status;
 import lombok.*;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -20,6 +17,14 @@ public class VendorRequestDto {
     private String email;
     private List<PhoneNumberDto> phoneNumber;
     private List<Long> productId;
+
+//    public List<Long> getProductIds() {
+//        return productId;
+//    }
+
+//    public void setProductIds(List<Long> productIds) {
+//        this.productIds = productIds;
+//    }
 //    private String userName;
 //    private String password;
 }
