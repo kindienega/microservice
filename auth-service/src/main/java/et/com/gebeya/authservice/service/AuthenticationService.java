@@ -23,6 +23,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
@@ -33,6 +35,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final UsersService usersService;
     private final PasswordEncoder passwordEncoder;
+
     public ResponseEntity<AuthenticationResponse> signIn(@RequestBody UsersCredential usersCredential) {
 
         try {
@@ -45,9 +48,14 @@ public class AuthenticationService {
 
         Users user = userRepository.findFirstByUserName(usersCredential.getUserName())
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid user name or password"));
+
+
+
+
         if (!user.isApproved()&&user.getRole()!= Role.ADMIN) {
             throw new RuntimeException("User is not approved or status is pending");
         }
+
 
         String jwt = jwtService.generateToken(user);
         AuthenticationResponse response = AuthenticationResponse.builder()
@@ -61,20 +69,9 @@ public class AuthenticationService {
 
 
 
-    public String addUser(AddUserRequest request) throws AuthException {
-        Users users=Users.builder()
-                .userName(request.getUserName())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .isActive(true)
-                .role(request.getRole())
-                .roleId(request.getRoleId())
-                .status(request.getStatus())
-                .phoneNumber(request.getPhoneNumber())
-                .status(request.getStatus())
-                .build();
-        users=userRepository.save(users);
-        return "Successfully Saved the user";
-    }
+
+
+
 
 
     public ResponseEntity<ValidationResponse> validate(ValidationRequest validationRequest)

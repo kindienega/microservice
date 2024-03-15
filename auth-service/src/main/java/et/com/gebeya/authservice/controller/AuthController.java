@@ -35,12 +35,6 @@ public class AuthController {
     {
         return authenticationService.validate(request);
     }
-    @PostMapping("/addUser")
-    public ResponseEntity<String> adduser(@RequestBody AddUserRequest request) throws AuthException {
-
-        String message= authenticationService.addUser(request);
-        return ResponseEntity.ok(message);
-    }
 
 
     @PostMapping("/login")

@@ -16,5 +16,6 @@ public class OrderRequestDto {
 private Integer restaurantId;
     private List<OrderItemRequestDto> orderItems;
     private String deliveryAddress;
+    private double totalPrice;
 
 }

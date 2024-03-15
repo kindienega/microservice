@@ -5,6 +5,7 @@ import et.com.gebeya.order_service.dto.requestDto.OrderRequestDto;
 import et.com.gebeya.order_service.dto.responseDto.OrderResponseDto;
 import et.com.gebeya.order_service.model.Orders;
 import et.com.gebeya.order_service.service.OrderService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,42 +21,81 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
-
     @PostMapping("/place")
-    public ResponseEntity<OrderResponseDto> placeOrder(@RequestBody OrderRequestDto request) {
+    public ResponseEntity<?> placeOrder(@RequestBody OrderRequestDto request) {
         try {
             OrderResponseDto response = orderService.placeOrder(request);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            log.error(e.getMessage(),e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while placing the order");
         }
     }
+
     @PutMapping("/{orderId}/cancel")
-    public ResponseEntity<String> cancelOrder(@PathVariable("orderId") Integer orderId,
-                                              @RequestParam("restaurantId") Integer restaurantId) {
-        orderService.cancelOrder(orderId, restaurantId);
-        return ResponseEntity.ok("Order cancelled successfully");
+    public ResponseEntity<?> cancelOrder(@PathVariable("orderId") Integer orderId,
+                                         @RequestParam("restaurantId") Integer restaurantId) {
+        try {
+            orderService.cancelOrder(orderId, restaurantId);
+            return ResponseEntity.ok("Order cancelled successfully");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order not found");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while cancelling the order");
+        }
     }
+
     @GetMapping("/all")
-    public ResponseEntity<List<Orders>> getAllOrdersExceptCancelled() {
-
+    public ResponseEntity<?> getAllOrdersExceptCancelled() {
+        try {
             List<Orders> orders = orderService.getAllOrdersExceptCancelled();
-            return new ResponseEntity<>(orders, HttpStatus.OK);
-
+            return ResponseEntity.ok(orders);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while retrieving orders");
+        }
     }
 
-    @GetMapping("/restaurant/{restaurantId}")
-    public ResponseEntity<List<Orders>> getOrdersByRestaurantId(@PathVariable("restaurantId")Integer restaurantId) {
-        List<Orders> orders = orderService.getOrdersByRestaurantId(restaurantId);
-        return ResponseEntity.ok(orders);
+    @GetMapping("/restaurant/get/{restaurantId}")
+    public ResponseEntity<?> getOrdersByRestaurantId(@PathVariable("restaurantId") Integer restaurantId) {
+        try {
+            List<Orders> orders = orderService.getOrdersByRestaurantId(restaurantId);
+            return ResponseEntity.ok(orders);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No orders found for the given restaurant");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while retrieving orders");
+        }
     }
 
-    @PutMapping("/{orderId}/complete")
-    public ResponseEntity<OrderPaymentInfo> completeOrder(@PathVariable("orderId") Integer orderId) {
-        OrderPaymentInfo orderPaymentInfo = orderService.updateOrderStatusToCompleted(orderId);
-        return ResponseEntity.ok(orderPaymentInfo);
+    @PutMapping("/{orderId}/update-status")
+    public ResponseEntity<?> updateOrderStatus(@PathVariable("orderId") Integer orderId) {
+        try {
+            String orderPaymentInfo = orderService.declineOrAcceptOrders(orderId);
+            return ResponseEntity.ok(orderPaymentInfo);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order not found");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage(),e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while updating order status");
+        }
+    }
+
+    @PostMapping("/complete/{orderId}")
+    public ResponseEntity<?> completeOrder(@PathVariable Integer orderId) {
+        try {
+            OrderPaymentInfo orderPaymentInfo = orderService.completeOrder(orderId);
+            return ResponseEntity.ok(orderPaymentInfo);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order not found");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while completing the order");
+        }
     }
 }

@@ -51,7 +51,7 @@ public class VendorService {
             vendor.setProducts(product);
             vendor.setIsActive(true);
             vendor = vendorRepository.save(vendor);
-            userUtil.createUser(vendor.getBusinessName(), vendor.getOwnerName(), vendor.getId(), Role.VENDOR, Status.APPROVED, vendorRequestDto.getEmail(),vendorRequestDto.getPhoneNumber().get(0).getPhoneNumber());
+            userUtil.createUser(vendor.getBusinessName(), vendor.getOwnerName(), vendor.getId(), Role.VENDOR, Status.APPROVED,vendorRequestDto.getPhoneNumber().get(0).getPhoneNumber());
             return vendorRequestDto;
         } catch (Exception e) {
             log.error(e.getMessage(),e);
@@ -77,10 +77,7 @@ public class VendorService {
         }
     }
 
-    public List<Vendor> getVendorsByName(String name) {
-        Specification<Vendor> spec = VendorSpecification.getVendorByName(name);
-        return vendorRepository.findAll(spec);
-    }
+
     public List<Vendor> getAllActiveVendors() {
         Specification<Vendor> spec = VendorSpecification.getAllVendors();
         return vendorRepository.findAll(spec);

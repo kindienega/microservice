@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,39 +40,64 @@ public class RestaurantService {
     private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
     private final SmsService smsService;
-    private final AuthService authService;
-     private UserUtil userUtil;
+     private  final  UserUtil userUtil;
     @Transactional
     public RestaurantRequestDto restaurantRegistration(RestaurantRequestDto restaurantRequestDto) {
-        Integer rId=null;
         try {
 
             Restaurant restaurant = MappingUtil.mapRestaurantDtoToModel(restaurantRequestDto);
+            restaurantRequestDto.setId(restaurant.getId());
+            restaurantRequestDto.setStatus(Status.PENDING);
             restaurant.setStatus(Status.PENDING);
             restaurant.setIsActive(true);
             restaurant = restaurantRepository.save(restaurant);
-            rId=restaurant.getId();
-            restaurantRequestDto.setRole(Role.RESTAURANT);
-            restaurantRequestDto.setId(rId);
-            restaurantRequestDto.setStatus(Status.PENDING);
-            AddUserRequest addUserRequest=MappingUtil.mapCustomerToUser(restaurantRequestDto);
-            Mono<String> responseMono=authService.getAuthServiceResponseEntityMono(addUserRequest);
-           String responseBody=responseMono.blockOptional().orElseThrow(()->new AuthException("Error occurred during saving the user" ));
-          if (responseBody==null||responseBody.isEmpty()){
-          throw new AuthException("Empty response received from authentication service" );
-}
-            String recipientPhoneNumber= restaurantRequestDto.getPhoneNumber().get(0).getPhoneNumber();
-            String message="Ypu have successfully registered; please wait until our admins approve your account";
-            smsService.sendSms(recipientPhoneNumber,"e80ad9d8-adf3-463f-80f4-7c4b39f7f164","",message);
- return restaurantRequestDto;
-        }catch (DataIntegrityViolationException ex) {
+
+            Users users = Users.builder()
+                    .userName(restaurantRequestDto.getUserName())
+                    .password(passwordEncoder.encode(restaurantRequestDto.getPassword()))
+                    .role(Role.RESTAURANT)
+                    .status(Status.PENDING)
+                    .phoneNumber(restaurant.getPhoneNumber().get(0).getPhoneNumber())
+                    .roleId(restaurant.getId())
+                    .isActive(true)
+                    .build();
+
+            usersRepository.save(users);
+            String recipientPhoneNumber = restaurantRequestDto.getPhoneNumber().get(0).getPhoneNumber();
+            String message = "You have successfully registered; please wait until our admins approve your account";
+            smsService.sendSms(recipientPhoneNumber, "e80ad9d8-adf3-463f-80f4-7c4b39f7f164", "", message);
+            return restaurantRequestDto;
+        } catch (DataIntegrityViolationException ex) {
             throw new RegistrationException("Failed to register restaurant due to data integrity violation", ex);
-        } catch (AuthException ex) {
-            throw new RegistrationException("Failed to register restaurant due to authentication error: " + ex.getMessage(), ex);
         } catch (Exception ex) {
-            throw new RegistrationException("Failed to register restaurant: " + ex.getMessage(), ex);
+            throw new RegistrationException("Failed to register restaurant", ex);
         }
     }
+//    private Restaurant createRestaurant(RestaurantRequestDto restaurantRequestDto) {
+//        Restaurant restaurant = MappingUtil.mapRestaurantDtoToModel(restaurantRequestDto);
+//        restaurant.setStatus(Status.PENDING);
+//        restaurant.setIsActive(true);
+//        return restaurantRepository.save(restaurant);
+//    }
+//
+//    private String registerUserAndGetResponse(RestaurantRequestDto restaurantRequestDto) throws AuthException {
+//        restaurantRequestDto.setRole(Role.RESTAURANT);
+//        AddUserRequest addUserRequest = MappingUtil.mapCustomerToUser(restaurantRequestDto);
+//        Mono<String> responseMono = authService.getAuthServiceResponseEntityMono(addUserRequest);
+//        return responseMono.blockOptional().orElseThrow(() -> new AuthException("Error occurred during saving the user"));
+//    }
+//
+//    private void validateAuthenticationResponse(String responseBody) throws AuthException {
+//        if (responseBody == null || responseBody.isEmpty()) {
+//            throw new AuthException("Empty response received from authentication service");
+//        }
+//    }
+//
+//    private void sendRegistrationConfirmationSms(RestaurantRequestDto restaurantRequestDto) throws IOException {
+//        String recipientPhoneNumber = restaurantRequestDto.getPhoneNumber().get(0).getPhoneNumber();
+//        String message = "You have successfully registered; please wait until our admins approve your account";
+//        smsService.sendSms(recipientPhoneNumber, "e80ad9d8-adf3-463f-80f4-7c4b39f7f164", "", message);
+//    }
 
     public Restaurant deleteRestaurant(Integer id)
     {
@@ -84,10 +110,6 @@ public class RestaurantService {
 
     }
 
-    public List<Restaurant> getRestaurantsByName(String name) {
-        Specification<Restaurant> spec = RestaurantSpecification.getRestaurantByName(name);
-        return restaurantRepository.findAll(spec);
-    }
     public List<Restaurant> getAllActiveRestaurants() {
         Specification<Restaurant> spec = RestaurantSpecification.getAllRestaurants();
         return restaurantRepository.findAll(spec);

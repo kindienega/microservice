@@ -37,11 +37,7 @@ private final VendorService vendorService;
         return ResponseEntity.ok(vendors);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<Vendor>> getVendorsByName(@RequestParam String name) {
-        List<Vendor> vendors = vendorService.getVendorsByName(name);
-        return ResponseEntity.ok(vendors);
-    }
+
     @DeleteMapping("/delete/{vendorId}")
     public ResponseEntity<String> deleteVendor(@PathVariable Integer vendorId) {
         vendorService.deleteVendor(vendorId);
