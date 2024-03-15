@@ -38,7 +38,6 @@ public class Orders {
     private Instant updatedOn;
     @ManyToOne
     @JoinColumn(name = "restaurant_Id",nullable = false)
-
     private Restaurant restaurant;
 
     @Enumerated(EnumType.STRING)

@@ -85,7 +85,7 @@ public class OrderController {
         }
     }
 
-    @PostMapping("/complete/{orderId}")
+    @PutMapping("/{orderId}/complete")
     public ResponseEntity<?> completeOrder(@PathVariable Integer orderId) {
         try {
             OrderPaymentInfo orderPaymentInfo = orderService.completeOrder(orderId);
