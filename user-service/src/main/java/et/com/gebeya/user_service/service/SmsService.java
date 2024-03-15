@@ -1,5 +1,5 @@
 package et.com.gebeya.user_service.service;
-import lombok.extern.slf4j.Slf4j;
+
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

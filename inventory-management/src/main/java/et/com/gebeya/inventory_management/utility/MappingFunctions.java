@@ -6,8 +6,13 @@ import et.com.gebeya.inventory_management.cloudinary.ImageModel;
 import et.com.gebeya.inventory_management.cloudinary.ImageServiceImpl;
 import et.com.gebeya.inventory_management.dto.CreateProductRequest;
 import et.com.gebeya.inventory_management.dto.ProductDTO;
+import et.com.gebeya.inventory_management.dto.request.CategoryDto;
 import et.com.gebeya.inventory_management.dto.request.CategoryRegistrationRequest;
+import et.com.gebeya.inventory_management.dto.request.ProductCreationRequest;
 import et.com.gebeya.inventory_management.dto.request.RequestForUpdate;
+import et.com.gebeya.inventory_management.dto.response.ProductCreationResponse;
+import et.com.gebeya.inventory_management.repos.CategoryRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +24,7 @@ import java.util.Map;
 @Component
 @AllArgsConstructor
 public class MappingFunctions {
+    private final CategoryRepository categoryRepository;
 
     public CategoryRegistrationRequest convertToDTOForCategory(Category category) {
         CategoryRegistrationRequest request = new CategoryRegistrationRequest();
@@ -102,6 +108,44 @@ public class MappingFunctions {
         product.setVolume(dto.getVolume());
         product.setBrands(dto.getBrands());
         product.setImageUrl(dto.getImageUrl());
+    }
+    public Product mapToProduct(ProductCreationRequest request) {
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+
+        Product product = new Product();
+        product.setName(request.getName());
+        product.setPrice(request.getPrice());
+        product.setQuantity(request.getQuantity());
+        product.setDescription(request.getDescription());
+        product.setImageUrl(request.getImageUrl());
+        product.setCalories(request.getCalories());
+        product.setFat(request.getFat());
+        product.setProtein(request.getProtein());
+        product.setWeight(request.getWeight());
+        product.setSize(request.getSize());
+        product.setVolume(request.getVolume());
+        product.setBrands(request.getBrands());
+        product.setCategory(category);
+        return product;
+    }
+    public ProductCreationResponse mapToProductCreationResponse(Product product) {
+        ProductCreationResponse response = new ProductCreationResponse();
+        response.setId(product.getId());
+        response.setName(product.getName());
+        response.setPrice(product.getPrice());
+        response.setQuantity(product.getQuantity());
+        response.setDescription(product.getDescription());
+        response.setImageUrl(product.getImageUrl());
+        response.setCalories(product.getCalories());
+        response.setFat(product.getFat());
+        response.setProtein(product.getProtein());
+        response.setWeight(product.getWeight());
+        response.setSize(product.getSize());
+        response.setVolume(product.getVolume());
+        response.setBrands(product.getBrands());
+        response.setCategory(new CategoryDto(product.getCategory().getId(), product.getCategory().getName()));
+        return response;
     }
 
 }

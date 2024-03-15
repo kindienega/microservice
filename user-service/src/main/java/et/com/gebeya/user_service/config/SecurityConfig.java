@@ -29,11 +29,14 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/api/auth/log_in",
+            "/api/v1/user/vendor/register",
+            "/api/v1/user/vendor/{id}/products"
+           // "/api/v1/user/vendor/1/products"
 
     };
 
     protected static final String [] ADMIN_MATCHERS = {
-            "api/v1/user/vendor/register",
+            //"api/v1/user/vendor/register",
             "/api/v1/user/restaurant/approve/*",
             "/api/v1/user/restaurant/get/*",
              "/api/v1/user/restaurant/search",

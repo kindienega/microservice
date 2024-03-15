@@ -4,6 +4,7 @@ import et.com.gebeya.user_service.dto.requestDto.*;
 import et.com.gebeya.user_service.dto.responseDto.AddressResponseDto;
 import et.com.gebeya.user_service.dto.responseDto.PhoneNumberResponseDto;
 import et.com.gebeya.user_service.dto.responseDto.RestaurantResponseDto;
+import et.com.gebeya.user_service.dto.responseDto.VendorResponse;
 import et.com.gebeya.user_service.model.*;
 
 import java.util.List;
@@ -106,5 +107,63 @@ private static AddressResponseDto mapAddressModelToDto(Address address){
         userRequest.setPhoneNumber(dto.getPhoneNumber().get(0).getPhoneNumber());
         return userRequest;
 
+    }
+
+    public VendorResponse transformToVendorResponse(Vendor vendor) {
+        VendorResponse response = new VendorResponse();
+        // Assuming you have setters or a constructor to set these fields
+        response.setId(vendor.getId());
+        response.setBusinessName(vendor.getBusinessName());
+        response.setOwnerName(vendor.getOwnerName());
+        response.setLicenseNumber(vendor.getLicenseNumber());
+        response.setEmail(vendor.getEmail());
+        response.setAddresses(vendor.getAddresses().stream().map(this::transformAddress).collect(Collectors.toList()));
+        response.setPhoneNumber(vendor.getPhoneNumber().stream().map(this::transformPhoneNumber).collect(Collectors.toList()));
+        response.setProductId(vendor.getProducts().stream().map(this::transformProductId).collect(Collectors.toList()));
+
+        return response;
+    }
+
+    private PhoneNumberDto transformPhoneNumber(PhoneNumber phoneNumber) {
+        PhoneNumberDto phoneNumbers = new PhoneNumberDto();
+        phoneNumbers.setPhoneNumber(phoneNumber.getPhoneNumber());
+        return phoneNumbers;
+    }
+    private ProductId transformProductId(Product products){
+        ProductId productId = new ProductId();
+        productId.setProductId(products.getId());
+        return productId;
+    }
+
+    private AddressRequestDto transformAddress(Address address) {
+        AddressRequestDto response = new AddressRequestDto();
+        response.setCity(address.getCity());
+        response.setSubCity(address.getSubCity());
+        response.setWereda(address.getWereda());
+        return response;
+    }
+    public VendorProductUpdateRequestDto mapToEntity(Product product ){
+        VendorProductUpdateRequestDto vpUpdate = new VendorProductUpdateRequestDto();
+        vpUpdate.setNameOfProduct(product.getName());
+       // vpUpdate.setVendorQuantity(product.getVendorQuantity());
+       // vpUpdate.setVendorProductPrice(product.getVendorProductPrice());
+        return vpUpdate;
+    }
+    public UpdateRequest mapDtoToEntity(VendorProductUpdateRequestDto dto) {
+        UpdateRequest updateRequest = new UpdateRequest();
+        updateRequest.setName(dto.getNameOfProduct());
+        updateRequest.setProductQuantity(dto.getVendorQuantity());
+        updateRequest.setVendorProductPrice(dto.getVendorProductPrice());
+        updateRequest.setStatus(dto.getStatus());
+        return updateRequest;
+    }
+
+    public VendorProductUpdateRequestDto mapEntityToDto(UpdateRequest entity) {
+        VendorProductUpdateRequestDto dto = new VendorProductUpdateRequestDto();
+        dto.setNameOfProduct(entity.getName());
+        dto.setVendorQuantity(entity.getProductQuantity());
+        dto.setVendorProductPrice(entity.getVendorProductPrice());
+        dto.setStatus(entity.getStatus());
+        return dto;
     }
 }

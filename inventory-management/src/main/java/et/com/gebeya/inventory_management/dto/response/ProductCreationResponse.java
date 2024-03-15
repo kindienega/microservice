@@ -28,9 +28,5 @@ public class ProductCreationResponse {
     private String volume;
     private String brands;
     private CategoryDto category;
-
-
-
     //private Admins admins;
-
 }

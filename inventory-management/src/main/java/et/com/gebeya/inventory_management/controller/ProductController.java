@@ -10,10 +10,10 @@ import et.com.gebeya.inventory_management.dto.response.ListAllProductUnderCatego
 import et.com.gebeya.inventory_management.dto.response.ProductCreationResponse;
 import et.com.gebeya.inventory_management.dto.response.ProductUpdateResponse;
 import et.com.gebeya.inventory_management.dto.response.QuantityResponse;
+import et.com.gebeya.inventory_management.repos.ProductRepository;
 import et.com.gebeya.inventory_management.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,22 +29,28 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-    @Autowired
     private ObjectMapper objectMapper;
-    @PostMapping(value = "/create", consumes = "multipart/form-data")
-    public ResponseEntity<ProductCreationResponse> createProduct(
+    private ProductRepository productRepository;
+
+    @PostMapping("/create")
+    public ResponseEntity<ProductCreationResponse> registerProduct(@Valid @RequestBody ProductCreationRequest productRequest) {
+        ProductCreationResponse productResponse = productService.createProduct(productRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(productResponse);
+    }
+    @PostMapping(value = "/register", consumes = "multipart/form-data")
+    public ResponseEntity<ProductCreationResponse> createProducts(
             @RequestPart("product") String productJson,
             @RequestPart("imageFile") MultipartFile imageFile) {
         try {
             ProductCreationRequest request = objectMapper.readValue(productJson, ProductCreationRequest.class);
-            ProductCreationResponse response = productService.createProduct(request, imageFile);
+            ProductCreationResponse response = productService.createProducts(request, imageFile);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-    @GetMapping
+    @GetMapping("/all")
     public List<ProductDTO> getAllProducts() {
         return productService.listAllProducts();
     }
@@ -118,4 +124,12 @@ public ResponseEntity<ProductUpdateResponse> orderProduct(@RequestBody StockAdju
     ProductUpdateResponse response = new ProductUpdateResponse(product.getName(), product.getQuantity());
     return ResponseEntity.ok(response);
 }
+    @PostMapping("/byIds")
+    public ResponseEntity<List<Product>> getProductsByIds(@RequestBody List<Long> ids) {
+        List<Product> products = productRepository.findByIdIn(ids);
+        if (products.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(products);
+    }
 }

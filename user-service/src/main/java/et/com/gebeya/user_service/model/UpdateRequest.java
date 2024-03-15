@@ -1,26 +1,24 @@
-package et.com.gebeya.inventory_management.Models;
+package et.com.gebeya.user_service.model;
 
+import et.com.gebeya.user_service.enums.Status;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-
-@Setter
 @Getter
+@Setter
 @Entity
-public class Category {
+public class UpdateRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String title;
-    private String metaTitle;
-    private String description;
-    //private Date createdAt;
+    private int productQuantity;
+    private Double vendorProductPrice;
+    private Status status;
 }
+
+
