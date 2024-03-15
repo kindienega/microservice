@@ -14,6 +14,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class PhoneNumber extends BaseModel  {
+    //todo make this unique
     @Column(length = 14)
     @Pattern(regexp = "^\\+251\\d{9}$")
     private String phoneNumber;

@@ -14,7 +14,7 @@ public class OrderResponseDto {
     private Integer orderId;
     private double totalPrice;
     private OrderStatus orderStatus;
-    private String message;
+
 
 
 }

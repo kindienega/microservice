@@ -127,22 +127,20 @@ public ResponseEntity<QuantityResponse> getTotalQuantity(Long productId) {
     return ResponseEntity.ok(response);
 }
     @Transactional
-    public Product restockProduct(Long productId, int quantityToAdd) {
+    public void restockProduct(Long productId, int quantityToAdd) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + productId));
         product.setQuantity(product.getQuantity() + quantityToAdd);
-        return productRepository.save(product);
+        productRepository.save(product);
     }
     @Transactional
     public Product decreaseStock(Long productId, int quantityToDecrease) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + productId));
         int newQuantity = product.getQuantity() - quantityToDecrease;
-
         if (newQuantity < 0) {
             throw new IllegalArgumentException("Insufficient stock for product ID: " + productId);
         }
-
         product.setQuantity(newQuantity);
         return productRepository.save(product);
     }

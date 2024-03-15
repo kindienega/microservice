@@ -5,9 +5,7 @@ import et.com.gebeya.user_service.model.Vendor;
 import org.springframework.data.jpa.domain.Specification;
 
 public class VendorSpecification {
-    public static Specification<Vendor> getVendorByName(String name){
-        return ((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("business_name"),"%" + name + "%"));
-    }
+
     public static Specification<Vendor> getAllVendors()
     {
         return (((root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get("isActive"),false)));

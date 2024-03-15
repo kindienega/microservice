@@ -27,15 +27,18 @@ public class SecurityConfig {
 
     protected static final String [] ADMIN_MATCHERS = {
             "/api/v1/orders/all",
-            "/api/v1/orders/restaurant/*",
-            "/api/v1/orders/*/complete"
+           "/api/v1/orders/restaurant/*",
+
+            "/api/v1/orders/*/update-status",
+            "/api/v1/orders/complete/*",
+
 
     };
 
     protected static final String [] RESTAURANT_MATCHERS = {
 
             "/api/v1/orders/*/cancel",
-            "/api/v1/orders/restaurant/*",
+            "/api/v1/orders/restaurant/get/*",
             "/api/v1/orders/place",
 
 
