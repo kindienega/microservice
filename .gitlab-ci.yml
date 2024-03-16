@@ -49,9 +49,6 @@ variables:
     - when: never 
 
 
-
-
-
 build_apigateway_service:
   extends: .docker_build
   stage: build
@@ -60,14 +57,11 @@ build_apigateway_service:
     IMAGE_PATH: "api-service-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
 
-
-
-
 build_service_discovery:
   extends: .docker_build
   stage: build
   needs:
-    - build_email_service
+    - build_apigateway_service
   variables:
     DOCKER_FILE_NAME: "Dockerfile.discovery"
     IMAGE_PATH: "service-discovery-"
@@ -124,13 +118,11 @@ update_apigateway_manifest:
     IMAGE_PATH: "api-service-"
     DOCKER_IMAGE: $DOCKER_USER_NAME/${IMAGE_PATH}${CI_PROJECT_NAME}:$CI_COMMIT_SHORT_SHA
 
-
-
 update_service_discovery_manifest:
   extends: .update_manifest
   stage: deploy
   needs:
-    - update_email_service_manifest
+    - update_apigateway_manifest
   variables:
     MANIFEST_STAGING_PATH: "service-discovery/deployment.yaml"
     COMMIT_MESSAGE: "update service managmanet image"
