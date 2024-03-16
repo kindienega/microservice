@@ -9,6 +9,7 @@ import et.com.gebeya.inventory_management.dto.request.RequestForUpdate;
 import et.com.gebeya.inventory_management.dto.response.ListAllProductUnderCategoryResponse;
 import et.com.gebeya.inventory_management.dto.response.ProductCreationResponse;
 import et.com.gebeya.inventory_management.dto.response.QuantityResponse;
+import et.com.gebeya.inventory_management.exceptions.NameAlreadyExistsException;
 import et.com.gebeya.inventory_management.exceptions.ResourceNotFoundException;
 import et.com.gebeya.inventory_management.repos.CategoryRepository;
 import et.com.gebeya.inventory_management.repos.ProductRepository;
@@ -33,6 +34,9 @@ public class ProductService {
     private MappingFunctions mappingFunctions;
 
     public ProductCreationResponse createProduct(ProductCreationRequest request) {
+        if (productRepository.existsByName(request.getName())) {
+            throw new NameAlreadyExistsException(request.getName());
+        }
         Product product = mappingFunctions.mapToProduct(request);
         Product savedProduct = productRepository.save(product);
         return mappingFunctions.mapToProductCreationResponse(savedProduct);
@@ -66,12 +70,12 @@ public class ProductService {
     }
     public ProductDTO getProductById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product with id not  found " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Product with id   " +id+ " not found " ));
         return mappingFunctions.convertToDTOForProduct(product);
     }
     public ProductDTO updateProduct(Long id, RequestForUpdate update) {
         Product existingProduct = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with  "+id));
+                .orElseThrow(() -> new ResourceNotFoundException("Product with id   " +id+ " not found "));
         mappingFunctions.updateEntityWithDTOForProduct(update, existingProduct);
         Product updatedProduct = productRepository.save(existingProduct);
         return mappingFunctions.convertToDTOForProduct(updatedProduct);
@@ -93,7 +97,7 @@ public class ProductService {
     }
     public ListAllProductUnderCategoryResponse listAllProductsUnderCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + categoryId));
+                .orElseThrow(() -> new ResourceNotFoundException("Category with ID: " + categoryId + "  not found"));
         List<Product> products = productRepository.findAllByCategory(category);
         List<ProductDto> productDtos = products.stream()
                 .map(product -> new ProductDto(product.getId(),
@@ -119,15 +123,10 @@ public class ProductService {
         return response;
     }
 
-//    public int getTotalQuantity(Long productId) {
-//        return productRepository.findById(productId)
-//                .map(Product::getQuantity)
-//                .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + productId));
-//    }
 public ResponseEntity<QuantityResponse> getTotalQuantity(Long productId) {
     int quantity = productRepository.findById(productId)
             .map(Product::getQuantity)
-            .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + productId));
+            .orElseThrow(() -> new ResourceNotFoundException("Product with ID: " + productId+ "  not found"));
 
     QuantityResponse response = new QuantityResponse(quantity);
     return ResponseEntity.ok(response);
@@ -135,14 +134,14 @@ public ResponseEntity<QuantityResponse> getTotalQuantity(Long productId) {
     @Transactional
     public void restockProduct(Long productId, int quantityToAdd) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + productId));
+                .orElseThrow(() -> new ResourceNotFoundException("Product with ID: " + productId + "  not found"));
         product.setQuantity(product.getQuantity() + quantityToAdd);
         productRepository.save(product);
     }
     @Transactional
     public Product decreaseStock(Long productId, int quantityToDecrease) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + productId));
+                .orElseThrow(() -> new ResourceNotFoundException("Product with ID: " + productId+ "  not found"));
         int newQuantity = product.getQuantity() - quantityToDecrease;
         if (newQuantity < 0) {
             throw new IllegalArgumentException("Insufficient stock for product ID: " + productId);

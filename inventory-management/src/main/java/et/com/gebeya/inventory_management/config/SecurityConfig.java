@@ -25,26 +25,29 @@ public class SecurityConfig {
     protected static final String [] UNAUTHORIZED_MATCHERS = {
             "/v3/api-docs/**",
             "/swagger-ui/**",
+            "/api/v1/products/*",
+            "/api/v1/products/*/stock",
+            "/api/v1/products/category/*",
+            "/api/v1/products/search",
             "/api/v1/products/byIds",
-            "/api/v1/products/all",
-            "/api/v1/products/order"
+            "/api/v1/products/all"
+
 
     };
 
     protected static final String [] ADMIN_MATCHERS = {
             "/api/v1/products/create",
             "/api/v1/category/**",
-            "/api/v1/category/all",
-            "/api/v1/products/restock"
+            "/api/v1/products/restock",
     };
     protected static final String [] VENDOR_MATCHERS = {
 
     };
     protected static final String [] RESTAURANT_MATCHERS ={
-            "/api/v1/products/order",
             "/api/v1/products/search",
             "/api/v1/products/all",
-            "/api/v1/products/category/{categoryId}"
+            "/api/v1/products/category/{categoryId}",
+            "/api/v1/products/{productId}/stock"
 
     };
 

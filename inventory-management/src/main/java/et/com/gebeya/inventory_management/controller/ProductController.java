@@ -32,6 +32,7 @@ public class ProductController {
     private ObjectMapper objectMapper;
     private ProductRepository productRepository;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<ProductCreationResponse> registerProduct(@Valid @RequestBody ProductCreationRequest productRequest) {
         ProductCreationResponse productResponse = productService.createProduct(productRequest);
@@ -64,15 +65,6 @@ public class ProductController {
         }
     }
 
-//    @PostMapping()
-//    public ProductDTO saveProduct(@RequestBody ProductDTO productDTO){
-//        return productService.savedProduct(productDTO);
-//    }
-//    @PostMapping("/productWithCategory")
-//    public ResponseEntity<ProductDTO> createProduct(@RequestBody CreateProductRequest createProductRequest) {
-//        ProductDTO savedProductDTO = productService.savedProductWithCategory(createProductRequest);
-//        return new ResponseEntity<>(savedProductDTO, HttpStatus.CREATED);
-//    }
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ProductDTO updateProduct(@PathVariable Long id, @RequestBody RequestForUpdate update) {
@@ -113,11 +105,6 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-//    @PostMapping("/order")
-//    public ResponseEntity<Void> orderProduct(@RequestBody StockAdjustmentDTO stockAdjustment) {
-//        productService.decreaseStock(stockAdjustment.getProductId(), stockAdjustment.getQuantity());
-//        return ResponseEntity.ok().build();
-//    }
 @PostMapping("/order")
 public ResponseEntity<ProductUpdateResponse> orderProduct(@RequestBody StockAdjustmentDTO stockAdjustment) {
     Product product = productService.decreaseStock(stockAdjustment.getProductId(), stockAdjustment.getQuantity());
