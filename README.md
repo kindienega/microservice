@@ -147,3 +147,5 @@ If you'd like to start applications in Intellij Idea you need to either use [Env
 - http://localhost:8181 - Gateway
 - http://localhost:8761 - Eureka Dashboard
 
+
+
