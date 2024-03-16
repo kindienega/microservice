@@ -30,7 +30,8 @@ public class SecurityConfig {
             "/v3/api-docs/**",
             "/api/auth/log_in",
             "/api/v1/user/vendor/register",
-            "/api/v1/user/vendor/{id}/products"
+            "/api/v1/user/vendor/{id}/products",
+            "/api/v1/user/vendor/request/**"
            // "/api/v1/user/vendor/1/products"
 
     };

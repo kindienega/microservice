@@ -1,12 +1,11 @@
 package et.com.gebeya.user_service.model;
 
 import et.com.gebeya.user_service.enums.Status;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,7 +17,13 @@ public class UpdateRequest {
     private String name;
     private int productQuantity;
     private Double vendorProductPrice;
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<PhoneNumber> phoneNumber;
     private Status status;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vendor_id", referencedColumnName = "id", nullable = false)
+    private Vendor vendor;
+
 }
 
 

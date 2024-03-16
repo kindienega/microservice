@@ -22,7 +22,9 @@ public class RouteValidator {
             "/api/v1/products/search",
             "/api/v1/products/byIds",
             "/api/v1/products/all",
-            "/api/v1/products/*"
+            "/api/v1/products/*",
+            "/api/v1/user/vendor/request/**"
+
     );
 
     public Predicate<ServerHttpRequest> isSecured =

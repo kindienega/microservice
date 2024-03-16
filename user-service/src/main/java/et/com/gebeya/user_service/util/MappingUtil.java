@@ -1,16 +1,21 @@
 package et.com.gebeya.user_service.util;
 
 import et.com.gebeya.user_service.dto.requestDto.*;
-import et.com.gebeya.user_service.dto.responseDto.AddressResponseDto;
-import et.com.gebeya.user_service.dto.responseDto.PhoneNumberResponseDto;
-import et.com.gebeya.user_service.dto.responseDto.RestaurantResponseDto;
-import et.com.gebeya.user_service.dto.responseDto.VendorResponse;
+import et.com.gebeya.user_service.dto.responseDto.*;
+import et.com.gebeya.user_service.enums.Status;
 import et.com.gebeya.user_service.model.*;
+import et.com.gebeya.user_service.repository.VendorRepository;
+import lombok.AllArgsConstructor;
+import org.apache.kafka.common.errors.ResourceNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Component
+@AllArgsConstructor
 public class MappingUtil {
+    private final VendorRepository vendorRepository;
+
     public static Restaurant mapRestaurantDtoToModel(RestaurantRequestDto dto){
         Restaurant restaurant=new Restaurant();
         restaurant.setBusinessName(dto.getBusinessName());
@@ -142,28 +147,32 @@ private static AddressResponseDto mapAddressModelToDto(Address address){
         response.setWereda(address.getWereda());
         return response;
     }
-    public VendorProductUpdateRequestDto mapToEntity(Product product ){
-        VendorProductUpdateRequestDto vpUpdate = new VendorProductUpdateRequestDto();
-        vpUpdate.setNameOfProduct(product.getName());
-       // vpUpdate.setVendorQuantity(product.getVendorQuantity());
-       // vpUpdate.setVendorProductPrice(product.getVendorProductPrice());
-        return vpUpdate;
-    }
-    public UpdateRequest mapDtoToEntity(VendorProductUpdateRequestDto dto) {
+    // Converts DTO to Entity
+    public UpdateRequest dtoToEntity(VendorProductUpdateRequestDto dto) {
+        Vendor vendor = vendorRepository.findById(dto.getVendorId())
+                .orElseThrow(() -> new ResourceNotFoundException(" vendor is not found"));
         UpdateRequest updateRequest = new UpdateRequest();
         updateRequest.setName(dto.getNameOfProduct());
         updateRequest.setProductQuantity(dto.getVendorQuantity());
         updateRequest.setVendorProductPrice(dto.getVendorProductPrice());
-        updateRequest.setStatus(dto.getStatus());
+        updateRequest.setStatus(Status.PENDING);
+        updateRequest.setVendor(vendor);
         return updateRequest;
     }
 
-    public VendorProductUpdateRequestDto mapEntityToDto(UpdateRequest entity) {
-        VendorProductUpdateRequestDto dto = new VendorProductUpdateRequestDto();
-        dto.setNameOfProduct(entity.getName());
-        dto.setVendorQuantity(entity.getProductQuantity());
-        dto.setVendorProductPrice(entity.getVendorProductPrice());
-        dto.setStatus(entity.getStatus());
+    // Converts Entity to DTO
+    public VendorProductUpdateResponseDto entityToDto(UpdateRequest updateRequest) {
+        VendorProductUpdateResponseDto dto = new VendorProductUpdateResponseDto();
+        dto.setNameOfProduct(updateRequest.getName());
+        dto.setVendorQuantity(updateRequest.getProductQuantity());
+        dto.setVendorProductPrice(updateRequest.getVendorProductPrice());
+        dto.setStatus(updateRequest.getStatus());
+//        if (!updateRequest.getVendor().getPhoneNumbers().isEmpty()) {
+//            dto.setPhoneNumber(updateRequest.getVendor().getPhoneNumbers().get(0).getPhoneNumber()); // Assuming a List; adjust based on actual collection type
+//        }
+        dto.setPhoneNumber(updateRequest.getVendor().getPhoneNumber().get(0).getPhoneNumber());
+        dto.setVendor(new VendorDto(updateRequest.getVendor().getId(), updateRequest.getVendor().getLicenseNumber()
+                 ,updateRequest.getVendor().getLicenseNumber(), updateRequest.getVendor().getPhoneNumber()));
         return dto;
     }
 }
