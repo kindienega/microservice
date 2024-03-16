@@ -2,10 +2,8 @@ package et.com.gebeya.user_service.controller;
 
 import et.com.gebeya.user_service.dto.requestDto.ProductDTO;
 import et.com.gebeya.user_service.dto.requestDto.VendorRequestDto;
-import et.com.gebeya.user_service.dto.responseDto.VendorResponse;
 import et.com.gebeya.user_service.model.Vendor;
 import et.com.gebeya.user_service.service.VendorService;
-import et.com.gebeya.user_service.util.MappingUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

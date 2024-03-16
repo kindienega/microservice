@@ -1,11 +1,8 @@
-package et.com.gebeya.user_service.controller;
+package et.com.gebeya.inventory_management.controller;
 
-
-import et.com.gebeya.user_service.dto.requestDto.VendorProductUpdateRequestDto;
-import et.com.gebeya.user_service.dto.responseDto.VendorProductUpdateResponseDto;
-import et.com.gebeya.user_service.enums.Status;
-import et.com.gebeya.user_service.model.UpdateRequest;
-import et.com.gebeya.user_service.service.UpdateRequestService;
+import et.com.gebeya.inventory_management.dto.request.VendorProductUpdateRequestDto;
+import et.com.gebeya.inventory_management.dto.response.VendorProductUpdateResponseDto;
+import et.com.gebeya.inventory_management.service.UpdateRequestService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +12,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/v1/user/vendor/request")
+@RequestMapping("/api/v1/category/vendor")
 public class UpdateRequestController {
 
     private final UpdateRequestService updateRequestService;

@@ -1,6 +1,6 @@
-package et.com.gebeya.user_service.callMethods;
+package et.com.gebeya.inventory_management.serviceCallMethods;
 
-import et.com.gebeya.user_service.model.Product;
+import et.com.gebeya.inventory_management.Models.Product;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;

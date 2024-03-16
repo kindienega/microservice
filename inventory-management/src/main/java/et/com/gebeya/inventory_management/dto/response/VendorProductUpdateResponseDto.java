@@ -1,7 +1,7 @@
-package et.com.gebeya.user_service.dto.responseDto;
+package et.com.gebeya.inventory_management.dto.response;
 
-import et.com.gebeya.user_service.dto.requestDto.VendorDto;
-import et.com.gebeya.user_service.enums.Status;
+import et.com.gebeya.inventory_management.dto.VendorDto;
+import et.com.gebeya.inventory_management.enums.Status;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;

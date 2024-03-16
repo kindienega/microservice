@@ -1,17 +1,15 @@
-package et.com.gebeya.user_service.service;
+package et.com.gebeya.inventory_management.service;
 
-import et.com.gebeya.user_service.dto.requestDto.VendorProductUpdateRequestDto;
-import et.com.gebeya.user_service.dto.responseDto.VendorProductUpdateResponseDto;
-import et.com.gebeya.user_service.enums.Status;
-import et.com.gebeya.user_service.model.UpdateRequest;
-import et.com.gebeya.user_service.model.Vendor;
-import et.com.gebeya.user_service.repository.UpdateRequestRepository;
-import et.com.gebeya.user_service.repository.VendorRepository;
-import et.com.gebeya.user_service.util.MappingUtil;
-import jakarta.persistence.EntityNotFoundException;
+import et.com.gebeya.inventory_management.Models.UpdateRequest;
+import et.com.gebeya.inventory_management.dto.request.VendorProductUpdateRequestDto;
+import et.com.gebeya.inventory_management.dto.response.VendorProductUpdateResponseDto;
+import et.com.gebeya.inventory_management.enums.Status;
+import et.com.gebeya.inventory_management.exceptions.ResourceNotFoundException;
+import et.com.gebeya.inventory_management.repos.UpdateRequestRepository;
+import et.com.gebeya.inventory_management.repos.VendorRepository;
+import et.com.gebeya.inventory_management.utility.MappingUtil;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -71,7 +69,5 @@ public class UpdateRequestService {
 
         return mappingUtil.entityToDto(savedRequest);
     }
-
-
 
 }

@@ -39,6 +39,7 @@ public class SecurityConfig {
             "/api/v1/products/create",
             "/api/v1/category/**",
             "/api/v1/products/restock",
+            "/api/v1/user/vendor/**"
     };
     protected static final String [] VENDOR_MATCHERS = {
 

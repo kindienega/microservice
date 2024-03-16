@@ -1,7 +1,7 @@
-package et.com.gebeya.user_service.dto.requestDto;
+package et.com.gebeya.inventory_management.dto.request;
 
-import et.com.gebeya.user_service.enums.Status;
-import et.com.gebeya.user_service.model.PhoneNumber;
+import et.com.gebeya.inventory_management.Models.PhoneNumber;
+import et.com.gebeya.inventory_management.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

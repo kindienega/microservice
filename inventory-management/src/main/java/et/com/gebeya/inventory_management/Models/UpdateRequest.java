@@ -1,6 +1,6 @@
-package et.com.gebeya.user_service.model;
+package et.com.gebeya.inventory_management.Models;
 
-import et.com.gebeya.user_service.enums.Status;
+import et.com.gebeya.inventory_management.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,5 +25,3 @@ public class UpdateRequest {
     private Vendor vendor;
 
 }
-
-

@@ -44,14 +44,7 @@ spring:
         - id: inventory-management
           uri: lb://inventory-management
           predicates:
-            - Path=/api/v1/vendorProducts/**
-          filters:
-            - AuthenticationFilter
-
-        - id: inventory-management
-          uri: lb://inventory-management
-          predicates:
-            - Path=/api/v1/vendors/**
+            - Path=/api/v1/user/vendor/**
           filters:
             - AuthenticationFilter
 
