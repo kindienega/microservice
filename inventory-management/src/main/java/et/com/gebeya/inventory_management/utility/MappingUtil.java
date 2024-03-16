@@ -35,7 +35,8 @@ public class MappingUtil {
         dto.setStatus(updateRequest.getStatus());
         dto.setPhoneNumber(updateRequest.getVendor().getPhoneNumber().get(0).getPhoneNumber());
         dto.setVendor(new VendorDto(updateRequest.getVendor().getId(), updateRequest.getVendor().getOwnerName()
-                ,updateRequest.getVendor().getLicenseNumber(), updateRequest.getVendor().getPhoneNumber()));
+                ,updateRequest.getVendor().getLicenseNumber(), updateRequest.getVendor().getPhoneNumber(),
+                updateRequest.getVendor().getProducts()));
         return dto;
     }
 }

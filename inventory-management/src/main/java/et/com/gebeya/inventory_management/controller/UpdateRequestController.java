@@ -31,9 +31,15 @@ public class UpdateRequestController {
     public ResponseEntity<List<VendorProductUpdateResponseDto>> getAllUpdateRequests() {
         return ResponseEntity.ok(updateRequestService.getAllUpdateRequests());
     }
-    @PutMapping("/{id}/approve")
-    public ResponseEntity<VendorProductUpdateResponseDto> approveUpdateRequest(@PathVariable Long id) throws IOException {
-        VendorProductUpdateResponseDto responseDto = updateRequestService.approveUpdateRequest(id);
+//    @PutMapping("/{id}/approve")
+//    public ResponseEntity<VendorProductUpdateResponseDto> approveUpdateRequest(@PathVariable Long id) throws IOException {
+//        VendorProductUpdateResponseDto responseDto = updateRequestService.approveUpdateRequest(id);
+//        return ResponseEntity.ok(responseDto);
+//    }
+
+    @PutMapping("/{id}/approved")
+    public ResponseEntity<VendorProductUpdateResponseDto> approvedUpdateRequest(@PathVariable Long id) throws IOException {
+        VendorProductUpdateResponseDto responseDto = updateRequestService.approveVendorProductUpdate(id);
         return ResponseEntity.ok(responseDto);
     }
 
