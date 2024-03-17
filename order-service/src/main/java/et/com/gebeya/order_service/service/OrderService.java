@@ -1,10 +1,9 @@
 package et.com.gebeya.order_service.service;
 
 import et.com.gebeya.order_service.Enum.OrderStatus;
-import et.com.gebeya.order_service.dto.requestDto.OrderItemRequestDto;
-import et.com.gebeya.order_service.dto.requestDto.OrderPaymentInfo;
-import et.com.gebeya.order_service.dto.requestDto.OrderRequestDto;
+import et.com.gebeya.order_service.dto.requestDto.*;
 import et.com.gebeya.order_service.dto.responseDto.OrderResponseDto;
+import et.com.gebeya.order_service.dto.responseDto.ProductResponse;
 import et.com.gebeya.order_service.model.*;
 import et.com.gebeya.order_service.repository.OrderRepository;
 import et.com.gebeya.order_service.repository.ProductRepository;
@@ -14,8 +13,10 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,6 +31,9 @@ public class OrderService {
     private final RestaurantRepository restaurantRepository;
     private final SmsService smsService;
     private final MockPaymentService mockPaymentService;
+    private final WebClient.Builder webclientBuilder;
+    @Value("${afroMessage.identifier}")
+    public String identifier;
 
 
     @Transactional
@@ -109,9 +113,9 @@ public class OrderService {
         List<OrderItem> orderItems = new ArrayList<>();
 
         for (OrderItemRequestDto itemRequest : request.getOrderItems()) {
-            Product product = productRepository.findById(Long.valueOf(itemRequest.getProductId()))
-                    .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + itemRequest.getProductId()));
-
+//            Product product = productRepository.findById(Long.valueOf(itemRequest.getProductId()))
+//                    .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + itemRequest.getProductId()));
+Product product=getProductById(itemRequest.getProductId());
             OrderItem orderItem = new OrderItem();
             orderItem.setProduct(product);
             orderItem.setQuantity(itemRequest.getQuantity());
@@ -125,6 +129,7 @@ public class OrderService {
         orders.setTotalPrice(totalPrice);
         return orders;
     }
+
 
     private OrderResponseDto createOrderResponse(Orders savedOrder) {
         OrderResponseDto response = new OrderResponseDto();
@@ -162,17 +167,42 @@ public class OrderService {
         }
         return true;
     }
+    private Product getProductById(Long productId){
+        return webclientBuilder.build()
+                .get()
+                .uri("http://INVENTORY-MANAGEMENT/api/v1/products/get/"+productId)
+                .header("role","SYSTEM")
+                .header("roleId","0")
+                .retrieve()
+                .bodyToMono(Product.class)
+                .block();
+    }
 
     private void updateProductQuantities(Orders orders) {
+        WebClient webClient=webclientBuilder.build();
         for (OrderItem orderItem : orders.getOrderItems()) {
             Product product = orderItem.getProduct();
             int orderedQuantity = orderItem.getQuantity();
             int currentQuantity = product.getQuantity();
             int updatedQuantity = currentQuantity - orderedQuantity;
-            product.setQuantity(updatedQuantity);
-            productRepository.save(product);
+         product.setQuantity(updatedQuantity);
+//            productRepository.save(product);
+            StockAdjustmentDTO stockAdjustment=new StockAdjustmentDTO(product.getId(), orderedQuantity);
+
+                ProductResponse response=webClient.put()
+                        .uri("http://INVENTORY-MANAGEMENT/api/v1/products/order")
+                        .header("role","SYSTEM")
+                        .header("roleId","0")
+                        .bodyValue(stockAdjustment)
+                        .retrieve()
+                        .bodyToMono(ProductResponse.class)
+
+                        .block() ;
+
+
         }
     }
+
 
     private OrderPaymentInfo calculateOrderPaymentInfo(Orders orders) {
         double totalPrice = orders.getOrderItems().stream()
@@ -203,7 +233,7 @@ public class OrderService {
 
     private void sendNotification(Restaurant restaurant, String message) {
         try {
-            smsService.sendSms(restaurant.getPhoneNumber().get(0).getPhoneNumber(), "e80ad9d8-adf3-463f-80f4-7c4b39f7f164", "", message);
+            smsService.sendSms(restaurant.getPhoneNumber().get(0).getPhoneNumber(), identifier, "", message);
         } catch (IOException e) {
             log.error("Failed to send SMS notification to restaurant: " + restaurant.getOwnerName(), e);
         }

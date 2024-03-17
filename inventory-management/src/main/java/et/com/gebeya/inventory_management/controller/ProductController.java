@@ -49,7 +49,7 @@ public class ProductController {
         return productService.listAllProducts();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ProductDTO getProductById(@PathVariable Long id) {
         try {
             return productService.getProductById(id);
@@ -112,7 +112,7 @@ public class ProductController {
 //        productService.decreaseStock(stockAdjustment.getProductId(), stockAdjustment.getQuantity());
 //        return ResponseEntity.ok().build();
 //    }
-@PostMapping("/order")
+@PutMapping("/order")
 public ResponseEntity<ProductUpdateResponse> orderProduct(@RequestBody StockAdjustmentDTO stockAdjustment) {
     Product product = productService.decreaseStock(stockAdjustment.getProductId(), stockAdjustment.getQuantity());
     ProductUpdateResponse response = new ProductUpdateResponse(product.getName(), product.getQuantity());

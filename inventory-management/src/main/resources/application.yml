@@ -33,7 +33,7 @@ eureka:
 
 
 server:
-  port: 8086
+  port: 8000
 
 management:
   tracing:
@@ -42,3 +42,7 @@ management:
 logging:
   level:
     web: debug
+
+afroMessage:
+  token: ${AFRO_TOKEN}
+  baseUrl: ${AFRO_URL}

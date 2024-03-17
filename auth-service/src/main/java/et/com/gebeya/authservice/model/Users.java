@@ -24,7 +24,7 @@ import java.util.List;
 @Builder
 public class Users extends BaseModel implements UserDetails {
     @JsonIgnoreProperties(ignoreUnknown = true)
-    @Column(name = "username", length = 32)
+    @Column(name = "username", length = 32,unique = true)
     private String userName;
 
     @Column(name = "password")

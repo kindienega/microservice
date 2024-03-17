@@ -20,6 +20,7 @@ public class RouteValidator {
             "/v3/api-docs",
             "/swagger-ui/index.html#/**",
             "/api/v1/user/restaurant/register"
+
             );
 
     public Predicate<ServerHttpRequest> isSecured =

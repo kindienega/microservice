@@ -4,17 +4,22 @@ import et.com.gebeya.authservice.dto.requestdto.AddUserRequest;
 import et.com.gebeya.authservice.dto.requestdto.ChangePassword;
 import et.com.gebeya.authservice.dto.requestdto.UsersCredential;
 import et.com.gebeya.authservice.dto.requestdto.ValidationRequest;
+import et.com.gebeya.authservice.dto.responsedto.AuthResponse;
 import et.com.gebeya.authservice.dto.responsedto.AuthenticationResponse;
 import et.com.gebeya.authservice.dto.responsedto.ValidationResponse;
 import et.com.gebeya.authservice.enums.Role;
+import et.com.gebeya.authservice.enums.Status;
 import et.com.gebeya.authservice.exceptions.PasswordChangeException;
 import et.com.gebeya.authservice.model.Users;
 import et.com.gebeya.authservice.repository.UsersRepository;
 import jakarta.security.auth.message.AuthException;
 import jakarta.ws.rs.ServerErrorException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,11 +28,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.Optional;
+
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AuthenticationService {
     private final UsersRepository userRepository;
@@ -52,7 +61,7 @@ public class AuthenticationService {
 
 
 
-        if (!user.isApproved()&&user.getRole()!= Role.ADMIN) {
+        if (!user.isApproved()&&user.getRole()== Role.RESTAURANT) {
             throw new RuntimeException("User is not approved or status is pending");
         }
 
@@ -67,6 +76,28 @@ public class AuthenticationService {
         return ResponseEntity.ok(response);
     }
 
+
+
+    public ResponseEntity<AuthResponse> addUser(AddUserRequest dto){
+        try {
+            Users users=Users.builder()
+                    .userName(dto.getUserName())
+                    .isActive(true)
+                    .role(dto.getRole())
+                    .roleId(dto.getRoleId())
+                    .status(dto.getStatus())
+                    .phoneNumber(dto.getPhoneNumber())
+                    .password(passwordEncoder.encode(dto.getPassword()))
+                    .build();
+            userRepository.save(users);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (Exception ex) {
+            // Log the exception for further analysis
+           log.error(ex.getMessage(),ex);
+            // Return an error response
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
 

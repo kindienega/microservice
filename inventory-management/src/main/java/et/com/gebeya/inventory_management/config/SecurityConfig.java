@@ -24,7 +24,14 @@ public class SecurityConfig {
 
     protected static final String [] UNAUTHORIZED_MATCHERS = {
             "/v3/api-docs/**",
-            "/swagger-ui/**"
+            "/swagger-ui/**",
+
+    };
+    protected static final String [] SYSTEM_MATCHERS = {
+
+            "/api/v1/products/get/{id}",
+            "/api/v1/products/order",
+            "/api/v1/products/{productId}/stocK"
     };
 
     protected static final String [] ADMIN_MATCHERS = {
@@ -42,10 +49,10 @@ public class SecurityConfig {
             "/api/v1/vendorProducts/{vendorProductId}/status/{status}"
     };
     protected static final String [] VENDOR_MATCHERS = {
-            "/api/v1/products/order"
+            "/api/v1/products/orde"
     };
     protected static final String [] RESTAURANT_MATCHERS ={
-            "/api/v1/products/order",
+            "/api/v1/products/ord",
             "/api/v1/products/search",
             "/api/v1/products/all",
 
@@ -57,9 +64,11 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request.requestMatchers(UNAUTHORIZED_MATCHERS).permitAll())
+                .authorizeHttpRequests(request -> request.requestMatchers(SYSTEM_MATCHERS).hasAuthority("SYSTEM"))
                 .authorizeHttpRequests(request -> request.requestMatchers(ADMIN_MATCHERS).hasAuthority("ADMIN"))
                 .authorizeHttpRequests(request -> request.requestMatchers(VENDOR_MATCHERS).hasAuthority("VENDOR"))
                 .authorizeHttpRequests(request -> request.requestMatchers(RESTAURANT_MATCHERS).hasAuthority("RESTAURANT"))
+
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .exceptionHandling(handling -> {
                     handling.authenticationEntryPoint(unauthorizedEntryPoint());

@@ -4,6 +4,7 @@ import et.com.gebeya.user_service.dto.requestDto.*;
 import et.com.gebeya.user_service.dto.responseDto.AddressResponseDto;
 import et.com.gebeya.user_service.dto.responseDto.PhoneNumberResponseDto;
 import et.com.gebeya.user_service.dto.responseDto.RestaurantResponseDto;
+import et.com.gebeya.user_service.enums.Status;
 import et.com.gebeya.user_service.model.*;
 
 import java.util.List;
@@ -96,7 +97,7 @@ private static AddressResponseDto mapAddressModelToDto(Address address){
 
     }
 
-    public static AddUserRequest mapCustomerToUser(RestaurantRequestDto dto){
+    public static AddUserRequest mapRestaurantToUser(RestaurantRequestDto dto){
         AddUserRequest userRequest=new AddUserRequest();
         userRequest.setUserName(dto.getUserName());
         userRequest.setPassword(dto.getPassword());
@@ -107,4 +108,5 @@ private static AddressResponseDto mapAddressModelToDto(Address address){
         return userRequest;
 
     }
+
 }

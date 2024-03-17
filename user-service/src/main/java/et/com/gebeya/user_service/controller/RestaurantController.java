@@ -80,6 +80,7 @@ public class RestaurantController {
             Restaurant approvedRestaurant = restaurantService.approveRestaurant(id);
             return ResponseEntity.ok(approvedRestaurant);
         } catch (RuntimeException e) {
+            log.error(e.getMessage(),e);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Restaurant not found with id: " + id);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred while approving restaurant");

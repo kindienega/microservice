@@ -1,4 +1,4 @@
-package et.com.gebeya.order_service.dto.requestDto;
+package et.com.gebeya.order_service.dto.responseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,12 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @AllArgsConstructor
+@Builder
 @NoArgsConstructor
-public class OrderItemRequestDto {
-    private Long productId;
-    private int quantity;
-
-
+public class ProductResponse {
+private int quantity;
 }
