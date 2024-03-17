@@ -42,7 +42,7 @@ public class SecurityConfig {
             "/api/v1/user/vendor/**"
     };
     protected static final String [] VENDOR_MATCHERS = {
-
+            "/api/v1/category/vendor/request"
     };
     protected static final String [] RESTAURANT_MATCHERS ={
             "/api/v1/products/search",
