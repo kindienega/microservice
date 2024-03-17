@@ -14,6 +14,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class VendorProductUpdateResponseDto {
+    private Long id;
     private String nameOfProduct;
     private int vendorQuantity;
     private Double vendorProductPrice;

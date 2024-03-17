@@ -26,26 +26,20 @@ public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     @JsonIgnore
     @CreationTimestamp
     @Column(name = "created_on")
     private Instant createdOn;
-
     @JsonIgnore
     @UpdateTimestamp
     @Column(name = "updated_on")
     private Instant updatedOn;
     @ManyToOne
-    @JoinColumn(name = "restaurant_Id",nullable = false)
-
+    @JoinColumn(name = "restaurant_Id",nullable = false, referencedColumnName = "id")
     private Restaurant restaurant;
-
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
-
     private double totalPrice;
-
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<OrderItem> orderItems = new ArrayList<>();

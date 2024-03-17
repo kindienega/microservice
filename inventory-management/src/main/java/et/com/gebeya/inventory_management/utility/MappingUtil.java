@@ -29,7 +29,8 @@ public class MappingUtil {
 
     public VendorProductUpdateResponseDto entityToDto(UpdateRequest updateRequest) {
         VendorProductUpdateResponseDto dto = new VendorProductUpdateResponseDto();
-        dto.setNameOfProduct(updateRequest.getName());
+        dto.setId(updateRequest.getId());
+        dto.setNameOfProduct(updateRequest.getVendor().getProducts().get(0).getName());
         dto.setVendorQuantity(updateRequest.getProductQuantity());
         dto.setVendorProductPrice(updateRequest.getVendorProductPrice());
         dto.setStatus(updateRequest.getStatus());

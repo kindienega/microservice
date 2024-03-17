@@ -48,18 +48,6 @@ public class UpdateRequestService {
         return mappingUtil.entityToDto(updateRequest);
     }
 
-//    @Transactional
-//    public VendorProductUpdateResponseDto approveUpdateRequest(Long id) throws IOException {
-//        UpdateRequest updateRequest = updateRequestRepository.findById(id)
-//                .orElseThrow(() -> new ResourceNotFoundException("UpdateRequest not found"));
-//        updateRequest.setStatus(Status.APPROVED);
-//        UpdateRequest savedRequest = updateRequestRepository.save(updateRequest);
-//        String phoneNumber = updateRequest.getVendor().getPhoneNumber().get(0).getPhoneNumber();
-//        String message = " CONGRATULATIONS ! : Your product update request has been approved.";
-//        smsService.sendSms(phoneNumber, "e80ad9d8-adf3-463f-80f4-7c4b39f7f164", "", message);
-//
-//        return mappingUtil.entityToDto(savedRequest);
-//    }
 
     @Transactional
     public VendorProductUpdateResponseDto declineUpdateRequest(Long id) throws IOException {
@@ -70,7 +58,6 @@ public class UpdateRequestService {
         String phoneNumber = updateRequest.getVendor().getPhoneNumber().get(0).getPhoneNumber();
         String message = " SORRY ! : Your product update request has been declined.";
         smsService.sendSms(phoneNumber, "e80ad9d8-adf3-463f-80f4-7c4b39f7f164", "", message);
-
         return mappingUtil.entityToDto(savedRequest);
     }
 
