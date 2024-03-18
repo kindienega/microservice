@@ -1,17 +1,15 @@
 package et.com.gebeya.order_service.dto.requestDto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class OrderItemRequestDto {
+@AllArgsConstructor
+@Setter
+@Getter
+public class StockAdjustmentDTO {
     private Long productId;
     private int quantity;
-
-
 }

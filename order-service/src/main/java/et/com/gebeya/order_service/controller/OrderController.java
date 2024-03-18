@@ -29,6 +29,7 @@ public class OrderController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
+            log.error(e.getMessage(),e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while placing the order");
         }
     }
@@ -44,6 +45,7 @@ public class OrderController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
+            log.error(e.getMessage(),e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while cancelling the order");
         }
     }
@@ -85,7 +87,7 @@ public class OrderController {
         }
     }
 
-    @PutMapping("/{orderId}/complete")
+    @PutMapping("/complete/{orderId}/order")
     public ResponseEntity<?> completeOrder(@PathVariable Integer orderId) {
         try {
             OrderPaymentInfo orderPaymentInfo = orderService.completeOrder(orderId);
@@ -95,6 +97,7 @@ public class OrderController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
+            log.error(e.getMessage(),e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while completing the order");
         }
     }

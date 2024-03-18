@@ -25,6 +25,7 @@ public class RouteValidator {
             "/api/v1/user/vendor/{id}/products",
             "/api/v1/products/all"
             //"/api/v1/products/category/{categoryId}"
+
     );
 
     public Predicate<ServerHttpRequest> isSecured =

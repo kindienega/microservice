@@ -1,27 +1,18 @@
 package et.com.gebeya.authservice.controller;
 
 import et.com.gebeya.authservice.dto.requestdto.AddUserRequest;
-import et.com.gebeya.authservice.dto.requestdto.ForgotPasswordRequestDto;
 import et.com.gebeya.authservice.dto.requestdto.UsersCredential;
 import et.com.gebeya.authservice.dto.requestdto.ValidationRequest;
+import et.com.gebeya.authservice.dto.responsedto.AuthResponse;
 import et.com.gebeya.authservice.dto.responsedto.AuthenticationResponse;
 import et.com.gebeya.authservice.dto.responsedto.ValidationResponse;
-import et.com.gebeya.authservice.exceptions.InvalidOtpException;
-import et.com.gebeya.authservice.exceptions.InvalidPhoneNumberException;
 import et.com.gebeya.authservice.service.AuthenticationService;
-import et.com.gebeya.authservice.service.ForgotPasswordService;
-import jakarta.security.auth.message.AuthException;
-import jakarta.ws.rs.NotFoundException;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,7 +20,7 @@ import java.io.IOException;
 @Slf4j
 public class AuthController {
     private final AuthenticationService authenticationService;
-    private final ForgotPasswordService forgotPasswordService;
+
     @PostMapping("/validate")
     public ResponseEntity<ValidationResponse> validate(@RequestBody ValidationRequest request)
     {
@@ -43,32 +34,18 @@ public class AuthController {
 
         return authenticationService.signIn(credential);
     }
-    @PostMapping("/forgot-password")
-    public ResponseEntity<String> initiateForgotPassword(@RequestBody String phoneNumber) {
+
+
+    @Hidden
+    @PostMapping("/addUser")
+    public ResponseEntity<AuthResponse> addUser(@RequestBody AddUserRequest dto) {
         try {
-            forgotPasswordService.initiateForgotPassword(phoneNumber);
-            return ResponseEntity.ok("Forgot password process initiated successfully.");
-        } catch (InvalidPhoneNumberException | IOException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid email format.");
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with email " + phoneNumber + " not found.");
-        } catch (RuntimeException e) {
-            log.error(e.getMessage(),e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error initiating forgot password: " + e.getMessage());
-        }
-    }
-    @PostMapping("/resetpassword")
-    public ResponseEntity<Object> resetPassword(@RequestBody ForgotPasswordRequestDto forgotPasswordRequestDto) {
-        try {
-            forgotPasswordService.resetPassword(forgotPasswordRequestDto);
-            return ResponseEntity.ok("Password reset successfully");
-        } catch (InvalidOtpException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            ResponseEntity<AuthResponse> response = authenticationService.addUser(dto);
+            return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
 }
