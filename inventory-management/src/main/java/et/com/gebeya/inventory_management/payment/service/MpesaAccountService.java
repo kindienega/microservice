@@ -63,7 +63,7 @@ public class MpesaAccountService {
 
 
     @Transactional
-    public PaymentDto processVendorPayment(PaymentRequestDto requestDto) {
+    public PaymentDto processVendorPayment(PaymentRequestDto requestDto) throws IOException {
         UpdateRequest updateRequest = updateRequestRepository.findById(requestDto.getUpdateRequestId())
                 .orElseThrow(() -> new ResourceNotFoundException("UpdateRequest not found"));
         String vendorPhoneNumber = updateRequest.getVendor().getPhoneNumber().get(0).getPhoneNumber();
@@ -82,7 +82,8 @@ public class MpesaAccountService {
 
         vendorAccount.setBalance(vendorAccount.getBalance() + paymentAmount);
         mpesaAccountRepository.save(vendorAccount);
-
+        String message = " CONGRATULATIONS ! : Your get paid for your product: " +paymentAmount;
+        smsService.sendSms(vendorPhoneNumber, "e80ad9d8-adf3-463f-80f4-7c4b39f7f164", "", message);
         return new PaymentDto(requestDto.getSenderPhoneNumber(), vendorPhoneNumber, paymentAmount, senderAccount.getBalance());
     }
 

@@ -1,6 +1,7 @@
 package et.com.gebeya.inventory_management.payment.controller;
 
 import et.com.gebeya.inventory_management.exceptions.InsufficientBalanceException;
+import et.com.gebeya.inventory_management.exceptions.ResourceNotFoundException;
 import et.com.gebeya.inventory_management.payment.requestDto.*;
 import et.com.gebeya.inventory_management.payment.responseDto.AccountCreationResponseDto;
 import et.com.gebeya.inventory_management.payment.service.MpesaAccountService;
@@ -50,8 +51,10 @@ public class MpesaAccountController {
         try {
             PaymentDto result = service.processVendorPayment(requestDto);
             return ResponseEntity.ok(result);
-        } catch (EntityNotFoundException | InsufficientBalanceException e) {
+        } catch (ResourceNotFoundException | InsufficientBalanceException e) {
             return ResponseEntity.badRequest().body(null);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
