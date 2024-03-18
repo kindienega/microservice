@@ -1,13 +1,11 @@
-package et.com.gebeya.user_service.model;
+package et.com.gebeya.inventory_management.Models;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Table(name = "address")

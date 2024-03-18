@@ -4,15 +4,23 @@ import et.com.gebeya.user_service.dto.requestDto.*;
 import et.com.gebeya.user_service.dto.responseDto.AddressResponseDto;
 import et.com.gebeya.user_service.dto.responseDto.PhoneNumberResponseDto;
 import et.com.gebeya.user_service.dto.responseDto.RestaurantResponseDto;
-import et.com.gebeya.user_service.enums.Status;
-import et.com.gebeya.user_service.model.*;
+import et.com.gebeya.user_service.model.Address;
+import et.com.gebeya.user_service.model.PhoneNumber;
+import et.com.gebeya.user_service.model.Restaurant;
+import et.com.gebeya.user_service.model.Vendor;
+import et.com.gebeya.user_service.repository.VendorRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Component
+@AllArgsConstructor
 public class MappingUtil {
-    public static Restaurant mapRestaurantDtoToModel(RestaurantRequestDto dto){
-        Restaurant restaurant=new Restaurant();
+    private final VendorRepository vendorRepository;
+
+    public static Restaurant mapRestaurantDtoToModel(RestaurantRequestDto dto) {
+        Restaurant restaurant = new Restaurant();
         restaurant.setBusinessName(dto.getBusinessName());
         restaurant.setOwnerName(dto.getOwnerName());
         restaurant.setLicenseNumber(dto.getLicenseNumber());
@@ -33,13 +41,14 @@ public class MappingUtil {
         restaurant.setPhoneNumber(phoneNumbers);
         return restaurant;
     }
-    public static Vendor mapVendorDtoToModel(VendorRequestDto dto){
-        Vendor vendor=new Vendor();
+
+    public static Vendor mapVendorDtoToModel(VendorRequestDto dto) {
+        Vendor vendor = new Vendor();
         vendor.setBusinessName(dto.getBusinessName());
         vendor.setOwnerName(dto.getOwnerName());
         vendor.setLicenseNumber(dto.getLicenseNumber());
         vendor.setEmail(dto.getEmail());
-        List<Address> addresses=dto.getAddresses()
+        List<Address> addresses = dto.getAddresses()
                 .stream()
                 .map(MappingUtil::mapAddressDtoToModel).toList();
         vendor.setAddresses(addresses);
@@ -50,17 +59,20 @@ public class MappingUtil {
         vendor.setPhoneNumber(phoneNumbers);
         return vendor;
     }
+
     private static PhoneNumber mapPhoneNumberDtoToModel(PhoneNumberDto dto) {
         PhoneNumber phoneNumber = new PhoneNumber();
         phoneNumber.setPhoneNumber(dto.getPhoneNumber());
         phoneNumber.setIsActive(true);
         return phoneNumber;
     }
+
     private static PhoneNumberResponseDto mapPhoneNumberModelToDto(PhoneNumber phoneNumber) {
         PhoneNumberResponseDto responseDto = new PhoneNumberResponseDto();
         responseDto.setPhoneNumber(phoneNumber.getPhoneNumber());
         return responseDto;
     }
+
     private static Address mapAddressDtoToModel(AddressRequestDto dto) {
         Address address = new Address();
         address.setCity(dto.getCity());
@@ -70,20 +82,20 @@ public class MappingUtil {
         return address;
     }
 
-private static AddressResponseDto mapAddressModelToDto(Address address){
-    AddressResponseDto responseDto = new AddressResponseDto();
-    responseDto.setCity(address.getCity());
-    responseDto.setSubCity(address.getSubCity());
-    responseDto.setWereda(address.getWereda());
-    return responseDto;
-}
+    private static AddressResponseDto mapAddressModelToDto(Address address) {
+        AddressResponseDto responseDto = new AddressResponseDto();
+        responseDto.setCity(address.getCity());
+        responseDto.setSubCity(address.getSubCity());
+        responseDto.setWereda(address.getWereda());
+        return responseDto;
+    }
 
     public static RestaurantResponseDto mapRestaurantModelToDto(Restaurant restaurant) {
-         RestaurantResponseDto responseDto=new RestaurantResponseDto();
-         responseDto.setOwnerName(restaurant.getOwnerName());
-         responseDto.setBusinessName(responseDto.getBusinessName());
+        RestaurantResponseDto responseDto = new RestaurantResponseDto();
+        responseDto.setOwnerName(restaurant.getOwnerName());
+        responseDto.setBusinessName(responseDto.getBusinessName());
 
-        List<AddressResponseDto> addressResponseDtos=restaurant.getAddresses()
+        List<AddressResponseDto> addressResponseDtos = restaurant.getAddresses()
                 .stream()
                 .map(MappingUtil::mapAddressModelToDto)
                 .toList();
@@ -97,8 +109,8 @@ private static AddressResponseDto mapAddressModelToDto(Address address){
 
     }
 
-    public static AddUserRequest mapRestaurantToUser(RestaurantRequestDto dto){
-        AddUserRequest userRequest=new AddUserRequest();
+    public static AddUserRequest mapRestaurantToUser(RestaurantRequestDto dto) {
+        AddUserRequest userRequest = new AddUserRequest();
         userRequest.setUserName(dto.getUserName());
         userRequest.setPassword(dto.getPassword());
         userRequest.setRole(dto.getRole());
@@ -108,5 +120,4 @@ private static AddressResponseDto mapAddressModelToDto(Address address){
         return userRequest;
 
     }
-
 }

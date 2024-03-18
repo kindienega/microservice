@@ -19,7 +19,6 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,7 +38,6 @@ public class VendorService {
     private  final UserUtil userUtil;
     private final ProductRepository productRepository;
     private  Users users;
-    
     @Transactional
     public VendorRequestDto vendorRegistration(VendorRequestDto vendorRequestDto) {
         try {

@@ -49,7 +49,7 @@ public class CategoryService {
     }
     public CategoryRegistrationRequest updateCategory(Long id, CategoryRegistrationRequest request) {
         Category ifExistCategory = categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(" category doest not exist"));
+                .orElseThrow(() -> new ResourceNotFoundException(" category with id : "+id+"'doest not exist"));
         mapper.updateEntityWithDtoForCategory(request, ifExistCategory);
         Category updatedCategory = categoryRepository.save(ifExistCategory);
         return mapper.convertToDTOForCategory(updatedCategory);

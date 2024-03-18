@@ -42,3 +42,7 @@ afroMessage:
   identifier: ${AFRO_IDENTIFIER}
 
 
+logging:
+  level:
+    web: debug
+

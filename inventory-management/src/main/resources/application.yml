@@ -46,3 +46,13 @@ logging:
 afroMessage:
   token: ${AFRO_TOKEN}
   baseUrl: ${AFRO_URL}
+  identifier: ${AFRO_IDENTIFIER}
+vendor:
+  service:
+    base:
+      url: http://localhost:8181
+
+inventory:
+  service:
+    base:
+      url: http://localhost:8181

@@ -11,6 +11,7 @@ import et.com.gebeya.inventory_management.dto.request.CategoryRegistrationReques
 import et.com.gebeya.inventory_management.dto.request.ProductCreationRequest;
 import et.com.gebeya.inventory_management.dto.request.RequestForUpdate;
 import et.com.gebeya.inventory_management.dto.response.ProductCreationResponse;
+import et.com.gebeya.inventory_management.exceptions.ResourceNotFoundException;
 import et.com.gebeya.inventory_management.repos.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -111,7 +112,7 @@ public class MappingFunctions {
     }
     public Product mapToProduct(ProductCreationRequest request) {
         Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("The Category you provided is not found"));
 
         Product product = new Product();
         product.setName(request.getName());

@@ -23,13 +23,10 @@ public class CategoryController {
     public CategoryRegistrationRequest getCategoryById(@PathVariable Long id){
         return categoryService.getCategoryById(id);
     }
-//    @PostMapping(value = "", consumes = "multipart/form-data")
-//    public CategoryRegistrationRequest addCategory(@RequestBody CategoryRegistrationRequest request, MultipartFile imageFile){
-//        return categoryService.createCategory(request, imageFile);
-//    }
-@PostMapping()
-public CategoryRegistrationRequest addCategory(@RequestBody @Valid CategoryRegistrationRequest request){
-    return categoryService.createCategory(request);
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping()
+    public CategoryRegistrationRequest addCategory(@RequestBody @Valid CategoryRegistrationRequest request){
+         return categoryService.createCategory(request);
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")

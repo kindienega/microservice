@@ -1,4 +1,4 @@
-package et.com.gebeya.inventory_management.vendor;
+package et.com.gebeya.inventory_management.payment.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,17 +9,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
-public class Vendor {
+public class MpesaAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String description;
-    private String contactEmail;
+    private String firstName;
+    private String lastName;
     private String phoneNumber;
+    private Double balance = 20.0;
+    private Double payedBalance;
+    private String city;
 }
