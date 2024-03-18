@@ -93,7 +93,7 @@ public class OrderService {
         return calculateOrderPaymentInfo(orders);
     }
 
-
+    @Transactional
     private Orders createOrderFromRequest(OrderRequestDto request) {
         Orders orders = new Orders();
         Restaurant restaurant = restaurantRepository.findById(request.getRestaurantId())

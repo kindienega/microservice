@@ -37,7 +37,7 @@ public class Orders {
     @Column(name = "updated_on")
     private Instant updatedOn;
     @ManyToOne
-    @JoinColumn(name = "restaurant_Id",nullable = false)
+    @JoinColumn(name = "restaurant_Id", referencedColumnName = "id")
     private Restaurant restaurant;
 
     @Enumerated(EnumType.STRING)
