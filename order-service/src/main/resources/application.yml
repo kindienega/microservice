@@ -39,4 +39,6 @@ management:
 afroMessage:
   token: ${AFRO_TOKEN}
   baseUrl: ${AFRO_URL}
+  identifier: ${AFRO_IDENTIFIER}
+
 

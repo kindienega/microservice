@@ -22,7 +22,6 @@
         <module>order-service</module>
         <module>inventory-management</module>
         <module>api-gateway</module>
-        <module>email-service</module>
     </modules>
 
     <properties>

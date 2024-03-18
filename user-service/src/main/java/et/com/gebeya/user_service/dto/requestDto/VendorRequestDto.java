@@ -4,11 +4,11 @@ import lombok.*;
 
 import java.util.List;
 
-@Data
+
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@ToString
+@Getter
+@Setter
 public class VendorRequestDto {
     private String BusinessName;
     private String OwnerName;
