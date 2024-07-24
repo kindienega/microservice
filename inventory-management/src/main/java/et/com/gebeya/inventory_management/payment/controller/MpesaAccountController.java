@@ -2,10 +2,12 @@ package et.com.gebeya.inventory_management.payment.controller;
 
 import et.com.gebeya.inventory_management.exceptions.InsufficientBalanceException;
 import et.com.gebeya.inventory_management.exceptions.ResourceNotFoundException;
-import et.com.gebeya.inventory_management.payment.requestDto.*;
+import et.com.gebeya.inventory_management.payment.requestDto.AccountCreationRequestDto;
+import et.com.gebeya.inventory_management.payment.requestDto.BalanceDto;
+import et.com.gebeya.inventory_management.payment.requestDto.PaymentDto;
+import et.com.gebeya.inventory_management.payment.requestDto.PaymentRequestDto;
 import et.com.gebeya.inventory_management.payment.responseDto.AccountCreationResponseDto;
 import et.com.gebeya.inventory_management.payment.service.MpesaAccountService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +21,7 @@ import java.io.IOException;
 public class MpesaAccountController {
     private final MpesaAccountService service;
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<AccountCreationResponseDto> createAccount(@RequestBody @Valid AccountCreationRequestDto requestDto) throws IOException {
         AccountCreationResponseDto responseDto = service.createAccount(requestDto);
         return ResponseEntity.ok(responseDto);

@@ -27,8 +27,6 @@ public class CustomMappingFunctions {
     private final CategoryRepository categoryRepository;
     private final ImageServiceImpl imageService;
     private final GlobalExceptionHandler globalExceptionHandler;
-    //private final AdminRepository adminRepository;
-    //private final VendorRepository vendorRepository;
 
 
     public ProductCreationResponse createProductAndConvertToResponse(ProductCreationRequest request, MultipartFile imageFile) {

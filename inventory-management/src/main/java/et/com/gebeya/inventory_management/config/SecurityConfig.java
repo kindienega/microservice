@@ -38,7 +38,7 @@ public class SecurityConfig {
 
             "/api/v1/products/get/{id}",
             "/api/v1/products/order",
-            "/api/v1/products/{productId}/stocK"
+            "/api/v1/products/{productId}/stock"
     };
 
     protected static final String [] ADMIN_MATCHERS = {
@@ -49,7 +49,7 @@ public class SecurityConfig {
     };
     protected static final String [] VENDOR_MATCHERS = {
 
-            "/api/v1/products/orde"
+            "/api/v1/order"
     };
     protected static final String [] RESTAURANT_MATCHERS ={
             "/api/v1/products/ord",
